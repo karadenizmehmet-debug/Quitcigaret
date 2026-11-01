@@ -12,6 +12,10 @@ Sigarayı bırakma sürecini takip eden, modern ve minimalist bir mobil web uygu
 - **Tasarruf:** Günlük, haftalık, aylık ve yıllık hesap; kişisel tasarruf hedefi
 - **Başarılar:** 12 rozet, seviye sistemi, aylık takvim, haftalık rapor, azaltma oranı ve deneme geçmişi
 - **Kayma takibi:** Kaç sigara içildiğini kaydeder; yeniden başlamada kazanımlar korunur ve 72 saatlik yeniden başlama planı sunulur
+- **Kademeli bırakma modu:** Günlük sigara sınırını haftadan haftaya azaltan plan; günlük sayaç ve plan uyumu
+- **30 günlük program:** Her gün bir görev ve kısa bir bilgi
+- **Gelişim grafikleri:** İstek düzeyi, ruh hâli, içilen sigara, zor saatler ve zor günler
+- **Paylaşılabilir başarı kartı:** Tek dokunuşla WhatsApp vb. için görsel
 - **Günlük hedefler ve akşam değerlendirmesi**
 - **Bildirimler:** Sabah, akşam, zor saatler, sağlık dönüm noktaları, haftalık rapor ve özel hatırlatmalar
 - **Bilgi merkezi:** Yoksunluk, ilk hafta, stres, kilo ve profesyonel destek (ALO 171)

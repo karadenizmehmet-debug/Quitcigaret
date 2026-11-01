@@ -257,6 +257,42 @@ pre.code{background:var(--card2);border:1px solid var(--line);border-radius:12px
 .stat span{color:var(--muted)}
 details summary{cursor:pointer;color:var(--lime);font-size:14px;margin-top:14px}
 
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:4px;gap:4px}
+.seg button{flex:1;border:none;background:none;color:var(--muted);border-radius:12px;padding:12px 6px;font-size:14px;font-weight:600}
+.seg button.on{background:var(--card2);color:var(--lime)}
+.rc{display:flex;align-items:center;justify-content:space-between;margin:10px 0 2px}
+.rc button{width:56px;height:56px;border-radius:18px;background:var(--card2);border:1px solid var(--line);color:var(--text);font-size:28px}
+.rc div{text-align:center}
+.rc b{font-size:52px;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums;line-height:1}
+.rc small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.wk{display:flex;gap:6px;margin-top:14px}
+.wk span{flex:1;text-align:center;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:8px 2px;font-size:11px;color:var(--muted);line-height:1.3}
+.wk span b{display:block;font-size:16px;color:var(--text)}
+.wk span.cur{border-color:var(--lime)}
+.wk span.cur b{color:var(--lime)}
+.wk span.past{opacity:.45}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .tip{font-size:13px;color:var(--muted);min-height:20px;margin-top:6px}
+.chart .tip b{color:var(--text)}
+.chart .hit{cursor:pointer}
+.chart .hit:hover .bar-m,.chart .hit.sel .bar-m{opacity:1}
+.moodstrip{display:grid;grid-template-columns:repeat(14,1fr);gap:3px;margin-top:10px;text-align:center}
+.moodstrip span{font-size:17px;line-height:1.2}
+.moodstrip small{display:block;font-size:9px;color:var(--muted)}
+.pday{font-size:12px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.06em}
+.ptitle{font-size:19px;font-weight:750;margin-top:6px;letter-spacing:-.02em}
+.ptask{font-size:15px;line-height:1.45;margin-top:8px}
+.pinfo{font-size:13px;color:var(--muted);line-height:1.5;margin-top:8px}
+.pitem{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.pitem:last-child{border:none}
+.pnum{width:34px;height:34px;flex:none;border-radius:11px;background:var(--card2);border:1px solid var(--line);display:grid;place-items:center;font-weight:800;font-size:13px;color:var(--muted)}
+.pitem.done .pnum{background:var(--lime);border-color:var(--lime);color:#08130a}
+.pitem.today .pnum{border-color:var(--teal);color:var(--teal)}
+.pitem.lock{opacity:.45}
+.pitem b{display:block;font-size:15px}
+.pitem span{font-size:13px;color:var(--muted);line-height:1.45;display:block;margin-top:2px}
+.shareimg{width:100%;border-radius:18px;border:1px solid var(--line);margin:12px 0 2px;display:block}
+
 /* Kurulum */
 .intro{padding:50px 0 16px}
 .intro .logo i{width:56px;height:56px;border-radius:18px;margin-bottom:22px}
@@ -348,7 +384,11 @@ nav .sos svg{width:24px;height:24px}
     <h2>Her nefes<br><em>yeni bir başlangıç.</em></h2>
     <p class="sub" style="margin-top:14px">Birkaç bilgi gir; ilerlemeni, tasarrufunu ve sağlığındaki değişimi biz hesaplayalım.</p>
   </div>
-  <label>Bıraktığın an</label><input type="datetime-local" id="f-quit">
+  <label>Nasıl bırakmak istiyorsun?</label>
+  <div class="seg" id="f-mode"><button class="on" data-m="now" onclick="setMode('now')">Hemen bırak</button><button data-m="reduce" onclick="setMode('reduce')">Kademeli azalt</button></div>
+  <div id="f-quitbox"><label>Bıraktığın an</label><input type="datetime-local" id="f-quit"></div>
+  <div id="f-reduce" style="display:none"><label>Kaç haftada bırakmak istiyorsun?</label><input type="number" id="f-weeks" inputmode="numeric" value="4" min="1" max="12">
+    <p class="note">Günlük sigara sınırın her hafta azalır; planın sonunda tamamen bırakırsın.</p></div>
   <label>Günde kaç sigara içiyordun?</label><input type="number" id="f-per" inputmode="numeric" placeholder="20" min="1">
   <label>Paket fiyatı (₺)</label><input type="number" id="f-price" inputmode="decimal" placeholder="100" min="0">
   <label>Paketteki sigara sayısı</label><input type="number" id="f-pack" inputmode="numeric" placeholder="20" min="1">
@@ -377,7 +417,7 @@ nav .sos svg{width:24px;height:24px}
         <circle cx="115" cy="115" r="103" fill="none" stroke="#252d29" stroke-width="14"/>
         <circle id="heroRing" cx="115" cy="115" r="103" fill="none" stroke="url(#gL)" stroke-width="14" stroke-linecap="round" stroke-dasharray="647.2" stroke-dashoffset="647.2" style="transition:stroke-dashoffset .8s"/>
       </svg>
-      <div class="c"><div class="d" id="days">0</div><div class="l">gün sigarasız</div></div>
+      <div class="c"><div class="d" id="days">0</div><div class="l" id="hero-l">gün sigarasız</div></div>
     </div>
     <div class="tiles">
       <div class="tile"><b id="hh">00</b><span>saat</span></div>
@@ -391,6 +431,7 @@ nav .sos svg{width:24px;height:24px}
     <div class="q" id="motto"></div>
   </div>
 
+  <div id="reduce-card"></div>
   <div id="recovery"></div>
 
   <div class="card" style="margin-top:12px" onclick="go('ach')">
@@ -413,7 +454,7 @@ nav .sos svg{width:24px;height:24px}
     </div>
     <div class="card">
       <div class="ic" style="background:rgba(251,191,36,.14);color:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg></div>
-      <div class="k">Sigarasız gün oranı</div><div class="v" id="succ">%100</div>
+      <div class="k" id="succ-k">Sigarasız gün oranı</div><div class="v" id="succ">%100</div>
     </div>
   </div>
 
@@ -423,6 +464,8 @@ nav .sos svg{width:24px;height:24px}
     <div class="bar"><i id="next-b" style="width:0"></i></div>
     <div class="meta"><span id="next-p"></span><span id="next-r"></span></div>
   </div>
+
+  <div id="prog-card"></div>
 
   <div class="sech">Bugünkü hedefler <span id="goal-sum"></span></div>
   <div class="card" id="goals"></div>
@@ -492,6 +535,9 @@ nav .sos svg{width:24px;height:24px}
       <div class="meta"><span id="lv-xp"></span><span id="lv-next"></span></div>
     </div>
   </div>
+  <button class="btn pri" onclick="openShareCard()">📣 Başarımı paylaş</button>
+  <div class="sech">Gelişim <span>son 14 gün</span></div>
+  <div id="charts"></div>
   <div class="sech">Rozetler <span id="bdg-cnt"></span></div>
   <div class="badges" id="badges"></div>
   <div class="sech">Takvim</div>
@@ -506,6 +552,14 @@ nav .sos svg{width:24px;height:24px}
   <div class="card" id="reduce"></div>
   <div class="sech">Denemelerin</div>
   <div class="card" id="attempts"></div>
+</div>
+
+<!-- ============ 30 GÜNLÜK PROGRAM ============ -->
+<div class="wrap view" id="v-prog">
+  <button class="back" onclick="go('home')">‹ Özet</button>
+  <div class="title">30 günlük program</div>
+  <div class="sub">Her gün küçük bir adım. Günler bırakma tarihinden itibaren sırayla açılır.</div>
+  <div class="card" style="padding:4px 18px" id="prog-list"></div>
 </div>
 
 <!-- ============ YEDEKLEME ============ -->
@@ -565,7 +619,8 @@ nav .sos svg{width:24px;height:24px}
   <button class="back" onclick="go('home')">‹ Özet</button>
   <div class="title">Ayarlar</div>
   <div class="sub">Bilgilerini güncelle.</div>
-  <button class="rowlink" style="margin-top:0" onclick="go('backup')"><span class="em">💾</span><span><b>Yedekleme ve senkronizasyon</b><small id="set-bk"></small></span></button>
+  <button class="rowlink" style="margin-top:0" onclick="openReducePlan()"><span class="em">📉</span><span><b>Kademeli bırakma planı</b><small id="set-rd"></small></span></button>
+  <button class="rowlink" onclick="go('backup')"><span class="em">💾</span><span><b>Yedekleme ve senkronizasyon</b><small id="set-bk"></small></span></button>
   <label>Bıraktığın an</label><input type="datetime-local" id="s-quit">
   <label>Günlük sigara</label><input type="number" id="s-per" inputmode="numeric">
   <label>Paket fiyatı (₺)</label><input type="number" id="s-price" inputmode="decimal">
@@ -784,7 +839,7 @@ function defaults(){
   S.crises=S.crises||[]; S.days=S.days||{};
   S.bank=S.bank||{cigs:0,saved:0,ms:0}; S.attempts=S.attempts||[]; S.badges=S.badges||{};
   S.stats=S.stats||{breaths:0}; S.first=Math.min(S.first||S.quit, S.quit); S.fired=S.fired||{};
-  S.bank.smoked=S.bank.smoked||0; S.plan=S.plan||null;
+  S.bank.smoked=S.bank.smoked||0; S.plan=S.plan||null; S.reduce=S.reduce||null; S.prog=S.prog||{done:{}};
   S.sync=S.sync||{on:false,url:'',code:'',last:0,err:''};
   S.backupAt=S.backupAt||0; S.updatedAt=S.updatedAt||Date.now();
   S.notif=S.notif||{morning:{on:true,time:'09:00'},evening:{on:true,time:'21:00'},hard:{on:true},health:{on:true},weekly:{on:true},custom:[]};
@@ -805,7 +860,7 @@ function calc(){
   const slipDays = slipSet().size;
   const passed = S.crises.filter(c=>c.passed===true).length;
   return {el, avoided, saved:avoided*each, daily:S.per*each,
-    cigsT:S.bank.cigs+avoided, savedT:S.bank.saved+avoided*each, msT:S.bank.ms+el,
+    cigsT:S.bank.cigs+avoided, savedT:S.bank.saved+avoided*each+(S.reduce?reduceSaved():0), msT:S.bank.ms+el,
     succ:Math.max(0,Math.round((totalDays-slipDays)/totalDays*100)), okDays:Math.max(0,totalDays-slipDays), totalDays, passed, smokedNow, smokedT, expectedT,
     reduction: expectedT>=1 ? Math.max(0,Math.min(100,Math.round((1-smokedT/expectedT)*100))) : 100};
 }
@@ -824,7 +879,10 @@ function label(ms){
 
 function goalsFor(k, slips){
   const g = S.days[k] || {water:0,done:{}};
-  return [!slips.has(k), g.water>=8, !!g.done.walk, !!g.done.breath, !!g.done.coffee];
+  let first = !slips.has(k);
+  const r = S.reduce;
+  if(r && !r.done){ const t = new Date(k+'T12:00').getTime(); if(t >= r.start && t < S.quit) first = rCount(k) <= rLimit(Math.floor((startOfDay(t)-r.start)/(7*D))); }
+  return [first, g.water>=8, !!g.done.walk, !!g.done.breath, !!g.done.coffee];
 }
 function dayStatus(t, slips){
   const k=dkey(t), sod=startOfDay(t);
@@ -846,7 +904,7 @@ function show(id){ document.querySelectorAll('.view').forEach(v=>v.classList.rem
 function go(v){
   show(v);
   document.querySelectorAll('nav [data-v]').forEach(b=>b.classList.toggle('on', b.dataset.v===v));
-  if(v==='home'){ renderWeek(); renderRecovery(); renderGoals(); renderReview(); renderBackupWarn(); renderTrigs(); }
+  if(v==='home'){ renderWeek(); renderReduceCard(); renderRecovery(); renderProgCard(); renderGoals(); renderReview(); renderBackupWarn(); renderTrigs(); }
   if(v==='health') renderHealth();
   if(v==='save') renderSaveForm();
   if(v==='ach') renderAch();
@@ -854,17 +912,29 @@ function go(v){
   if(v==='notif') renderNotif();
   if(v==='set') fillSettings();
   if(v==='backup') renderBackup();
+  if(v==='prog') renderProgList();
   tick();
 }
 
 /* ================= Kurulum & ayarlar ================= */
+let setupMode = 'now';
+function setMode(m){
+  setupMode = m;
+  document.querySelectorAll('#f-mode button').forEach(b=>b.classList.toggle('on', b.dataset.m===m));
+  $('f-quitbox').style.display = m==='now' ? '' : 'none';
+  $('f-reduce').style.display = m==='reduce' ? '' : 'none';
+}
 function saveSetup(){
   const q=$('f-quit').value, per=+$('f-per').value, price=+$('f-price').value, pack=+$('f-pack').value||20;
-  if(!q || !per){ toast('Bırakma zamanını ve günlük sigara sayısını gir.'); return; }
-  S = {quit:new Date(q).getTime(), per, price:price||0, pack};
+  const weeks = Math.max(1, Math.min(12, +$('f-weeks').value||4));
+  if(!per || (setupMode==='now' && !q)){ toast(setupMode==='now' ? 'Bırakma zamanını ve günlük sigara sayısını gir.' : 'Günlük sigara sayısını gir.'); return; }
+  if(setupMode==='reduce'){
+    const st = startOfDay(Date.now());
+    S = {quit:st+weeks*7*D, per, price:price||0, pack, reduce:{start:st, weeks, from:per, log:{}}};
+  } else S = {quit:new Date(q).getTime(), per, price:price||0, pack};
   defaults(); markMilestones(); save(); start();
 }
-function fillSettings(){ $('set-bk').textContent = backupLine(); $('s-quit').value=toLocal(S.quit); $('s-per').value=S.per; $('s-price').value=S.price; $('s-pack').value=S.pack; }
+function fillSettings(){ $('set-bk').textContent = backupLine(); $('set-rd').textContent = reduceActive() ? 'Aktif · '+(rWeek()+1)+'. hafta' : 'Sigarayı haftalar içinde azaltarak bırak'; $('s-quit').value=toLocal(S.quit); $('s-per').value=S.per; $('s-price').value=S.price; $('s-pack').value=S.pack; }
 function saveSettings(){
   const q=$('s-quit').value; if(q){ S.quit=new Date(q).getTime(); S.first=Math.min(S.first,S.quit); markMilestones(); }
   S.per=+$('s-per').value||S.per; S.price=+$('s-price').value||0; S.pack=+$('s-pack').value||20;
@@ -879,19 +949,35 @@ function resetAll(){
 /* ================= Canlı güncelleme ================= */
 function tick(){
   if(!S) return;
-  const c = calc(), el = c.el;
-  $('days').textContent = Math.floor(el/D);
-  $('hh').textContent = pad(Math.floor(el%D/H));
-  $('mm').textContent = pad(Math.floor(el%H/MIN));
-  $('ss').textContent = pad(Math.floor(el%MIN/1e3));
+  const c = calc(), el = c.el, future = S.quit > Date.now();
+  const shown = future ? S.quit - Date.now() : el;
+  $('days').textContent = Math.floor(shown/D);
+  $('hero-l').textContent = future ? 'gün sonra bırakıyorsun' : 'gün sigarasız';
+  $('hh').textContent = pad(Math.floor(shown%D/H));
+  $('mm').textContent = pad(Math.floor(shown%H/MIN));
+  $('ss').textContent = pad(Math.floor(shown%MIN/1e3));
   $('money').textContent = tl(c.savedT);
   $('cigs').textContent = num(c.cigsT);
   const lm = c.cigsT*11;
   $('life').innerHTML = lm < 1440 ? Math.floor(lm/60)+'<small>saat</small>' : (lm/1440).toFixed(1).replace('.',',')+'<small>gün</small>';
-  $('succ').innerHTML = '%'+c.succ+'<small>'+c.okDays+'/'+c.totalDays+' gün</small>';
+  if(reduceActive()){
+    const r = S.reduce, n = Math.min(Math.floor((startOfDay(Date.now())-r.start)/D)+1, 999); let ok = 0;
+    for(let i=0;i<n;i++){ const k = dkey(r.start + i*D + 12*H); if(rCount(k) <= rLimit(Math.floor(i/7))) ok++; }
+    $('succ-k').textContent = 'Plan uyumu';
+    $('succ').innerHTML = '%'+Math.round(ok/n*100)+'<small>'+ok+'/'+n+' gün</small>';
+  } else {
+    $('succ-k').textContent = 'Sigarasız gün oranı';
+    $('succ').innerHTML = '%'+c.succ+'<small>'+c.okDays+'/'+c.totalDays+' gün</small>';
+  }
 
   const i = MS.findIndex(x=>x[0]>el);
-  if(i>=0){
+  if(future){
+    const span = S.reduce ? S.quit - S.reduce.start : 1;
+    $('next-t').textContent = 'Sağlık kazanımların bırakma gününde başlar.';
+    $('next-b').style.width = '0'; $('next-p').textContent = '';
+    $('next-r').textContent = new Date(S.quit).toLocaleDateString('tr-TR',{day:'numeric',month:'long'});
+    $('heroRing').style.strokeDashoffset = 647.2*(1-Math.min(1,Math.max(0,1-(S.quit-Date.now())/span)));
+  } else if(i>=0){
     const prev = i ? MS[i-1][0] : 0, p = (el-prev)/(MS[i][0]-prev);
     $('next-t').textContent = MS[i][1];
     $('next-b').style.width = (p*100).toFixed(1)+'%';
@@ -949,6 +1035,7 @@ function renderGoals(){
     const right = type==='count'
       ? `<div class="cnt"><button onclick="water(-1);event.stopPropagation()">−</button><b>${g.water}/8</b><button onclick="water(1);event.stopPropagation()">+</button></div>` : '';
     const sub = type==='auto' ? `<span class="auto">${id==='smokefree'?'Otomatik takip edilir':'Acil destekten yapılınca işaretlenir'}</span>` : '';
+    if(id==='smokefree' && reduceActive()) txt = 'Bugün sınırın içinde kal';
     const click = type==='check' ? `onclick="toggleGoal('${id}')"` : '';
     return `<div class="goal ${ok?'done':''}" ${click}><div class="cb"></div><div class="gt">${txt}${sub}</div>${right}</div>`;
   }).join('');
@@ -1058,7 +1145,7 @@ function renderAch(){
     const sub = on ? new Date(S.badges[b[0]]).toLocaleDateString('tr-TR',{day:'numeric',month:'short'}) : b[3];
     return `<div class="bdg ${on?'on':''}"><div class="hx"><span>${b[1]}</span></div><b>${b[2]}</b><small>${sub}</small>${on?'':`<div class="pb"><i style="width:${(p*100).toFixed(0)}%"></i></div>`}</div>`;
   }).join('');
-  renderCal(); renderReport(); renderReduce(); renderAttempts();
+  renderCharts(); renderCal(); renderReport(); renderReduce(); renderAttempts();
 }
 function calMove(n){ calOff+=n; renderCal(); }
 function renderCal(){
@@ -1205,10 +1292,16 @@ function renderRecovery(){
       <div style="margin-top:8px">${steps.map(([id,t])=>`<div class="goal ${planDone(id)?'done':''}" onclick="togglePlan('${id}')"><div class="cb"></div><div class="gt" style="font-size:14px;line-height:1.4">${t}</div></div>`).join('')}</div>
     </div>`;
 }
-function restart(){
+function bankAttempt(){
   const c = calc(), now = Date.now();
+  if(S.quit >= now) return;
   S.bank.cigs += c.avoided; S.bank.saved += c.saved; S.bank.ms += c.el; S.bank.smoked += c.smokedNow;
   S.attempts.push({start:S.quit, end:now, smoked:c.smokedNow});
+}
+function restart(){
+  const now = Date.now();
+  bankAttempt();
+  if(S.reduce && !S.reduce.done) S.reduce.done = true;
   S.quit = now; S.slips = []; S.plan = {t:now, done:{}};
   markMilestones(); save(); scheduleNative();
   const c2 = calc();
@@ -1411,6 +1504,263 @@ async function scheduleNative(){
     if(n.health.on){ const now=Date.now(); MS.forEach(([t,txt],i)=>{ const at=S.quit+t; if(at>now) list.push({id:200+i,title:'Yeni iyileşme aşaması ❤️',body:txt,schedule:{at:new Date(at),allowWhileIdle:true}}); }); }
     if(list.length) await LN.schedule({notifications:list});
   }catch(e){}
+}
+
+/* ================= Kademeli bırakma ================= */
+function reduceActive(){ return !!(S && S.reduce && !S.reduce.done && Date.now() < S.quit); }
+function rWeek(t=Date.now()){ return Math.max(0, Math.floor((startOfDay(t)-S.reduce.start)/(7*D))); }
+function rLimit(w, r=S.reduce){ return w >= r.weeks ? 0 : Math.max(1, Math.round(r.from*(r.weeks-w)/(r.weeks+1))); }
+function rCount(k=dkey()){ return (S.reduce.log||{})[k] || 0; }
+function rLog(n){ const k=dkey(); S.reduce.log[k] = Math.max(0, Math.min(99, rCount(k)+n)); save(); renderReduceCard(); renderGoals(); tick(); }
+function reduceSaved(){
+  const r = S.reduce, each = S.price/S.pack; let sum = 0;
+  const today = dkey();
+  for(const k in (r.log||{})) if(k < today) sum += Math.max(0, r.from - r.log[k]) * each;
+  return sum;
+}
+function weekChips(r, cur){
+  let h = '';
+  for(let w=0; w<r.weeks; w++) h += `<span class="${w===cur?'cur':(w<cur?'past':'')}"><b>${rLimit(w,r)}</b>${w+1}. hf</span>`;
+  return h + `<span class="${cur>=r.weeks?'cur':''}"><b>0</b>Bırak</span>`;
+}
+function renderReduceCard(){
+  const box = $('reduce-card');
+  if(!S.reduce || S.reduce.done){ box.innerHTML=''; return; }
+  const now = Date.now();
+  if(now >= S.quit){
+    if(now > S.quit + D){ S.reduce.done = true; save(); box.innerHTML=''; return; }
+    box.innerHTML = `<div class="card motto" style="margin-top:12px"><div class="k">📉 Kademeli bırakma tamamlandı</div><div class="q">Bugün bırakma günün! 🎉 Sayacın başladı. İstek geldiğinde ACİL butonu seninle.</div></div>`;
+    return;
+  }
+  const w = rWeek(), lim = rLimit(w), cnt = rCount(), over = cnt > lim;
+  box.innerHTML = `<div class="sech">Kademeli bırakma <span>${w+1}. hafta / ${S.reduce.weeks}</span></div>
+    <div class="card">
+      <div class="k">Bugün içtiğin · sınırın ${lim}</div>
+      <div class="rc"><button onclick="rLog(-1)">−</button><div><b style="${over?'color:var(--amber)':''}">${cnt}</b><small>/ ${lim} sigara</small></div><button onclick="rLog(1)">+</button></div>
+      <div class="bar"><i style="width:${Math.min(100,cnt/lim*100)}%;${over?'background:var(--amber)':''}"></i></div>
+      <div class="meta"><span>${over ? 'Sınırı aştın; sorun değil, yarın yeni bir gün.' : (lim-cnt)+' hakkın kaldı'}</span><span>Bırakma: ${new Date(S.quit).toLocaleDateString('tr-TR',{day:'numeric',month:'long'})}</span></div>
+      <div class="wk">${weekChips(S.reduce, w)}</div>
+      <p class="empty">Her içtiğinde + bas. Azaltarak şimdiye kadar <b style="color:var(--lime)">${tl(reduceSaved())}</b> biriktirdin (tamamlanan günler).</p>
+    </div>`;
+}
+function rpPreview(){
+  const from = +$('rp-from').value||0, weeks = Math.max(1,Math.min(12,+$('rp-weeks').value||4));
+  $('rp-prev').innerHTML = from ? weekChips({from,weeks}, 0) : '';
+}
+function openReducePlan(){
+  if(reduceActive()){
+    openSheet(`<h3>Kademeli bırakma</h3><p>Planın sürüyor: ${rWeek()+1}. haftadasın, bugünkü sınırın ${rLimit(rWeek())} sigara. Bırakma günün ${new Date(S.quit).toLocaleDateString('tr-TR',{day:'numeric',month:'long'})}.</p>
+      <div class="wk">${weekChips(S.reduce, rWeek())}</div>
+      <button class="btn pri" onclick="quitNowFromPlan()">Kendimi hazır hissediyorum, şimdi bırak</button>
+      <button class="btn ghost" style="border:none" onclick="closeSheet()">Kapat</button>`);
+    return;
+  }
+  openSheet(`<h3>Kademeli bırakma planı</h3><p>Birden bırakmak zor geliyorsa sigarayı haftalar içinde azaltarak bırakabilirsin. Mevcut kazanımların ve rozetlerin korunur.</p>
+    <label>Şu an günde kaç sigara içiyorsun?</label><input type="number" id="rp-from" inputmode="numeric" value="${S.per}" oninput="rpPreview()">
+    <label>Kaç haftada bırakmak istiyorsun?</label><input type="number" id="rp-weeks" inputmode="numeric" value="4" min="1" max="12" oninput="rpPreview()">
+    <label>Haftalık günlük sınırların</label><div class="wk" id="rp-prev" style="margin-top:0"></div>
+    <button class="btn pri" onclick="startReducePlan()">Planı başlat</button>
+    <button class="btn ghost" style="border:none" onclick="closeSheet()">Vazgeç</button>`);
+  rpPreview();
+}
+function startReducePlan(){
+  const from = +$('rp-from').value, weeks = Math.max(1,Math.min(12,+$('rp-weeks').value||4));
+  if(!from){ toast('Günlük sigara sayısını gir.'); return; }
+  bankAttempt();
+  const st = startOfDay(Date.now());
+  S.reduce = {start:st, weeks, from, log:{}};
+  S.per = Math.max(S.per, from);
+  S.quit = st + weeks*7*D; S.slips = []; S.plan = null;
+  markMilestones(); save(); scheduleNative(); closeSheet(); go('home');
+  toast('Plan başladı: bu hafta günde en fazla '+rLimit(0)+' sigara');
+}
+function quitNowFromPlan(){
+  S.reduce.done = true; S.quit = Date.now();
+  markMilestones(); save(); scheduleNative(); closeSheet(); go('home');
+  toast('Sayacın başladı. Başarılar! 🌱');
+}
+
+/* ================= 30 günlük program ================= */
+const PROGRAM = [
+  ['Temiz başlangıç','Evdeki sigara, çakmak ve küllükleri at.','Tetikleyicileri gözünün önünden kaldırmak, ilk günlerdeki istekleri belirgin şekilde azaltır.'],
+  ['Su günü','Bugün 8 bardak su iç.','Su hem ağzını ve elini meşgul eder hem de kendini daha iyi hissetmeni sağlar.'],
+  ['Zirveyi karşıla','İstek geldiğinde ACİL butonunu en az bir kez kullan.','Yoksunluk belirtileri genellikle ilk 3 gün en yoğundur. Bugünü geçmek büyük bir adım.'],
+  ['Rutini boz','Kahveni ya da çayını farklı bir yerde, farklı bir bardakta iç.','Küçük rutin değişiklikleri, beynin sigarayla kurduğu bağı zayıflatır.'],
+  ['Nedenlerin','Akşam değerlendirmesine bırakma nedenlerinden üçünü yaz.','Zor anlarda kendi yazdığın nedenler, hazır motivasyon sözlerinden daha etkilidir.'],
+  ['Harekete geç','15 dakika tempolu yürü.','Kısa bir yürüyüş sigara isteğini ve stresi azaltır.'],
+  ['Bir hafta!','Biriktirdiğin paradan kendine küçük bir ödül al.','İlk haftayı tamamlamak kalıcı bırakma yolunda önemli bir eşik.'],
+  ['Yemek sonrası','Yemekten hemen sonra masadan kalk ve dişlerini fırçala.','Yemek sonrası en güçlü alışkanlık tetikleyicilerinden biridir.'],
+  ['Tetikleyici haritası','Başarı sekmesindeki grafiklerden en zor saatini bul ve o saat için bir plan yap.','Ne zaman zorlandığını bilmek, hazırlıklı olmanı sağlar.'],
+  ['Destekçin','Bir yakınına sürecini anlat ve zor anlarda arayabileceğini söyle.','Sosyal destek, bırakma başarısını artıran en güçlü etkenlerden biridir.'],
+  ['Prova','İstek yokken bir kez nefes egzersizi yap.','Sakin anda prova etmek, kriz anında yöntemi otomatik hâle getirir.'],
+  ['Sağlıklı atıştırmalık','Yanına havuç, salatalık ya da bir avuç kuruyemiş al.','İştah artışı yaygındır; hazırlıklı olmak kilo endişesini azaltır.'],
+  ['Uyku','Bu akşam her zamankinden erken yat.','Yorgunluk istekleri güçlendirir; dinlenmiş bir zihin daha dirençlidir.'],
+  ['İki hafta','Merdiven çık ve nefesindeki farkı fark et.','Dolaşım ve akciğer fonksiyonu bu dönemde iyileşmeye devam ediyor.'],
+  ['Sosyal ortam','Sigara içilen bir ortamda ne yapacağını önceden planla.','Elinde bir içecek tutmak ve kısa süre uzaklaşmak işe yarar.'],
+  ['Hayır demek','“Teşekkürler, bıraktım” cümlesini sesli olarak prova et.','Hazır bir cümle, ikram edildiğinde tereddüt etmeni önler.'],
+  ['Tat ve koku','Bir yemeğin tadını ve kokusunu bilinçli olarak fark et.','Tat ve koku duyuların bırakmadan sonra belirgin şekilde güçlenir.'],
+  ['Para hedefi','Tasarruf hedefini gözden geçir ya da yeni bir hedef koy.','Somut bir hedef, motivasyonu canlı tutar.'],
+  ['Alkole dikkat','Bu hafta alkolü azalt ya da hiç içme.','Alkol, kaymaların en sık görülen nedenlerinden biridir.'],
+  ['Gelecekteki sana','Akşam değerlendirmesine bir yıl sonraki kendine kısa bir not yaz.','Hedefini somutlaştırmak bağlılığını güçlendirir.'],
+  ['Üç hafta','İstek düzeyi grafiğine bak ve değişimi gör.','Yeni alışkanlıklar yerleşmeye başlıyor.'],
+  ['Hareketi artır','Bugün 30 dakika yürü.','Düzenli hareket hem ruh hâlini hem enerjini artırır.'],
+  ['Zihin tuzakları','“Bir tane bir şey olmaz” düşüncesini fark et ve not al.','Kaymaların çoğu bu düşünceyle başlar; onu tanımak gücünü azaltır.'],
+  ['Nefes ustası','Bugün iki kez nefes egzersizi yap.','Nefes egzersizi stres anında en hızlı etki eden yöntemlerden biridir.'],
+  ['İlham ol','Başarı kartını bir yakınınla paylaş.','Başarını paylaşmak hem seni hem başkalarını motive eder.'],
+  ['Ödülünü seç','Ay sonu için kendine bir ödül belirle.','Biriktirdiğin parayla kendini ödüllendirmek, emeğini somutlaştırır.'],
+  ['Geriye bak','En zor krizini nasıl atlattığını düşün ve yaz.','Başardığın şeyleri hatırlamak, yeni zorluklara karşı güven verir.'],
+  ['Yeni kimlik','Kendine “Ben sigara içmeyen biriyim” de.','Kendini sigara içmeyen biri olarak görmek, kalıcı bırakmayı destekler.'],
+  ['İleriye bak','Önümüzdeki ay için üç hedef belirle.','Bırakma süreci bir ayda bitmez; yeni hedefler yolu sürdürür.'],
+  ['Bir ay! 🎉','Bugünü kutla ve sevdiklerinle paylaş.','Bir ayı tamamlamak büyük bir başarı. Yolun devamında da bu uygulama seninle.']
+];
+function progDay(){ const el = Date.now()-S.quit; return el < 0 ? 0 : Math.min(30, Math.floor(el/D)+1); }
+function progToggle(n){ if(n > progDay()) return; S.prog.done[n] = !S.prog.done[n]; save(); renderProgCard(); if($('v-prog').classList.contains('on')) renderProgList(); }
+function renderProgCard(){
+  const d = progDay(), doneN = Object.values(S.prog.done).filter(Boolean).length, box = $('prog-card');
+  if(d===0){ box.innerHTML = `<button class="rowlink" onclick="go('prog')"><span class="em">🗓️</span><span><b>30 günlük program</b><small>Bırakma gününde başlar</small></span></button>`; return; }
+  if(Date.now()-S.quit > 30*D && S.prog.done[30]){ box.innerHTML = `<button class="rowlink" onclick="go('prog')"><span class="em">🏁</span><span><b>30 günlük programı tamamladın</b><small>${doneN}/30 görev</small></span></button>`; return; }
+  const [t,task,info] = PROGRAM[d-1], ok = !!S.prog.done[d];
+  box.innerHTML = `<div class="sech">30 günlük program <span>${doneN}/30</span></div>
+    <div class="card">
+      <div class="pday">Gün ${d}</div><div class="ptitle">${t}</div><div class="ptask">${task}</div><div class="pinfo">${info}</div>
+      <div class="grid" style="gap:10px"><button class="btn ${ok?'sec':'pri'} sm" onclick="progToggle(${d})">${ok?'✓ Tamamlandı':'Tamamladım'}</button><button class="btn ghost sm" onclick="go('prog')">Tüm program</button></div>
+    </div>`;
+}
+function renderProgList(){
+  const d = progDay();
+  $('prog-list').innerHTML = PROGRAM.map(([t,task],i)=>{
+    const n = i+1, done = !!S.prog.done[n], lock = n > d;
+    return `<div class="pitem ${done?'done':''} ${n===d?'today':''} ${lock?'lock':''}" onclick="progToggle(${n})">
+      <div class="pnum">${done?'✓':n}</div><div><b>${t}</b><span>${lock ? 'Gün '+n+'’de açılır' : task}</span></div></div>`;
+  }).join('');
+}
+
+/* ================= Gelişim grafikleri ================= */
+const CH = {w:340, pad:26};
+function chartTip(id, html, el){
+  $(id).innerHTML = html;
+  el.closest('svg').querySelectorAll('.hit').forEach(h=>h.classList.remove('sel')); el.classList.add('sel');
+}
+function barChart(id, vals, labels, tips, opts={}){
+  const h = opts.h||120, n = vals.length, max = Math.max(1, ...vals), plotW = CH.w-CH.pad;
+  const gap = 2, bw = Math.max(2, plotW/n - gap), base = h;
+  let g = `<line x1="${CH.pad}" x2="${CH.w}" y1="${base}" y2="${base}" stroke="var(--line)"/>`;
+  g += `<line x1="${CH.pad}" x2="${CH.w}" y1="0" y2="0" stroke="var(--line)" stroke-dasharray="2 4"/><text x="${CH.pad-6}" y="4" fill="var(--muted)" font-size="10" text-anchor="end">${max}</text><text x="${CH.pad-6}" y="${base+3}" fill="var(--muted)" font-size="10" text-anchor="end">0</text>`;
+  vals.forEach((v,i)=>{
+    const x = CH.pad + i*(bw+gap) + gap/2, bh = v/max*h, y = base-bh, r = Math.min(4, bw/2, bh);
+    const path = bh>0 ? `M${x},${base} V${y+r} Q${x},${y} ${x+r},${y} H${x+bw-r} Q${x+bw},${y} ${x+bw},${y+r} V${base} Z` : '';
+    g += `<g class="hit" onclick="chartTip('${id}-tip', this.dataset.t, this)" data-t="${tips[i].replace(/"/g,'&quot;')}">
+      <rect x="${x-gap/2}" y="0" width="${bw+gap}" height="${h+18}" fill="transparent"/>
+      ${path?`<path class="bar-m" d="${path}" fill="${opts.color||'var(--teal)'}" opacity=".85"/>`:''}</g>`;
+    if(labels[i]) g += `<text x="${x+bw/2}" y="${base+14}" fill="var(--muted)" font-size="10" text-anchor="middle">${labels[i]}</text>`;
+  });
+  return `<svg viewBox="0 -6 ${CH.w} ${h+26}" role="img">${g}</svg><div class="tip" id="${id}-tip">${opts.hint||'Ayrıntı için bir çubuğa dokun.'}</div>`;
+}
+function lineChart(id, vals, labels, tips, max){
+  const h = 110, n = vals.length, plotW = CH.w-CH.pad-8, X = i => CH.pad+4 + i*(plotW/(n-1)), Y = v => h - v/max*h;
+  let g = '';
+  [0, max/2, max].forEach(v=>{ g += `<line x1="${CH.pad}" x2="${CH.w}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" ${v?'stroke-dasharray="2 4"':''}/><text x="${CH.pad-6}" y="${Y(v)+3}" fill="var(--muted)" font-size="10" text-anchor="end">${v}</text>`; });
+  let d = '', pen = false;
+  vals.forEach((v,i)=>{ if(v==null){ pen=false; return; } d += (pen?'L':'M')+X(i)+','+Y(v)+' '; pen=true; });
+  g += `<path d="${d}" fill="none" stroke="var(--violet)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  vals.forEach((v,i)=>{
+    g += `<g class="hit" onclick="chartTip('${id}-tip', this.dataset.t, this)" data-t="${tips[i].replace(/"/g,'&quot;')}"><rect x="${X(i)-10}" y="-6" width="20" height="${h+24}" fill="transparent"/>
+      ${v!=null?`<circle cx="${X(i)}" cy="${Y(v)}" r="4" fill="var(--violet)" stroke="var(--card)" stroke-width="2"/>`:''}</g>`;
+    if(labels[i]) g += `<text x="${X(i)}" y="${h+14}" fill="var(--muted)" font-size="10" text-anchor="middle">${labels[i]}</text>`;
+  });
+  return `<svg viewBox="0 -6 ${CH.w} ${h+26}" role="img">${g}</svg><div class="tip" id="${id}-tip">Ayrıntı için bir noktaya dokun.</div>`;
+}
+function renderCharts(){
+  const days = [], now = Date.now();
+  for(let i=13;i>=0;i--){ const t = now - i*D; days.push({t, k:dkey(t), d:new Date(t)}); }
+  const dl = d => d.d.getDate()+'/'+(d.d.getMonth()+1);
+  const lab = days.map((d,i)=> i%3===1 || i===13 ? dl(d) : '');
+  const crave = days.map(d=> S.days[d.k]?.review ? S.days[d.k].review.crave : null);
+  const moods = days.map(d=> S.days[d.k]?.review ? MOODS[S.days[d.k].review.mood] : '·');
+  const smoked = days.map(d=> S.slipLog.filter(e=>dkey(e.t)===d.k).reduce((a,e)=>a+(e.n||1),0) + (S.reduce?.log?.[d.k]||0));
+  const hours = Array(24).fill(0), wdays = Array(7).fill(0);
+  S.crises.forEach(c=>{ const d=new Date(c.t); hours[d.getHours()]++; wdays[(d.getDay()+6)%7]++; });
+  const WD = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+  const hasReview = crave.some(v=>v!=null), hasSmoked = smoked.some(Boolean), hasCrisis = S.crises.length > 0;
+  const card = (title, sub, body) => `<div class="card chart" style="margin-top:12px"><div class="k" style="justify-content:space-between"><b style="color:var(--text);font-size:14px">${title}</b><span>${sub}</span></div><div style="margin-top:12px">${body}</div></div>`;
+  const empty = t => `<p class="empty" style="margin:0">${t}</p>`;
+  let h = '';
+  h += card('Sigara isteği düzeyi', '0–10', hasReview
+    ? lineChart('ch-crave', crave, lab, days.map((d,i)=> crave[i]==null ? `${dl(d)}: değerlendirme yok` : `<b>${dl(d)}</b> · istek düzeyi <b>${crave[i]}/10</b>`), 10)
+    : empty('Akşam değerlendirmesi yaptıkça burada istek düzeyinin nasıl değiştiğini göreceksin.'));
+  h += card('Ruh hâli', 'akşam değerlendirmesi', hasReview
+    ? `<div class="moodstrip">${moods.map((m,i)=>`<div><span>${m}</span><small>${days[i].d.getDate()}</small></div>`).join('')}</div>`
+    : empty('Değerlendirme yaptıkça günlük ruh hâlin burada sıralanır.'));
+  h += card('İçilen sigara', 'günlük', hasSmoked
+    ? barChart('ch-smoked', smoked, lab, days.map((d,i)=>`<b>${dl(d)}</b> · <b>${smoked[i]}</b> sigara`), {color:'var(--amber)', h:90})
+    : empty('Son 14 günde kayıtlı sigara yok. 👏'));
+  h += card('Zor saatler', 'krizlerin saate göre', hasCrisis
+    ? barChart('ch-hours', hours, hours.map((_,i)=> i%6===0 ? pad(i) : ''), hours.map((v,i)=>`<b>${pad(i)}:00–${pad(i)}:59</b> · <b>${v}</b> kriz`))
+    : empty('ACİL butonunu kullandıkça en çok zorlandığın saatler burada görünür.'));
+  h += card('Zor günler', 'krizlerin haftanın gününe göre', hasCrisis
+    ? barChart('ch-wd', wdays, WD, wdays.map((v,i)=>`<b>${WD[i]}</b> · <b>${v}</b> kriz`), {h:90})
+    : empty('Kriz kayıtların arttıkça haftanın hangi günlerinin daha zor olduğunu görürsün.'));
+  $('charts').innerHTML = h;
+}
+
+/* ================= Paylaşılabilir başarı kartı ================= */
+function rr(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function drawShareCard(){
+  const c = calc(), W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width=W; cv.height=H;
+  const x = cv.getContext('2d'), F = '-apple-system,"Segoe UI",Roboto,Inter,sans-serif';
+  x.fillStyle = '#0a0c0b'; x.fillRect(0,0,W,H);
+  let gr = x.createRadialGradient(W/2,-80,40,W/2,-80,900); gr.addColorStop(0,'rgba(181,242,61,.30)'); gr.addColorStop(1,'rgba(181,242,61,0)');
+  x.fillStyle = gr; x.fillRect(0,0,W,H);
+  const lg = x.createLinearGradient(0,0,W,H); lg.addColorStop(0,'#b5f23d'); lg.addColorStop(1,'#2dd4bf');
+  // logo
+  x.fillStyle = lg; rr(x,90,90,84,84,26); x.fill();
+  x.strokeStyle = '#08130a'; x.lineWidth = 6; x.lineCap = 'round';
+  x.save(); x.translate(90+6,90+6); x.scale(3,3); x.beginPath();
+  x.moveTo(4,12); x.bezierCurveTo(8,12,10,9,12,6); x.bezierCurveTo(14,9,16,12,20,12);
+  x.moveTo(4,16); x.lineTo(20,16); x.moveTo(7,20); x.lineTo(17,20); x.lineWidth=2.2; x.stroke(); x.restore();
+  x.fillStyle = '#eef2ef'; x.font = `800 52px ${F}`; x.textBaseline='middle'; x.fillText('Nefes', 196, 134);
+  // ana sayı
+  const el = c.el, big = el >= D ? Math.floor(el/D) : Math.floor(el/H), unit = el >= D ? 'gündür sigarasızım' : 'saattir sigarasızım';
+  x.textAlign='center'; x.textBaseline='alphabetic';
+  x.font = `800 340px ${F}`; x.fillStyle = lg; x.fillText(String(big), W/2, 620);
+  x.font = `600 56px ${F}`; x.fillStyle = '#eef2ef'; x.fillText(unit, W/2, 712);
+  // istatistik kutuları
+  const stats = [[tl(c.savedT),'biriktirdim'],[num(c.cigsT),'sigara içmedim'],[Object.keys(S.badges).length+' rozet','kazandım']];
+  stats.forEach(([v,l],i)=>{
+    const bx = 90 + i*310, by = 820;
+    x.fillStyle = '#141917'; rr(x,bx,by,280,200,32); x.fill(); x.strokeStyle='#252d29'; x.lineWidth=2; x.stroke();
+    x.fillStyle = '#eef2ef'; x.font = `750 ${v.length>8?44:54}px ${F}`; x.fillText(v, bx+140, by+105);
+    x.fillStyle = '#87928c'; x.font = `500 30px ${F}`; x.fillText(l, bx+140, by+155);
+  });
+  const ms = MS.filter(m=>el>=m[0]).length;
+  x.fillStyle = '#87928c'; x.font = `500 34px ${F}`; x.fillText(`${ms}/${MS.length} sağlık dönüm noktası · Seviye ${xpInfo(c).n}`, W/2, 1110);
+  x.fillStyle = lg; rr(x,90,1180,W-180,4,2); x.fill();
+  x.fillStyle = '#eef2ef'; x.font = `700 40px ${F}`; x.fillText('Her nefes yeni bir başlangıç.', W/2, 1262);
+  return cv;
+}
+let shareBlob = null;
+function openShareCard(){
+  const cv = drawShareCard();
+  cv.toBlob(b=>{ shareBlob = b; });
+  openSheet(`<h3>Başarı kartın</h3><p>Paylaş ya da indirip istediğin yere gönder.</p>
+    <img class="shareimg" src="${cv.toDataURL('image/png')}" alt="Başarı kartı">
+    <button class="btn pri" onclick="shareCard()">Paylaş</button>
+    <button class="btn sec" onclick="downloadCard()">İndir</button>
+    <button class="btn ghost" style="border:none" onclick="closeSheet()">Kapat</button>`);
+}
+async function shareCard(){
+  if(!shareBlob){ toast('Hazırlanıyor, tekrar dene'); return; }
+  const f = new File([shareBlob], 'nefes-basari.png', {type:'image/png'});
+  try{
+    if(navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], text:'Sigarayı bırakma yolculuğumda ilerliyorum 🌱'}); return; }
+  }catch(e){ if(e && e.name==='AbortError') return; }
+  downloadCard();
+}
+function downloadCard(){
+  if(!shareBlob) return;
+  const a = document.createElement('a'); a.href = URL.createObjectURL(shareBlob); a.download = 'nefes-basari.png';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+  toast('Kart indirildi');
 }
 
 /* ================= Yedekleme ================= */
