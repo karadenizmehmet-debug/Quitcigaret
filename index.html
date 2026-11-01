@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0a0c0b">
+<meta name="author" content="Mehmet Karadeniz, 2026-2027">
+<meta name="copyright" content="Mehmet Karadeniz, 2026-2027">
+<title>Nefes</title>
+<meta name="description" content="Nefes – sigara bırakma takip uygulaması">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+:root{
+  --bg:#0a0c0b; --card:#141917; --card2:#1b211e; --line:#252d29; --text:#eef2ef; --muted:#87928c;
+  --lime:#b5f23d; --teal:#2dd4bf; --violet:#8b5cf6; --blue:#3b82f6; --rose:#fb7185; --amber:#fbbf24;
+  --grad:linear-gradient(135deg,#b5f23d 0%,#2dd4bf 100%);
+  --grad2:linear-gradient(135deg,#8b5cf6 0%,#3b82f6 100%);
+  --r:24px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{background:radial-gradient(700px 420px at 50% -140px,rgba(181,242,61,.16),transparent 70%),var(--bg);background-attachment:fixed;
+  color:var(--text);font-family:-apple-system,"Segoe UI",Roboto,Inter,sans-serif;padding-top:env(safe-area-inset-top);
+  overflow-x:hidden;user-select:none;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--lime)}
+.wrap{max-width:480px;margin:0 auto;padding:18px 16px 130px}
+.view{display:none}
+.view.on{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* Üst bar */
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.02em}
+.logo i{width:30px;height:30px;border-radius:10px;background:var(--grad);display:grid;place-items:center}
+.logo i svg{width:18px;height:18px}
+.tb{display:flex;gap:8px}
+.iconbtn{width:40px;height:40px;border-radius:13px;background:var(--card);border:1px solid var(--line);color:var(--text);display:grid;place-items:center;position:relative}
+.iconbtn svg{width:19px;height:19px}
+.back{background:none;border:none;color:var(--muted);font-size:15px;display:flex;align-items:center;gap:4px;margin-bottom:8px;padding:6px 0}
+.title{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 0 4px}
+.sub{color:var(--muted);font-size:14px;margin-bottom:18px;line-height:1.5}
+.sech{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:26px 4px 12px;display:flex;justify-content:space-between}
+.sech span{text-transform:none;letter-spacing:0}
+
+/* Kartlar */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;position:relative;overflow:hidden}
+.card+.card{margin-top:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid .card+.card{margin-top:0}
+.k{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.v{font-size:26px;font-weight:750;letter-spacing:-.03em;margin-top:8px;font-variant-numeric:tabular-nums}
+.v small{font-size:13px;font-weight:500;color:var(--muted);margin-left:3px;letter-spacing:0}
+.ic{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;margin-bottom:12px}
+.ic svg{width:17px;height:17px}
+.motto{background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box;border:1px solid transparent}
+.motto .q{font-size:17px;line-height:1.45;font-weight:600;margin-top:8px}
+
+/* Hero */
+.hero{display:flex;flex-direction:column;align-items:center;padding:26px 18px 20px;
+  background:radial-gradient(300px 200px at 50% 30%,rgba(45,212,191,.10),transparent 70%),var(--card)}
+.ringbox{position:relative;width:230px;height:230px}
+.ringbox svg{transform:rotate(-90deg)}
+.ringbox .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ringbox .d{font-size:68px;font-weight:800;letter-spacing:-.05em;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ringbox .l{color:var(--muted);font-size:13px;margin-top:6px}
+.tiles{display:flex;gap:10px;margin-top:20px;width:100%}
+.tile{flex:1;background:var(--card2);border-radius:16px;padding:12px 6px;text-align:center}
+.tile b{display:block;font-size:22px;font-variant-numeric:tabular-nums;font-weight:700}
+.tile span{font-size:11px;color:var(--muted)}
+
+.bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;background:var(--grad);border-radius:8px;transition:width .6s}
+.nextt{font-size:16px;font-weight:600;line-height:1.4;margin-top:8px}
+.meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:8px}
+
+/* Hafta şeridi */
+.week{display:flex;justify-content:space-between;gap:6px;margin-top:14px}
+.wd{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.wd b{width:100%;max-width:40px;aspect-ratio:1;border-radius:12px;display:grid;place-items:center;font-size:14px;color:var(--text);background:var(--card2);border:1px solid var(--line)}
+.wd.ok b{background:rgba(181,242,61,.14);border-color:rgba(181,242,61,.45);color:var(--lime)}
+.wd.slip b{background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.45);color:var(--amber)}
+.wd.today b{box-shadow:0 0 0 2px var(--teal)}
+.wd.future b{opacity:.45}
+
+/* Hedefler */
+.goal{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}
+.goal:last-child{border:none;padding-bottom:2px}
+.goal:first-child{padding-top:2px}
+.cb{width:28px;height:28px;border-radius:9px;border:2px solid var(--line);display:grid;place-items:center;flex:none;transition:.2s}
+.goal.done .cb{background:var(--lime);border-color:var(--lime)}
+.goal.done .cb::after{content:"";width:10px;height:6px;border-left:2.5px solid #0a0c0b;border-bottom:2.5px solid #0a0c0b;transform:rotate(-45deg) translate(1px,-1px)}
+.goal .gt{flex:1;font-size:15px}
+.goal.done .gt{color:var(--muted);text-decoration:line-through}
+.goal .auto{font-size:10px;color:var(--muted);display:block;margin-top:2px;text-decoration:none}
+.cnt{display:flex;align-items:center;gap:8px}
+.cnt button{width:30px;height:30px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:17px}
+.cnt b{min-width:38px;text-align:center;font-variant-numeric:tabular-nums}
+
+/* Tetikleyici çubukları */
+.tr{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:14px}
+.tr .n{width:130px;flex:none}
+.tr .b{flex:1;height:10px;background:var(--line);border-radius:10px;overflow:hidden}
+.tr .b i{display:block;height:100%;background:var(--grad2);border-radius:10px}
+.tr .x{width:24px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.empty{color:var(--muted);font-size:14px;line-height:1.5;margin-top:8px}
+
+/* Butonlar */
+.btn{width:100%;border:none;border-radius:18px;padding:17px;font-size:15px;font-weight:700;margin-top:12px;transition:transform .15s}
+.btn:active{transform:scale(.98)}
+.btn.pri{background:var(--grad);color:#08130a}
+.btn.sec{background:var(--card2);color:var(--text);border:1px solid var(--line)}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.btn.dng{background:transparent;color:var(--rose);border:1px solid rgba(251,113,133,.3)}
+.btn.sm{padding:12px;font-size:14px;border-radius:14px}
+.rowlink{display:flex;align-items:center;gap:14px;width:100%;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;color:var(--text);text-align:left;margin-top:12px;text-decoration:none}
+.rowlink .em{font-size:26px}
+.rowlink b{display:block;font-size:15px}
+.rowlink small{color:var(--muted);font-size:12px}
+.rowlink::after{content:"›";margin-left:auto;color:var(--muted);font-size:22px}
+
+/* Sağlık */
+.organs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.organ{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 6px 12px;text-align:center}
+.organ .rg{position:relative;width:66px;height:66px;margin:0 auto}
+.organ .rg svg{transform:rotate(-90deg)}
+.organ .rg span{position:absolute;inset:0;display:grid;place-items:center;font-size:22px}
+.organ b{display:block;font-size:13px;margin-top:8px}
+.organ small{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.tl{position:relative;padding-left:30px}
+.tl::before{content:"";position:absolute;left:11px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.ms{position:relative;padding:0 0 18px}
+.ms .dot{position:absolute;left:-30px;top:2px;width:24px;height:24px;border-radius:50%;background:var(--bg);border:2px solid var(--line);display:grid;place-items:center;font-size:11px;color:var(--muted)}
+.ms.done .dot{background:var(--lime);border-color:var(--lime);color:#0a0c0b;font-weight:800}
+.ms.now .dot{border-color:var(--teal);box-shadow:0 0 0 5px rgba(45,212,191,.15)}
+.ms .box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+.ms.now .box{border-color:rgba(45,212,191,.45)}
+.ms .tm{font-size:12px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.06em}
+.ms.done .tm{color:var(--lime)}
+.ms .ds{font-size:15px;font-weight:600;margin-top:4px;line-height:1.4}
+.ms .ex{font-size:13px;color:var(--muted);line-height:1.5;margin-top:6px;display:none}
+.ms.open .ex{display:block}
+.ms .pb{height:5px;background:var(--line);border-radius:5px;margin-top:10px;overflow:hidden}
+.ms .pb i{display:block;height:100%;background:var(--grad)}
+.note{font-size:12px;color:var(--muted);line-height:1.6;margin-top:8px}
+
+/* Tasarruf */
+.money-hero{text-align:center;padding:28px 18px;background:radial-gradient(260px 160px at 50% 0,rgba(181,242,61,.14),transparent 70%),var(--card)}
+.money-hero .big{font-size:48px;font-weight:800;letter-spacing:-.04em;margin:8px 0 4px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.presets button{background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:99px;padding:9px 14px;font-size:13px}
+
+/* Başarı */
+.level{background:radial-gradient(260px 160px at 85% 0,rgba(139,92,246,.25),transparent 70%),var(--card);display:flex;align-items:center;gap:16px}
+.lvbadge{width:72px;height:72px;flex:none;border-radius:22px;background:var(--grad2);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;box-shadow:0 10px 30px rgba(139,92,246,.35)}
+.lvbadge small{font-size:10px;opacity:.85;letter-spacing:.06em}
+.lvbadge b{font-size:28px;line-height:1}
+.level .info{flex:1}
+.level .nm{font-size:20px;font-weight:750}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.bdg{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 8px;text-align:center}
+.bdg .hx{width:58px;height:58px;margin:0 auto;display:grid;place-items:center;font-size:28px;
+  clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);background:var(--line)}
+.bdg.on .hx{background:var(--grad2)}
+.bdg:not(.on) .hx span{filter:grayscale(1);opacity:.35}
+.bdg b{display:block;font-size:12.5px;margin-top:8px;line-height:1.25}
+.bdg small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.bdg .pb{height:4px;background:var(--line);border-radius:4px;margin:8px 6px 0;overflow:hidden}
+.bdg .pb i{display:block;height:100%;background:var(--grad2)}
+.calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.calhead b{font-size:16px}
+.calhead button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:18px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.cal .h{font-size:11px;color:var(--muted);padding-bottom:4px}
+.cal .c{aspect-ratio:1;border-radius:10px;display:grid;place-items:center;font-size:13px;background:var(--card2);color:var(--muted)}
+.cal .c.ok{background:rgba(181,242,61,.16);color:var(--lime);font-weight:700}
+.cal .c.slip{background:rgba(251,191,36,.16);color:var(--amber);font-weight:700}
+.cal .c.today{box-shadow:0 0 0 2px var(--teal)}
+.cal .c.blank{background:none}
+.legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-top:12px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.rep{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
+.rep .v{font-size:22px;margin-top:4px}
+
+/* Form */
+label{display:block;font-size:13px;color:var(--muted);margin:16px 0 8px}
+input,textarea{width:100%;background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:16px;padding:15px 16px;font-size:16px;font-family:inherit;outline:none;color-scheme:dark}
+textarea{resize:none;height:90px;background:var(--card2)}
+input:focus,textarea:focus{border-color:var(--lime)}
+input[type=range]{padding:0;border:none;background:none;accent-color:var(--lime);height:30px}
+input[type=time]{width:auto;max-width:112px;flex:none;padding:8px 10px;font-size:14px;border-radius:12px;background:var(--card2)}
+
+/* Bildirimler */
+.nrow{display:flex;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid var(--line)}
+.nrow:last-child{border:none}
+.nrow .t{flex:1}
+.nrow .t b{display:block;font-size:15px;font-weight:600}
+.nrow .t small{color:var(--muted);font-size:12px;line-height:1.4;display:block;margin-top:2px}
+.sw{position:relative;width:48px;height:28px;flex:none;margin:0}
+.sw input{opacity:0;width:0;height:0;position:absolute}
+.sw span{position:absolute;inset:0;background:var(--line);border-radius:28px;transition:.2s}
+.sw span::before{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.sw input:checked+span{background:var(--lime)}
+.sw input:checked+span::before{transform:translateX(20px);background:#08130a}
+.del{background:none;border:none;color:var(--rose);font-size:20px;width:30px}
+
+/* Bilgi merkezi */
+.acc{background:var(--card);border:1px solid var(--line);border-radius:20px;margin-top:10px;overflow:hidden}
+.acc .q{display:flex;align-items:center;gap:12px;padding:16px;font-size:15px;font-weight:600;width:100%;background:none;border:none;color:var(--text);text-align:left}
+.acc .q .em{font-size:22px}
+.acc .q::after{content:"+";margin-left:auto;color:var(--muted);font-size:20px;transition:.2s}
+.acc.open .q::after{transform:rotate(45deg)}
+.acc .a{display:none;padding:0 16px 16px;font-size:14px;line-height:1.65;color:#c9d1cc}
+.acc.open .a{display:block}
+.acc .a p+p{margin-top:10px}
+.acc .a ul{padding-left:18px;margin-top:8px}
+.acc .a li{margin-top:4px}
+.help{background:var(--grad2);border:none;color:#fff}
+.help small{color:rgba(255,255,255,.8)}
+
+/* Değerlendirme */
+.moods{display:flex;justify-content:space-between;gap:6px;margin-top:8px}
+.moods button{flex:1;aspect-ratio:1;max-width:56px;border-radius:16px;background:var(--card2);border:2px solid var(--line);font-size:26px}
+.moods button.on{border-color:var(--lime);background:rgba(181,242,61,.12)}
+.plan{counter-reset:p;margin:14px 0 4px}
+.plan div{counter-increment:p;position:relative;padding:10px 0 10px 40px;font-size:14px;line-height:1.5;border-bottom:1px solid var(--line)}
+.plan div:last-child{border:none}
+.plan div::before{content:counter(p);position:absolute;left:0;top:9px;width:26px;height:26px;border-radius:9px;background:var(--card2);color:var(--lime);display:grid;place-items:center;font-weight:800;font-size:13px}
+.kept{display:flex;gap:8px;margin-top:12px}
+.kept div{flex:1;background:var(--card2);border-radius:14px;padding:12px 8px;text-align:center}
+.kept b{display:block;font-size:17px}
+.kept small{font-size:11px;color:var(--muted)}
+
+/* Yeni bileşenler */
+.milestrip{display:flex;gap:4px;margin-top:14px}
+.milestrip i{flex:1;height:8px;border-radius:4px;background:var(--line)}
+.milestrip i.on{background:var(--grad)}
+.stepper{display:flex;align-items:center;justify-content:center;gap:26px;margin-top:6px}
+.stepper button{width:52px;height:52px;border-radius:16px;background:var(--card2);border:1px solid var(--line);color:var(--text);font-size:26px}
+.stepper b{font-size:44px;min-width:60px;text-align:center;font-variant-numeric:tabular-nums}
+.minichips{display:flex;flex-wrap:wrap;gap:8px}
+.minichips button{background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:99px;padding:9px 12px;font-size:13px}
+.minichips button.on{border-color:var(--lime);color:var(--lime)}
+.att{display:flex;flex-direction:column;gap:3px;padding:12px 0 0;margin-top:12px;border-top:1px solid var(--line)}
+.att b{font-size:14px}
+.att.cur b{color:var(--lime)}
+.att span{font-size:13px;color:var(--muted)}
+pre.code{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:11.5px;line-height:1.5;white-space:pre-wrap;word-break:break-all;color:#c9d1cc;user-select:text;margin-top:8px}
+.steps{padding-left:18px;font-size:13.5px;color:#c9d1cc;line-height:1.6}
+.steps li{margin-top:4px}
+.stat{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:8px 0}
+.stat span{color:var(--muted)}
+details summary{cursor:pointer;color:var(--lime);font-size:14px;margin-top:14px}
+
+/* Kurulum */
+.intro{padding:50px 0 16px}
+.intro .logo i{width:56px;height:56px;border-radius:18px;margin-bottom:22px}
+.intro .logo i svg{width:30px;height:30px}
+.intro h2{font-size:40px;letter-spacing:-.04em;line-height:1.05;font-weight:800}
+.intro h2 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* Alt menü */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:5;padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+  background:rgba(10,12,11,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--line)}
+nav .in{max-width:480px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+nav button{flex:1;background:none;border:none;color:var(--muted);font-size:10.5px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0}
+nav button.on{color:var(--lime)}
+nav svg{width:22px;height:22px}
+nav .sos{flex:none;width:70px;height:70px;margin:-34px 4px 0;border-radius:50%;background:var(--grad);color:#08130a;font-weight:800;font-size:11px;letter-spacing:.04em;
+  justify-content:center;box-shadow:0 10px 30px rgba(181,242,61,.35),0 0 0 6px var(--bg);animation:pulse 2.6s infinite}
+nav .sos svg{width:24px;height:24px}
+@keyframes pulse{0%,100%{box-shadow:0 10px 30px rgba(181,242,61,.35),0 0 0 6px var(--bg)}50%{box-shadow:0 10px 40px rgba(181,242,61,.6),0 0 0 6px var(--bg)}}
+
+/* Kriz ekranı */
+.ov{position:fixed;inset:0;z-index:30;background:radial-gradient(500px 400px at 50% 0,rgba(139,92,246,.22),transparent 70%),var(--bg);display:none;overflow-y:auto}
+.ov.on{display:block;animation:fade .3s}
+.ov .in{max-width:480px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(30px + env(safe-area-inset-bottom));min-height:100%;display:flex;flex-direction:column}
+.ov .x{align-self:flex-end;width:40px;height:40px;border-radius:50%;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:20px}
+.cs{display:none;flex:1;flex-direction:column}
+.cs.on{display:flex;animation:fade .3s}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.chips button{background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:20px;padding:18px 12px;font-size:14px;font-weight:600;text-align:left;display:flex;flex-direction:column;gap:10px}
+.chips button span{font-size:26px}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tool{background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:22px;padding:18px 14px;text-align:left}
+.tool.wide{grid-column:span 2;display:flex;align-items:center;gap:14px;background:var(--grad2);border:none}
+.tool.wide .ic{background:rgba(255,255,255,.18);margin:0;width:46px;height:46px;border-radius:14px}
+.tool b{display:block;font-size:15px;margin-top:2px}
+.tool small{color:var(--muted);font-size:12px}
+.tool.wide small{color:rgba(255,255,255,.75)}
+.advice{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--violet);border-radius:16px;padding:14px 16px;font-size:14px;line-height:1.5;margin:4px 0 16px}
+.breath{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.bwrap{position:relative;width:270px;height:270px;margin:20px 0 30px}
+.bwrap svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.orb{position:absolute;inset:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#60a5fa,#8b5cf6 70%);
+  display:grid;place-items:center;transform:scale(.62);box-shadow:0 0 60px rgba(139,92,246,.45);transition:transform 4s ease-in-out}
+.orb span{font-size:20px;font-weight:600;color:#fff}
+.btime{font-size:15px;color:var(--muted);font-variant-numeric:tabular-nums}
+.arena{position:relative;flex:1;min-height:380px;background:var(--card);border:1px solid var(--line);border-radius:24px;overflow:hidden;margin-top:12px}
+.bub{position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.7),rgba(45,212,191,.5) 40%,rgba(139,92,246,.45));
+  animation:pop-in .3s ease;transition:transform .15s,opacity .15s}
+.bub.gone{transform:scale(1.5);opacity:0}
+@keyframes pop-in{from{transform:scale(0)}to{transform:scale(1)}}
+.gbar{display:flex;justify-content:space-between;align-items:center}
+.gbar b{font-size:24px;font-variant-numeric:tabular-nums}
+.center{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;align-items:center}
+.emoji{font-size:64px;margin-bottom:18px}
+.center h2{font-size:28px;letter-spacing:-.03em;line-height:1.2}
+.center p{color:var(--muted);line-height:1.55;margin-top:10px;max-width:330px}
+
+/* Alt sayfa, bildirim şeridi, toast */
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:none;align-items:flex-end}
+.sheet.on{display:flex}
+.sheet .box{background:var(--card);width:100%;max-width:480px;margin:0 auto;border-radius:28px 28px 0 0;padding:26px 16px calc(20px + env(safe-area-inset-bottom));animation:up .25s ease;border-top:1px solid var(--line);max-height:92vh;overflow-y:auto}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.sheet h3{font-size:22px;margin-bottom:6px}
+.sheet p{color:var(--muted);line-height:1.5;font-size:14px}
+.toast{position:fixed;left:50%;bottom:120px;transform:translate(-50%,20px);background:var(--card2);border:1px solid var(--line);color:var(--text);
+  padding:12px 18px;border-radius:14px;font-size:14px;z-index:60;opacity:0;transition:.3s;pointer-events:none;max-width:90%;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.banner{position:fixed;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));max-width:456px;margin:0 auto;z-index:70;background:var(--card2);border:1px solid var(--line);
+  border-radius:18px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;box-shadow:0 14px 40px rgba(0,0,0,.5);transform:translateY(-140%);transition:transform .35s}
+.banner.on{transform:none}
+.banner i{width:34px;height:34px;flex:none;border-radius:11px;background:var(--grad);display:grid;place-items:center;font-style:normal}
+.banner b{display:block;font-size:14px}
+.banner span{font-size:13px;color:var(--muted);line-height:1.4}
+.foot{text-align:center;font-size:11px;color:var(--muted);margin-top:30px;opacity:.7}
+.link{background:none;border:none;color:var(--muted);font-size:13px;text-decoration:underline;margin-top:16px;width:100%}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="gL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b5f23d"/><stop offset="1" stop-color="#2dd4bf"/></linearGradient>
+    <linearGradient id="gV" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#3b82f6"/></linearGradient>
+  </defs>
+</svg>
+
+<!-- ============ KURULUM ============ -->
+<div class="wrap view" id="v-setup">
+  <div class="intro">
+    <div class="logo"><i><svg viewBox="0 0 24 24" fill="none" stroke="#08130a" stroke-width="2.4" stroke-linecap="round"><path d="M4 12c4 0 6-3 8-6 2 3 4 6 8 6M4 16h16M7 20h10"/></svg></i></div>
+    <h2>Her nefes<br><em>yeni bir başlangıç.</em></h2>
+    <p class="sub" style="margin-top:14px">Birkaç bilgi gir; ilerlemeni, tasarrufunu ve sağlığındaki değişimi biz hesaplayalım.</p>
+  </div>
+  <label>Bıraktığın an</label><input type="datetime-local" id="f-quit">
+  <label>Günde kaç sigara içiyordun?</label><input type="number" id="f-per" inputmode="numeric" placeholder="20" min="1">
+  <label>Paket fiyatı (₺)</label><input type="number" id="f-price" inputmode="decimal" placeholder="100" min="0">
+  <label>Paketteki sigara sayısı</label><input type="number" id="f-pack" inputmode="numeric" placeholder="20" min="1">
+  <button class="btn pri" style="margin-top:28px" onclick="saveSetup()">Yolculuğa başla</button>
+  <div class="sech" style="margin-top:34px">Daha önce kullandın mı?</div>
+  <button class="btn sec" style="margin-top:0" onclick="$('imp-file2').click()">💾 Yedek dosyasından geri yükle</button>
+  <input type="file" id="imp-file2" accept=".json,application/json,text/plain" style="display:none" onchange="importFile(this)">
+  <button class="btn sec" onclick="openCloudSetup()">☁️ Bulut koduyla bağlan</button>
+  <div class="foot">Mehmet Karadeniz, 2026-2027</div>
+</div>
+
+<!-- ============ ÖZET ============ -->
+<div class="wrap view" id="v-home">
+  <div class="top">
+    <div class="logo"><i><svg viewBox="0 0 24 24" fill="none" stroke="#08130a" stroke-width="2.4" stroke-linecap="round"><path d="M4 12c4 0 6-3 8-6 2 3 4 6 8 6M4 16h16M7 20h10"/></svg></i>Nefes</div>
+    <div class="tb">
+      <button class="iconbtn" onclick="go('learn')" aria-label="Bilgi merkezi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5zM4 19.5V21h16"/></svg></button>
+      <button class="iconbtn" onclick="go('notif')" aria-label="Bildirimler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg></button>
+      <button class="iconbtn" onclick="go('set')" aria-label="Ayarlar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
+    </div>
+  </div>
+
+  <div class="card hero">
+    <div class="ringbox">
+      <svg width="230" height="230" viewBox="0 0 230 230">
+        <circle cx="115" cy="115" r="103" fill="none" stroke="#252d29" stroke-width="14"/>
+        <circle id="heroRing" cx="115" cy="115" r="103" fill="none" stroke="url(#gL)" stroke-width="14" stroke-linecap="round" stroke-dasharray="647.2" stroke-dashoffset="647.2" style="transition:stroke-dashoffset .8s"/>
+      </svg>
+      <div class="c"><div class="d" id="days">0</div><div class="l">gün sigarasız</div></div>
+    </div>
+    <div class="tiles">
+      <div class="tile"><b id="hh">00</b><span>saat</span></div>
+      <div class="tile"><b id="mm">00</b><span>dakika</span></div>
+      <div class="tile"><b id="ss">00</b><span>saniye</span></div>
+    </div>
+  </div>
+
+  <div class="card motto" style="margin-top:12px">
+    <div class="k">✦ Günün mesajı</div>
+    <div class="q" id="motto"></div>
+  </div>
+
+  <div id="recovery"></div>
+
+  <div class="card" style="margin-top:12px" onclick="go('ach')">
+    <div class="k" style="justify-content:space-between"><span id="today"></span><span id="lvchip" style="color:var(--violet);font-weight:700"></span></div>
+    <div class="week" id="week"></div>
+  </div>
+
+  <div class="grid" style="margin-top:12px">
+    <div class="card" onclick="go('save')">
+      <div class="ic" style="background:rgba(181,242,61,.14);color:var(--lime)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M16 15h2"/></svg></div>
+      <div class="k">Biriktirilen</div><div class="v" id="money">₺0</div>
+    </div>
+    <div class="card">
+      <div class="ic" style="background:rgba(45,212,191,.14);color:var(--teal)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 15h14v3H3zM20 15v3M17 11c0-2 3-2 3-5"/><path d="M4 4l16 16"/></svg></div>
+      <div class="k">İçilmeyen sigara</div><div class="v" id="cigs">0</div>
+    </div>
+    <div class="card">
+      <div class="ic" style="background:rgba(139,92,246,.16);color:var(--violet)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg></div>
+      <div class="k">Tahmini kazanılan ömür</div><div class="v" id="life">0</div>
+    </div>
+    <div class="card">
+      <div class="ic" style="background:rgba(251,191,36,.14);color:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg></div>
+      <div class="k">Sigarasız gün oranı</div><div class="v" id="succ">%100</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <div class="k">Sağlık · sıradaki iyileşme aşaması</div>
+    <div class="nextt" id="next-t">—</div>
+    <div class="bar"><i id="next-b" style="width:0"></i></div>
+    <div class="meta"><span id="next-p"></span><span id="next-r"></span></div>
+  </div>
+
+  <div class="sech">Bugünkü hedefler <span id="goal-sum"></span></div>
+  <div class="card" id="goals"></div>
+  <div id="review-card"></div>
+  <div id="backup-warn"></div>
+
+  <div class="sech">Tetikleyicilerin</div>
+  <div class="card" id="trig-card"></div>
+
+  <button class="rowlink" onclick="go('learn')"><span class="em">📚</span><span><b>Bilgi merkezi</b><small>Yoksunluk, ilk hafta, stres, kilo ve daha fazlası</small></span></button>
+
+  <button class="btn ghost" style="margin-top:22px" onclick="openSlip()">Bir tane içtim</button>
+</div>
+
+<!-- ============ SAĞLIK ============ -->
+<div class="wrap view" id="v-health">
+  <div class="title">Vücudundaki değişim</div>
+  <div class="sub">Sigarayı bıraktığın andan itibaren vücudun kendini onarmaya başlar.</div>
+  <div class="card" id="hsum"></div>
+  <div class="sech">Zaman çizelgesi</div>
+  <div class="tl" id="timeline"></div>
+  <p class="note">Süreler Dünya Sağlık Örgütü (WHO) ve ABD Hastalık Kontrol Merkezi (CDC) gibi kaynaklarda yer alan genel ortalamalardır; kişiden kişiye değişir. Kişisel bir ölçüm değildir; bilgilendirme amaçlıdır ve tıbbi tavsiye yerine geçmez. Ayrıntı için bir aşamaya dokun.</p>
+</div>
+
+<!-- ============ TASARRUF ============ -->
+<div class="wrap view" id="v-save">
+  <div class="title">Tasarruf</div>
+  <div class="sub">Sigaraya gitmeyen her lira cebinde kalıyor.</div>
+  <div class="card money-hero">
+    <div class="k" style="justify-content:center">Şu ana kadar biriktirdiğin</div>
+    <div class="big" id="sv-total">₺0</div>
+    <div class="k" style="justify-content:center" id="sv-packs"></div>
+  </div>
+  <div class="sech">Bırakmaya devam edersen</div>
+  <div class="grid">
+    <div class="card"><div class="k">Günlük</div><div class="v" id="sv-d">₺0</div></div>
+    <div class="card"><div class="k">Haftalık</div><div class="v" id="sv-w">₺0</div></div>
+    <div class="card"><div class="k">Aylık</div><div class="v" id="sv-m">₺0</div></div>
+    <div class="card"><div class="k">Yıllık</div><div class="v" id="sv-y">₺0</div></div>
+  </div>
+  <div class="sech">Tasarruf hedefin</div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font-size:18px;font-weight:700" id="g-name">Hedef belirle</div>
+      <div style="font-size:14px;color:var(--muted)" id="g-pct"></div>
+    </div>
+    <div class="bar" style="height:12px"><i id="g-bar" style="width:0"></i></div>
+    <div class="meta"><span id="g-have"></span><span id="g-left"></span></div>
+    <label>Hedef</label>
+    <input id="g-in-name" placeholder="Örn. Yeni telefon">
+    <div class="presets" id="presets"></div>
+    <label>Tutar (₺)</label>
+    <input type="number" id="g-in-amt" inputmode="decimal" placeholder="30000">
+    <button class="btn pri" onclick="saveGoal()">Hedefi kaydet</button>
+  </div>
+</div>
+
+<!-- ============ BAŞARI ============ -->
+<div class="wrap view" id="v-ach">
+  <div class="title">Başarılar</div>
+  <div class="sub">Rozetlerin ve seviyen kalıcıdır; bir kayma yaşasan bile silinmez.</div>
+  <div class="card level">
+    <div class="lvbadge"><small>SEVİYE</small><b id="lv-n">1</b></div>
+    <div class="info">
+      <div class="nm" id="lv-name">Başlangıç</div>
+      <div class="bar"><i id="lv-bar" style="width:0;background:var(--grad2)"></i></div>
+      <div class="meta"><span id="lv-xp"></span><span id="lv-next"></span></div>
+    </div>
+  </div>
+  <div class="sech">Rozetler <span id="bdg-cnt"></span></div>
+  <div class="badges" id="badges"></div>
+  <div class="sech">Takvim</div>
+  <div class="card">
+    <div class="calhead"><button onclick="calMove(-1)">‹</button><b id="cal-title"></b><button onclick="calMove(1)">›</button></div>
+    <div class="cal" id="cal"></div>
+    <div class="legend"><span><i style="background:var(--lime)"></i>Sigarasız</span><span><i style="background:var(--amber)"></i>Kayma</span></div>
+  </div>
+  <div class="sech">Haftalık rapor <span>son 7 gün</span></div>
+  <div class="card"><div class="rep" id="report"></div></div>
+  <div class="sech">Azaltma <span>başladığından beri</span></div>
+  <div class="card" id="reduce"></div>
+  <div class="sech">Denemelerin</div>
+  <div class="card" id="attempts"></div>
+</div>
+
+<!-- ============ YEDEKLEME ============ -->
+<div class="wrap view" id="v-backup">
+  <button class="back" onclick="go('set')">‹ Ayarlar</button>
+  <div class="title">Yedekleme ve senkronizasyon</div>
+  <div class="sub">Telefon değiştirdiğinde ya da tarayıcı verileri silindiğinde ilerlemen kaybolmasın.</div>
+  <div class="card" id="bk-status"></div>
+  <div class="sech">Dosya yedeği</div>
+  <div class="card">
+    <p class="empty" style="margin:0">Tüm verilerin tek bir JSON dosyasına kaydedilir. Dosyayı Google Drive’a, e-postana ya da WhatsApp’ta kendine gönderebilirsin.</p>
+    <button class="btn pri sm" onclick="backupShare()">Yedeği paylaş / kaydet</button>
+    <div class="grid" style="gap:10px"><button class="btn sec sm" onclick="backupDownload()">İndir</button><button class="btn sec sm" onclick="backupCopy()">Panoya kopyala</button></div>
+  </div>
+  <div class="sech">Geri yükle</div>
+  <div class="card">
+    <button class="btn sec sm" style="margin-top:0" onclick="$('imp-file').click()">Yedek dosyası seç</button>
+    <input type="file" id="imp-file" accept=".json,application/json,text/plain" style="display:none" onchange="importFile(this)">
+    <textarea id="imp-text" placeholder="…ya da yedek metnini buraya yapıştır" style="margin-top:12px"></textarea>
+    <button class="btn sec sm" onclick="importText($('imp-text').value)">Metinden geri yükle</button>
+  </div>
+  <div class="sech">Bulut senkronizasyonu <span>isteğe bağlı</span></div>
+  <div class="card" id="sync-card"></div>
+</div>
+
+<!-- ============ BİLGİ MERKEZİ ============ -->
+<div class="wrap view" id="v-learn">
+  <button class="back" onclick="go('home')">‹ Özet</button>
+  <div class="title">Bilgi merkezi</div>
+  <div class="sub">Ne yaşadığını anlamak, onunla baş etmeyi kolaylaştırır.</div>
+  <a class="rowlink help" href="tel:171"><span class="em">📞</span><span><b>ALO 171 Sigara Bırakma Danışma Hattı</b><small>Sağlık Bakanlığı · ücretsiz uzman desteği</small></span></a>
+  <div id="learn"></div>
+  <p class="note" style="margin-top:16px">Bu bölüm genel bilgilendirme amaçlıdır. İlaç veya nikotin bandı gibi destekler için mutlaka doktoruna danış.</p>
+</div>
+
+<!-- ============ BİLDİRİMLER ============ -->
+<div class="wrap view" id="v-notif">
+  <button class="back" onclick="go('home')">‹ Özet</button>
+  <div class="title">Bildirimler</div>
+  <div class="sub">Az ama yerinde. Hepsini istediğin gibi aç, kapat ve saatini ayarla.</div>
+  <button class="btn sec sm" id="perm-btn" onclick="askPerm()" style="margin:0 0 12px">Bildirimlere izin ver</button>
+  <div class="card" style="padding:4px 18px" id="notif-list"></div>
+  <div class="sech">Özel hatırlatmalar</div>
+  <div class="card" style="padding:4px 18px" id="custom-list"></div>
+  <div class="card" style="margin-top:12px">
+    <div style="display:flex;gap:10px;align-items:center">
+      <input type="time" id="c-time" value="15:00">
+      <input id="c-text" placeholder="Örn. Ara öğünde su iç" style="padding:10px 12px;font-size:15px;border-radius:12px;background:var(--card2)">
+    </div>
+    <button class="btn pri sm" onclick="addCustom()">Hatırlatma ekle</button>
+  </div>
+  <p class="note" style="margin-top:14px" id="notif-note"></p>
+</div>
+
+<!-- ============ AYARLAR ============ -->
+<div class="wrap view" id="v-set">
+  <button class="back" onclick="go('home')">‹ Özet</button>
+  <div class="title">Ayarlar</div>
+  <div class="sub">Bilgilerini güncelle.</div>
+  <button class="rowlink" style="margin-top:0" onclick="go('backup')"><span class="em">💾</span><span><b>Yedekleme ve senkronizasyon</b><small id="set-bk"></small></span></button>
+  <label>Bıraktığın an</label><input type="datetime-local" id="s-quit">
+  <label>Günlük sigara</label><input type="number" id="s-per" inputmode="numeric">
+  <label>Paket fiyatı (₺)</label><input type="number" id="s-price" inputmode="decimal">
+  <label>Paketteki sigara</label><input type="number" id="s-pack" inputmode="numeric">
+  <button class="btn pri" style="margin-top:24px" onclick="saveSettings()">Kaydet</button>
+  <button class="btn dng" onclick="resetAll()">Tüm verileri sil</button>
+  <div class="foot">Nefes · Mehmet Karadeniz, 2026-2027</div>
+</div>
+
+<!-- ============ ALT MENÜ ============ -->
+<nav id="nav" style="display:none"><div class="in">
+  <button data-v="home" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Özet</button>
+  <button data-v="health" onclick="go('health')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Sağlık</button>
+  <button class="sos" onclick="openCrisis()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4"/><circle cx="12" cy="12" r="3"/></svg>ACİL</button>
+  <button data-v="save" onclick="go('save')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9h-4a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4H9M12 6v2M12 16v2"/></svg>Tasarruf</button>
+  <button data-v="ach" onclick="go('ach')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/></svg>Başarı</button>
+</div></nav>
+
+<!-- ============ ACİL DESTEK ============ -->
+<div class="ov" id="crisis"><div class="in">
+  <button class="x" onclick="closeCrisis()">×</button>
+  <div class="cs" id="cs-trig">
+    <div class="title" style="margin-top:10px">Şu anda neden sigara içmek istiyorsun?</div>
+    <div class="sub">Cevabın kaydedilir; zamanla seni en çok neyin tetiklediğini görürsün.</div>
+    <div class="chips" id="chips"></div>
+    <button class="link" onclick="pickTrig(null)">Atla</button>
+  </div>
+  <div class="cs" id="cs-tools">
+    <div class="title" style="margin-top:10px">Bu istek geçecek.</div>
+    <div class="sub">Sigara isteği genellikle 3–5 dakika içinde zirveye çıkıp söner. Bu süreyi birlikte geçirelim.</div>
+    <div class="advice" id="advice"></div>
+    <div class="tools">
+      <button class="tool wide" onclick="startBreath()">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 8h10a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h8"/></svg></div>
+        <div><b style="color:#fff">Nefes egzersizi</b><small>2 dakika · en etkili yöntem</small></div>
+      </button>
+      <button class="tool" onclick="startGame()"><div style="font-size:26px">🫧</div><b>Baloncuk patlat</b><small>5 dk dikkat dağıtma</small></button>
+      <button class="tool" onclick="info('water')"><div style="font-size:26px">💧</div><b>Su iç</b><small>Bir büyük bardak</small></button>
+      <button class="tool" onclick="info('walk')"><div style="font-size:26px">🚶</div><b>Kısa yürüyüş</b><small>5–10 dakika</small></button>
+      <button class="tool" onclick="info('moti')"><div style="font-size:26px">💬</div><b>Motivasyon</b><small>Neden bıraktın?</small></button>
+    </div>
+    <button class="btn sec" style="margin-top:16px" onclick="cs('check')">İsteğim geçti mi? Kontrol et</button>
+    <a class="link" style="display:block;text-align:center" href="tel:171">Profesyonel destek: ALO 171</a>
+  </div>
+  <div class="cs" id="cs-breath">
+    <div class="breath">
+      <div class="sub" style="margin:0">Burnundan al, ağzından yavaşça ver</div>
+      <div class="bwrap">
+        <svg width="270" height="270" viewBox="0 0 270 270">
+          <circle cx="135" cy="135" r="128" fill="none" stroke="#252d29" stroke-width="6"/>
+          <circle id="bRing" cx="135" cy="135" r="128" fill="none" stroke="url(#gV)" stroke-width="6" stroke-linecap="round" stroke-dasharray="804.2" stroke-dashoffset="804.2"/>
+        </svg>
+        <div class="orb" id="orb"><span id="bPhase">Hazır ol</span></div>
+      </div>
+      <div class="btime" id="bTime">2:00</div>
+      <button class="btn ghost" style="max-width:320px" onclick="endBreath(false)">Bitir</button>
+    </div>
+  </div>
+  <div class="cs" id="cs-game">
+    <div class="gbar" style="margin-top:12px"><div><div class="k">Patlatılan</div><b id="gScore">0</b></div><div style="text-align:right"><div class="k" style="justify-content:flex-end">Kalan süre</div><b id="gTime">5:00</b></div></div>
+    <div class="arena" id="arena"></div>
+    <button class="btn ghost" onclick="endGame()">Bitir</button>
+  </div>
+  <div class="cs" id="cs-info">
+    <div class="center"><div class="emoji" id="iEmo"></div><h2 id="iTitle"></h2><p id="iText"></p></div>
+    <button class="btn pri" id="iBtn" onclick="infoDone()">Yaptım</button>
+    <button class="btn ghost" onclick="cs('tools')">Geri</button>
+  </div>
+  <div class="cs" id="cs-check">
+    <div class="center"><div class="emoji">🤔</div><h2>Sigara isteğin geçti mi?</h2><p>Dürüst ol, burada yargı yok.</p></div>
+    <button class="btn pri" onclick="resolve(true)">Evet, geçti</button>
+    <button class="btn sec" onclick="resolve(false)">Hâlâ istiyorum</button>
+  </div>
+  <div class="cs" id="cs-win">
+    <div class="center"><div class="emoji">🎉</div><h2>Harika! Bir krizi daha atlattın.</h2><p id="winText"></p></div>
+    <button class="btn pri" onclick="closeCrisis()">Devam et</button>
+  </div>
+</div></div>
+
+<div class="sheet" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="box" id="sheetBox"></div></div>
+<div class="banner" id="banner" onclick="this.classList.remove('on')"><i>🌿</i><div><b id="bn-t"></b><span id="bn-b"></span></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= Sabitler ================= */
+const KEY = 'nefes_v2';
+const MIN = 60e3, H = 60*MIN, D = 24*H;
+
+const MS = [
+  [20*MIN, 'Nabız ve tansiyon normale dönmeye başlar.', 'Nikotinin damarları daraltıcı etkisi azaldıkça kalp atışı yavaşlar ve kan basıncı düşer. El ve ayakların ısısı artmaya başlar.'],
+  [8*H,    'Kandaki karbonmonoksit yarıya iner, oksijen yükselir.', 'Sigara dumanındaki karbonmonoksit, oksijenin yerine kana bağlanır. Bıraktıktan sonra hızla atılır ve dokulara daha fazla oksijen ulaşır.'],
+  [24*H,   'Karbonmonoksit vücuttan büyük ölçüde atılır.', 'Kalp krizi riski azalmaya başlar; akciğerler mukus ve kalıntıları temizlemeye başlar.'],
+  [48*H,   'Tat ve koku duyuları keskinleşir.', 'Zarar görmüş sinir uçları yeniden büyümeye başlar. Yemeklerin tadını daha iyi alırsın. Vücutta nikotin kalmaz.'],
+  [72*H,   'Bronşlar gevşer, nefes almak kolaylaşır.', 'Akciğer kapasitesi artmaya başlar. Nikotin yoksunluğu bu dönemde zirve yapabilir; en zor kısmı geçiyorsun.'],
+  [14*D,   'Kan dolaşımı iyileşir, yürümek kolaylaşır.', 'Dolaşım ve akciğer fonksiyonu 2–12 hafta içinde belirgin şekilde iyileşir. Fiziksel aktivite daha az yorar.'],
+  [90*D,   'Akciğer fonksiyonu belirgin şekilde artar.', 'Akciğer fonksiyonunda %10’a varan iyileşme görülebilir. Enerji düzeyin yükselir.'],
+  [270*D,  'Öksürük ve nefes darlığı azalır.', 'Akciğerlerdeki tüysü yapılar (silyalar) yenilenir; mukusu temizleme ve enfeksiyonla savaşma yeteneği artar.'],
+  [365*D,  'Koroner kalp hastalığı riski yarıya iner.', 'Bir yıl sonra kalp hastalığı riskin, sigaraya devam eden birine göre yaklaşık yarı yarıya azalır.'],
+  [5*365*D,'İnme riski içmeyen birinin düzeyine iner.', 'Ağız, boğaz, yemek borusu ve mesane kanseri riskleri yarıya iner. İnme riski hiç içmemiş birine yaklaşır.'],
+  [10*365*D,'Akciğer kanseri riski yaklaşık yarıya iner.', 'Akciğer kanserinden ölüm riski, içmeye devam eden birinin yaklaşık yarısıdır. Pankreas kanseri riski de azalır.'],
+  [15*365*D,'Kalp hastalığı riski hiç içmemiş biri gibi olur.', 'Koroner kalp hastalığı riski, hiç sigara içmemiş birinin düzeyine iner.']
+];
+
+
+const MOTTOS = [
+  'Bugün içmediğin her sigara, yarın aldığın daha derin bir nefes.',
+  'İstek bir dalga gibidir; yükselir, zirve yapar ve geçer.',
+  'Bırakmak bir kere verilen karar değil, her gün yeniden seçilen bir yol.',
+  'Vücudun şu anda kendini onarıyor. Ona fırsat ver.',
+  'Zor olan ilk günlerdi; sen zaten yoldasın.',
+  'Sigara stresi azaltmaz, sadece yoksunluğu kısa süreliğine susturur.',
+  'Kendine verdiğin söz, başkalarına verdiklerin kadar değerli.',
+  'Her “hayır” bir sonrakini kolaylaştırır.',
+  'Biriktirdiğin para, kendine yaptığın bir yatırım.',
+  'Ailen ve sevdiklerin daha temiz bir havayı hak ediyor. Sen de.',
+  'Mükemmel olmak zorunda değilsin, devam etmen yeterli.',
+  'Bir kriz atlattığında beynin yeni bir alışkanlık öğreniyor.',
+  'Nefes almak bir hak; onu geri kazanıyorsun.',
+  'Bugün bir gün daha. Bu kadar basit.',
+  'Merdiveni çıkarken nefesin daha az daralıyorsa, işe yarıyor demektir.'
+];
+
+const TRIGS = [
+  ['stres','Stresliyim','😣','Nikotin stresi azaltıyormuş gibi hissettirir ama aslında yoksunluk stresini besler. Önce 2 dakikalık nefes egzersizini dene; vücudun gerçekten sakinleşir.'],
+  ['sikinti','Canım sıkılıyor','😐','Can sıkıntısı en sık tetikleyicilerden biri. Ellerini ve zihnini meşgul et: baloncuk oyunu ya da kısa bir yürüyüş işe yarar.'],
+  ['kahve','Kahve içiyorum','☕','Kahve ve sigara beyninde birbirine bağlanmış. Kahveni farklı bir yerde ya da farklı bir bardakta iç; rutini bozmak bağı zayıflatır.'],
+  ['yemek','Yemekten sonra','🍽️','Yemek sonrası alışkanlığı kırmak için masadan hemen kalk, dişlerini fırçala ya da sakız çiğne.'],
+  ['arkadas','Arkadaş ortamı','👥','Sigara içen arkadaşlarına bıraktığını söyle. Elinde içecek tut ve içilen alandan kısa süreliğine uzaklaş.'],
+  ['nikotin','Nikotin isteği','🧲','Fiziksel istek gerçek ama geçici. Bol su iç, derin nefes al. İlk haftalardan sonra belirgin şekilde azalır.']
+];
+
+const GOALS = [['smokefree','Bugün sigarasız','auto'],['water','8 bardak su','count'],['walk','15 dakika yürüyüş','check'],['breath','1 nefes egzersizi','auto'],['coffee','Kahveyi sigarasız iç','check']];
+const PRESETS = ['📱 Telefon','🏖️ Tatil','💻 Bilgisayar','🎁 Hediye','🚲 Bisiklet'];
+const MOODS = ['😫','😕','😐','🙂','😄'];
+
+const BADGES = [
+  ['first','🌱','İlk adım','İlk 24 saat','time',D],
+  ['k3','💪','Kararlılık','3 gün','time',3*D],
+  ['k7','🔥','Güçlü irade','7 gün','time',7*D],
+  ['k14','🌅','Yeni başlangıç','14 gün','time',14*D],
+  ['k30','🕊️','Bir ay özgürlük','30 gün','time',30*D],
+  ['k90','🏆','Büyük başarı','90 gün','time',90*D],
+  ['k365','👑','Özgür hayat','1 yıl','time',365*D],
+  ['c1','🛡️','İlk zafer','İlk krizi atlat','pass',1],
+  ['c10','⚔️','Kriz ustası','10 krizi atlat','pass',10],
+  ['b5','🫁','Nefes ustası','5 nefes egzersizi','breath',5],
+  ['s1k','💰','Kumbaracı','₺1.000 biriktir','save',1000],
+  ['goal','🎯','Hedefe ulaştın','Tasarruf hedefini tamamla','goal',1]
+];
+
+const LEVELS = [[0,'Başlangıç'],[100,'Filiz'],[300,'Fidan'],[700,'Genç ağaç'],[1500,'Güçlü gövde'],[3000,'Ulu çınar'],[6000,'Orman']];
+
+const LEARN = [
+  ['🧠','Nikotin bağımlılığı nasıl oluşur?',
+   `<p>Sigaradan çekilen nikotin yaklaşık 10 saniyede beyne ulaşır ve “ödül” hissi veren dopamin salgılatır. Bu hızlı ödül, beynin sigarayı önemli bir ihtiyaç gibi kaydetmesine neden olur.</p>
+    <p>Düzenli içildikçe beyindeki nikotin reseptörlerinin sayısı artar. Nikotin düzeyi düştüğünde bu reseptörler “boş” kalır ve huzursuzluk başlar. Yani sigara aslında rahatlatmaz; bir önceki sigaranın yarattığı yoksunluğu geçici olarak giderir.</p>
+    <p>İyi haber: Sigarayı bıraktıktan sonra reseptörler zamanla normale döner ve istek giderek azalır.</p>`],
+  ['⚡','Sigara isteği neden gelir?',
+   `<p>İsteğin üç kaynağı vardır:</p>
+    <ul><li><b>Fiziksel:</b> Kandaki nikotinin azalması.</li>
+    <li><b>Alışkanlık:</b> Kahve, yemek sonrası, araba, mola gibi sigarayla eşleşmiş anlar.</li>
+    <li><b>Duygusal:</b> Stres, can sıkıntısı, öfke, hatta mutluluk.</li></ul>
+    <p>Bir istek genellikle birkaç dakika içinde zirveye çıkar ve söner. Her atlatışında beyin, o tetikleyici ile sigara arasındaki bağı biraz daha zayıflatır. Uygulamadaki tetikleyici kaydı bu yüzden işe yarar.</p>`],
+  ['🌡️','Yoksunluk belirtileri nelerdir?',
+   `<ul><li>Sinirlilik, gerginlik, huzursuzluk</li><li>Konsantrasyon güçlüğü</li><li>İştah artışı</li><li>Uyku sorunları</li><li>Öksürük artışı (akciğerlerin temizlenmesinin işareti olabilir)</li><li>Güçlü sigara isteği</li></ul>
+    <p>Belirtiler genellikle ilk 3 gün en yoğundur ve çoğunlukla 2–4 hafta içinde belirgin şekilde azalır. Geçici olduklarını bilmek, onlara dayanmayı kolaylaştırır.</p>`],
+  ['📅','İlk hafta neler yaşanır?',
+   `<p><b>1. gün:</b> Karbonmonoksit atılır, kararlılık yüksektir ama istekler sık gelir.</p>
+    <p><b>2–3. gün:</b> Vücutta nikotin kalmaz; yoksunluk genellikle bu günlerde zirve yapar. En zor kısım budur.</p>
+    <p><b>4–7. gün:</b> Fiziksel belirtiler hafiflemeye başlar, alışkanlık tetikleyicileri öne çıkar. Tat ve koku belirgin şekilde iyileşir.</p>
+    <p>İpucu: İlk hafta kahve ve alkolü azaltmak, bol su içmek ve rutinini küçük değişikliklerle bozmak çok yardımcı olur.</p>`],
+  ['⚖️','Kilo alma endişesi nasıl yönetilir?',
+   `<p>Bırakanların bir kısmı kilo alır; çalışmalarda ilk yıl için ortalama birkaç kilo bildirilmektedir. Sigarayı bırakmanın sağlık kazancı, bu kilonun getirdiği riskten çok daha büyüktür.</p>
+    <ul><li>Elini ağzına götürme alışkanlığı için havuç, salatalık gibi sağlıklı atıştırmalıklar hazırla.</li>
+    <li>Şekerli içecekler yerine su ve şekersiz çay tercih et.</li>
+    <li>Günde 15–30 dakika yürüyüş hem kiloyu hem sigara isteğini azaltır.</li>
+    <li>Önce sigarayı bırakmaya odaklan; kilo konusuna sonra daha rahat dönebilirsin.</li></ul>`],
+  ['🧘','Stresle nasıl baş edilir?',
+   `<ul><li><b>Nefes:</b> 4 saniye al, 2 saniye tut, 6 saniye ver. Uzun verilen nefes vücudu sakinleştirir.</li>
+    <li><b>Hareket:</b> Kısa bir yürüyüş stres hormonlarını düşürür.</li>
+    <li><b>Ertele:</b> “10 dakika sonra karar vereceğim” de; istek çoğu zaman o sürede geçer.</li>
+    <li><b>Paylaş:</b> Bir yakınınla konuşmak yükü hafifletir.</li>
+    <li><b>Uyku:</b> Yorgunluk isteği artırır; düzenli uyku önemlidir.</li></ul>`],
+  ['🩺','Profesyonel destek ve tedavi',
+   `<p>Destek almak bırakma şansını belirgin şekilde artırır.</p>
+    <ul><li><b>ALO 171:</b> Sağlık Bakanlığı Sigara Bırakma Danışma Hattı, ücretsizdir.</li>
+    <li><b>Sigara bırakma poliklinikleri:</b> MHRS üzerinden randevu alınabilir.</li>
+    <li><b>Nikotin replasman tedavisi ve ilaçlar:</b> Bant, sakız veya reçeteli ilaçlar doktor kontrolünde kullanılmalıdır.</li></ul>`],
+  ['🔬','Bilimsel kaynaklar ve uzman önerileri',
+   `<p>Bu uygulamadaki sağlık bilgileri Dünya Sağlık Örgütü (WHO), ABD Hastalık Kontrol ve Önleme Merkezleri (CDC) ve T.C. Sağlık Bakanlığı gibi kurumların yayımladığı genel bilgilere dayanır.</p>
+    <p>Uzmanların ortak önerileri:</p>
+    <ul><li>Bir bırakma tarihi belirle ve çevrene söyle.</li><li>Tetikleyicilerini tanı ve her biri için bir plan yap.</li><li>Evdeki sigara, çakmak ve küllükleri kaldır.</li><li>Kayma olursa pes etme; çoğu kişi birkaç denemede kalıcı olarak bırakır.</li><li>Gerekirse profesyonel destek al.</li></ul>`]
+];
+
+/* ================= Durum ================= */
+let S = null, tickT = null, calOff = 0;
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,'0');
+const tl = n => new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',maximumFractionDigits:0}).format(Math.max(0,n));
+const num = n => new Intl.NumberFormat('tr-TR').format(Math.floor(n));
+const dkey = (t=Date.now()) => { const d=new Date(t); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
+const toLocal = t => { const d=new Date(t); return new Date(d - d.getTimezoneOffset()*MIN).toISOString().slice(0,16); };
+const startOfDay = t => { const d=new Date(t); d.setHours(0,0,0,0); return d.getTime(); };
+
+function load(){ try{ S = JSON.parse(localStorage.getItem(KEY)); }catch(e){ S=null; } }
+let pushT = null;
+function save(touch=true){
+  if(!S) return;
+  if(touch) S.updatedAt = Date.now();
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  if(touch && S.sync && S.sync.on){ clearTimeout(pushT); pushT = setTimeout(syncPush, 4000); }
+}
+function defaults(){
+  const norm = x => typeof x==='number' ? {t:x, n:1} : x;
+  S.slips=(S.slips||[]).map(norm); S.slipLog=(S.slipLog||S.slips.map(e=>({...e}))).map(norm);
+  S.crises=S.crises||[]; S.days=S.days||{};
+  S.bank=S.bank||{cigs:0,saved:0,ms:0}; S.attempts=S.attempts||[]; S.badges=S.badges||{};
+  S.stats=S.stats||{breaths:0}; S.first=Math.min(S.first||S.quit, S.quit); S.fired=S.fired||{};
+  S.bank.smoked=S.bank.smoked||0; S.plan=S.plan||null;
+  S.sync=S.sync||{on:false,url:'',code:'',last:0,err:''};
+  S.backupAt=S.backupAt||0; S.updatedAt=S.updatedAt||Date.now();
+  S.notif=S.notif||{morning:{on:true,time:'09:00'},evening:{on:true,time:'21:00'},hard:{on:true},health:{on:true},weekly:{on:true},custom:[]};
+}
+function day(k=dkey()){ return S.days[k] ||= {water:0, done:{}}; }
+function toast(t){ const el=$('toast'); el.textContent=t; el.classList.add('on'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('on'),2400); }
+function slipSet(){ return new Set(S.slipLog.map(e=>dkey(e.t))); }
+
+/* ================= Hesaplar ================= */
+function calc(){
+  const now = Date.now(), el = Math.max(0, now-S.quit);
+  const sum = a => a.reduce((x,e)=>x+(e.n||1),0);
+  const smokedNow = sum(S.slips), smokedT = sum(S.slipLog);
+  const avoided = Math.max(0, Math.floor(el/D*S.per) - smokedNow);
+  const expectedT = Math.max(0,(now - S.first)/D*S.per);
+  const each = S.price / S.pack;
+  const totalDays = Math.max(1, Math.ceil((now - startOfDay(S.first))/D));
+  const slipDays = slipSet().size;
+  const passed = S.crises.filter(c=>c.passed===true).length;
+  return {el, avoided, saved:avoided*each, daily:S.per*each,
+    cigsT:S.bank.cigs+avoided, savedT:S.bank.saved+avoided*each, msT:S.bank.ms+el,
+    succ:Math.max(0,Math.round((totalDays-slipDays)/totalDays*100)), okDays:Math.max(0,totalDays-slipDays), totalDays, passed, smokedNow, smokedT, expectedT,
+    reduction: expectedT>=1 ? Math.max(0,Math.min(100,Math.round((1-smokedT/expectedT)*100))) : 100};
+}
+function fmtDur(ms){
+  if(ms < H) return Math.max(1,Math.ceil(ms/MIN))+' dk';
+  if(ms < D) return Math.ceil(ms/H)+' saat';
+  if(ms < 365*D) return Math.ceil(ms/D)+' gün';
+  return (ms/(365*D)).toFixed(1).replace('.',',')+' yıl';
+}
+function label(ms){
+  if(ms < H) return Math.round(ms/MIN)+' dakika';
+  if(ms < D) return Math.round(ms/H)+' saat';
+  if(ms < 365*D){ const d=Math.round(ms/D); if(d===14) return '2 hafta'; return d>=60 && d%30===0 ? d/30+' ay' : d+' gün'; }
+  return Math.round(ms/(365*D))+' yıl';
+}
+
+function goalsFor(k, slips){
+  const g = S.days[k] || {water:0,done:{}};
+  return [!slips.has(k), g.water>=8, !!g.done.walk, !!g.done.breath, !!g.done.coffee];
+}
+function dayStatus(t, slips){
+  const k=dkey(t), sod=startOfDay(t);
+  if(sod > startOfDay(Date.now())) return 'future';
+  if(sod + D <= S.first) return 'none';
+  return slips.has(k) ? 'slip' : 'ok';
+}
+function xpInfo(c){
+  const slips = slipSet();
+  let goalsDone = 0; for(const k in S.days) goalsDone += goalsFor(k,slips).filter(Boolean).length;
+  const xp = Math.floor(c.msT/D)*10 + c.passed*15 + goalsDone*5 + Object.keys(S.badges).length*25;
+  let i = LEVELS.length-1; while(xp < LEVELS[i][0]) i--;
+  const next = LEVELS[i+1];
+  return {xp, n:i+1, name:LEVELS[i][1], p: next ? (xp-LEVELS[i][0])/(next[0]-LEVELS[i][0]) : 1, next: next ? next[0] : null};
+}
+
+/* ================= Navigasyon ================= */
+function show(id){ document.querySelectorAll('.view').forEach(v=>v.classList.remove('on')); $('v-'+id).classList.add('on'); window.scrollTo(0,0); }
+function go(v){
+  show(v);
+  document.querySelectorAll('nav [data-v]').forEach(b=>b.classList.toggle('on', b.dataset.v===v));
+  if(v==='home'){ renderWeek(); renderRecovery(); renderGoals(); renderReview(); renderBackupWarn(); renderTrigs(); }
+  if(v==='health') renderHealth();
+  if(v==='save') renderSaveForm();
+  if(v==='ach') renderAch();
+  if(v==='learn') renderLearn();
+  if(v==='notif') renderNotif();
+  if(v==='set') fillSettings();
+  if(v==='backup') renderBackup();
+  tick();
+}
+
+/* ================= Kurulum & ayarlar ================= */
+function saveSetup(){
+  const q=$('f-quit').value, per=+$('f-per').value, price=+$('f-price').value, pack=+$('f-pack').value||20;
+  if(!q || !per){ toast('Bırakma zamanını ve günlük sigara sayısını gir.'); return; }
+  S = {quit:new Date(q).getTime(), per, price:price||0, pack};
+  defaults(); markMilestones(); save(); start();
+}
+function fillSettings(){ $('set-bk').textContent = backupLine(); $('s-quit').value=toLocal(S.quit); $('s-per').value=S.per; $('s-price').value=S.price; $('s-pack').value=S.pack; }
+function saveSettings(){
+  const q=$('s-quit').value; if(q){ S.quit=new Date(q).getTime(); S.first=Math.min(S.first,S.quit); markMilestones(); }
+  S.per=+$('s-per').value||S.per; S.price=+$('s-price').value||0; S.pack=+$('s-pack').value||20;
+  save(); scheduleNative(); toast('Kaydedildi'); go('home');
+}
+function resetAll(){
+  if(!confirm('Tüm veriler silinecek. Emin misin?')) return;
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  location.reload();
+}
+
+/* ================= Canlı güncelleme ================= */
+function tick(){
+  if(!S) return;
+  const c = calc(), el = c.el;
+  $('days').textContent = Math.floor(el/D);
+  $('hh').textContent = pad(Math.floor(el%D/H));
+  $('mm').textContent = pad(Math.floor(el%H/MIN));
+  $('ss').textContent = pad(Math.floor(el%MIN/1e3));
+  $('money').textContent = tl(c.savedT);
+  $('cigs').textContent = num(c.cigsT);
+  const lm = c.cigsT*11;
+  $('life').innerHTML = lm < 1440 ? Math.floor(lm/60)+'<small>saat</small>' : (lm/1440).toFixed(1).replace('.',',')+'<small>gün</small>';
+  $('succ').innerHTML = '%'+c.succ+'<small>'+c.okDays+'/'+c.totalDays+' gün</small>';
+
+  const i = MS.findIndex(x=>x[0]>el);
+  if(i>=0){
+    const prev = i ? MS[i-1][0] : 0, p = (el-prev)/(MS[i][0]-prev);
+    $('next-t').textContent = MS[i][1];
+    $('next-b').style.width = (p*100).toFixed(1)+'%';
+    $('next-p').textContent = MS.filter(x=>el>=x[0]).length+'/'+MS.length+' dönüm noktası';
+    $('next-r').textContent = fmtDur(MS[i][0]-el)+' kaldı';
+    $('heroRing').style.strokeDashoffset = 647.2*(1-p);
+  } else {
+    $('next-t').textContent='Tüm iyileşme aşamalarını tamamladın! 🎉'; $('next-b').style.width='100%';
+    $('next-p').textContent=''; $('next-r').textContent=''; $('heroRing').style.strokeDashoffset=0;
+  }
+
+  if($('v-save').classList.contains('on')){
+    $('sv-total').textContent = tl(c.savedT);
+    $('sv-packs').textContent = num(c.cigsT/S.pack)+' paket içilmedi';
+    $('sv-d').textContent = tl(c.daily); $('sv-w').textContent = tl(c.daily*7);
+    $('sv-m').textContent = tl(c.daily*30); $('sv-y').textContent = tl(c.daily*365);
+    if(S.goal && S.goal.amount){
+      const p = Math.min(1, c.savedT/S.goal.amount);
+      $('g-name').textContent = S.goal.name; $('g-pct').textContent = '%'+Math.floor(p*100);
+      $('g-bar').style.width = (p*100).toFixed(1)+'%';
+      $('g-have').textContent = tl(c.savedT)+' / '+tl(S.goal.amount);
+      $('g-left').textContent = p>=1 ? 'Hedefe ulaştın! 🎉' : c.daily>0 ? Math.ceil((S.goal.amount-c.savedT)/c.daily)+' gün kaldı' : '';
+    } else {
+      $('g-name').textContent='Hedef belirle'; $('g-pct').textContent=''; $('g-bar').style.width='0';
+      $('g-have').textContent='Biriktirdiğin parayla ne almak istersin?'; $('g-left').textContent='';
+    }
+  }
+  const sec = Math.floor(Date.now()/1e3);
+  if(sec%10===0){
+    if($('v-health').classList.contains('on')) renderHealth();
+    checkBadges(c); checkHealthNotif(el); checkReminders();
+    const lv = xpInfo(c); $('lvchip').textContent = 'Seviye '+lv.n+' · '+lv.name;
+  }
+}
+
+/* ================= Özet bölümleri ================= */
+function renderWeek(){
+  const slips = slipSet(), now = new Date();
+  const mon = new Date(now); mon.setHours(12,0,0,0); mon.setDate(mon.getDate()-((mon.getDay()+6)%7));
+  const names = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+  $('today').textContent = now.toLocaleDateString('tr-TR',{day:'numeric',month:'long',weekday:'long'});
+  $('week').innerHTML = names.map((n,i)=>{
+    const d = new Date(mon); d.setDate(mon.getDate()+i);
+    const st = dayStatus(d.getTime(), slips), isT = dkey(d)===dkey();
+    const ic = st==='ok' ? '✓' : st==='slip' ? '•' : d.getDate();
+    return `<div class="wd ${st} ${isT?'today':''}"><b>${ic}</b>${n}</div>`;
+  }).join('');
+  const lv = xpInfo(calc()); $('lvchip').textContent = 'Seviye '+lv.n+' · '+lv.name;
+}
+function renderGoals(){
+  const g = day(), res = goalsFor(dkey(), slipSet());
+  const done = res.filter(Boolean).length;
+  $('goals').innerHTML = GOALS.map(([id,txt,type],i)=>{
+    const ok = res[i];
+    const right = type==='count'
+      ? `<div class="cnt"><button onclick="water(-1);event.stopPropagation()">−</button><b>${g.water}/8</b><button onclick="water(1);event.stopPropagation()">+</button></div>` : '';
+    const sub = type==='auto' ? `<span class="auto">${id==='smokefree'?'Otomatik takip edilir':'Acil destekten yapılınca işaretlenir'}</span>` : '';
+    const click = type==='check' ? `onclick="toggleGoal('${id}')"` : '';
+    return `<div class="goal ${ok?'done':''}" ${click}><div class="cb"></div><div class="gt">${txt}${sub}</div>${right}</div>`;
+  }).join('');
+  $('goal-sum').textContent = 'Günlük puan %'+Math.round(done/GOALS.length*100);
+}
+function toggleGoal(id){ const g=day(); g.done[id]=!g.done[id]; save(); renderGoals(); }
+function water(n){ const g=day(); g.water=Math.max(0,Math.min(20,g.water+n)); save(); renderGoals(); }
+
+function renderReview(){
+  const r = day().review;
+  $('review-card').innerHTML = r
+    ? `<button class="rowlink" onclick="openReview()"><span class="em">${MOODS[r.mood]}</span><span><b>Bugünü değerlendirdin</b><small>İstek düzeyi ${r.crave}/10${r.note?' · '+escapeHtml(r.note).slice(0,40):''}</small></span></button>`
+    : `<button class="rowlink" onclick="openReview()"><span class="em">🌙</span><span><b>Günü değerlendir</b><small>Bugün nasıl geçti? 30 saniye sürer</small></span></button>`;
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+
+function renderTrigs(){
+  const all = S.crises, list = all.filter(c=>c.trig);
+  if(!all.length){ $('trig-card').innerHTML = `<div class="k">Henüz kayıt yok</div><p class="empty">Sigara isteği geldiğinde ortadaki <b style="color:var(--lime)">ACİL</b> butonuna bas. Uygulama zamanla seni en çok neyin tetiklediğini öğrenir.</p>`; return; }
+  const cnt = {}; list.forEach(c=>cnt[c.trig]=(cnt[c.trig]||0)+1);
+  const max = Math.max(1,...Object.values(cnt));
+  const passed = all.filter(c=>c.passed===true).length;
+  const topT = topTrigger();
+  const hh = hardHour();
+  $('trig-card').innerHTML =
+    `<div class="grid" style="gap:10px">
+      <div><div class="k">Toplam kriz</div><div class="v">${all.length}</div></div>
+      <div><div class="k">Atlatılan</div><div class="v" style="color:var(--lime)">${passed}</div></div>
+    </div>
+    ${topT?`<p class="empty" style="margin-top:12px">En sık tetikleyicin: <b style="color:var(--text)">${topT[2]} ${topT[1]}</b>${hh!=null?`<br>En çok zorlandığın saat: <b style="color:var(--text)">${pad(hh)}:00 civarı</b>`:''}</p>`:''}
+    ${TRIGS.filter(t=>cnt[t[0]]).map(t=>`<div class="tr"><span class="n">${t[2]} ${t[1]}</span><span class="b"><i style="width:${cnt[t[0]]/max*100}%"></i></span><span class="x">${cnt[t[0]]}</span></div>`).join('')}`;
+}
+function topTrigger(){
+  const cnt={}; S.crises.forEach(c=>{ if(c.trig) cnt[c.trig]=(cnt[c.trig]||0)+1; });
+  const top = Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0];
+  return top ? TRIGS.find(t=>t[0]===top[0]) : null;
+}
+function hardHour(){
+  if(S.crises.length < 3) return null;
+  const cnt = {}; S.crises.forEach(c=>{ const h=new Date(c.t).getHours(); cnt[h]=(cnt[h]||0)+1; });
+  const top = Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0];
+  return top && top[1] >= 2 ? +top[0] : null;
+}
+
+/* ================= Sağlık ================= */
+let openMs = -1;
+function msDate(t){
+  return new Date(t).toLocaleString('tr-TR', t - S.quit <= D ? {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'} : {day:'numeric',month:'long',year:'numeric'});
+}
+function renderHealth(){
+  const el = Math.max(0, Date.now()-S.quit), doneN = MS.filter(([t])=>el>=t).length;
+  $('hsum').innerHTML = `<div class="k">Gerçekleşen dönüm noktaları</div>
+    <div class="v">${doneN}<small>/ ${MS.length}</small></div>
+    <div class="milestrip">${MS.map(([t])=>`<i class="${el>=t?'on':''}"></i>`).join('')}</div>
+    <p class="empty">Bunlar senin vücudundan alınmış ölçümler değil; araştırmalarda sigarayı bırakanlarda genellikle bu sürelerde görülen değişimlerdir. Süreler son başlangıcından (${msDate(S.quit)}) itibaren sayılır.</p>`;
+  const ni = MS.findIndex(x=>x[0]>el);
+  $('timeline').innerHTML = MS.map(([t,txt,ex],i)=>{
+    const prev = i?MS[i-1][0]:0, done = el>=t, now = i===ni;
+    const p = now ? (el-prev)/(t-prev) : 0;
+    const when = done ? '✓ '+msDate(S.quit+t) : (now ? fmtDur(t-el)+' kaldı' : 'Tahmini: '+msDate(S.quit+t));
+    return `<div class="ms ${done?'done':''} ${now?'now':''} ${openMs===i?'open':''}" onclick="openMs=openMs===${i}?-1:${i};renderHealth()">
+      <div class="dot">${done?'✓':''}</div>
+      <div class="box"><div class="tm">${label(t)}${now?' · sıradaki':''}</div><div class="ds">${txt}</div>
+      <div class="k" style="margin-top:6px">${when}</div><div class="ex">${ex}</div>
+      ${now?`<div class="pb"><i style="width:${(p*100).toFixed(1)}%"></i></div>`:''}</div></div>`;
+  }).join('');
+}
+
+/* ================= Tasarruf hedefi ================= */
+function renderSaveForm(){
+  $('g-in-name').value = S.goal?.name || '';
+  $('g-in-amt').value = S.goal?.amount || '';
+  $('presets').innerHTML = PRESETS.map(p=>`<button onclick="$('g-in-name').value='${p}';">${p}</button>`).join('');
+}
+function saveGoal(){
+  const name=$('g-in-name').value.trim(), amount=+$('g-in-amt').value;
+  if(!name || !amount){ toast('Hedef adı ve tutarı gir.'); return; }
+  S.goal={name,amount}; save(); toast('Hedef kaydedildi'); tick();
+}
+
+/* ================= Başarılar ================= */
+function badgeProgress(b,c){
+  const [,, ,,type,target] = b;
+  if(type==='time') return c.el/target;
+  if(type==='pass') return c.passed/target;
+  if(type==='breath') return S.stats.breaths/target;
+  if(type==='save') return c.savedT/target;
+  if(type==='goal') return S.goal && S.goal.amount ? c.savedT/S.goal.amount : 0;
+  return 0;
+}
+function checkBadges(c){
+  let fresh = null;
+  BADGES.forEach(b=>{ if(!S.badges[b[0]] && badgeProgress(b,c)>=1){ S.badges[b[0]]=Date.now(); fresh=b; } });
+  if(fresh){ save(false); notify('Yeni rozet: '+fresh[2]+' '+fresh[1], fresh[3]+' tamamlandı. Tebrikler!'); if($('v-ach').classList.contains('on')) renderAch(); }
+}
+function renderAch(){
+  const c = calc(); checkBadges(c);
+  const lv = xpInfo(c);
+  $('lv-n').textContent = lv.n; $('lv-name').textContent = lv.name;
+  $('lv-bar').style.width = (lv.p*100).toFixed(1)+'%';
+  $('lv-xp').textContent = num(lv.xp)+' puan';
+  $('lv-next').textContent = lv.next ? 'Sonraki seviye: '+num(lv.next) : 'En üst seviye';
+  const earned = Object.keys(S.badges).length;
+  $('bdg-cnt').textContent = earned+'/'+BADGES.length;
+  $('badges').innerHTML = BADGES.map(b=>{
+    const on = !!S.badges[b[0]], p = Math.min(1, badgeProgress(b,c));
+    const sub = on ? new Date(S.badges[b[0]]).toLocaleDateString('tr-TR',{day:'numeric',month:'short'}) : b[3];
+    return `<div class="bdg ${on?'on':''}"><div class="hx"><span>${b[1]}</span></div><b>${b[2]}</b><small>${sub}</small>${on?'':`<div class="pb"><i style="width:${(p*100).toFixed(0)}%"></i></div>`}</div>`;
+  }).join('');
+  renderCal(); renderReport(); renderReduce(); renderAttempts();
+}
+function calMove(n){ calOff+=n; renderCal(); }
+function renderCal(){
+  const slips = slipSet(), base = new Date(); base.setDate(1); base.setHours(12,0,0,0); base.setMonth(base.getMonth()+calOff);
+  $('cal-title').textContent = base.toLocaleDateString('tr-TR',{month:'long',year:'numeric'});
+  const lead = (base.getDay()+6)%7, daysIn = new Date(base.getFullYear(), base.getMonth()+1, 0).getDate();
+  let h = ['P','S','Ç','P','C','C','P'].map(x=>`<div class="h">${x}</div>`).join('');
+  for(let i=0;i<lead;i++) h += '<div class="c blank"></div>';
+  for(let d=1; d<=daysIn; d++){
+    const t = new Date(base.getFullYear(), base.getMonth(), d, 12).getTime();
+    const st = dayStatus(t, slips), isT = dkey(t)===dkey();
+    h += `<div class="c ${st==='ok'||st==='slip'?st:''} ${isT?'today':''}">${d}</div>`;
+  }
+  $('cal').innerHTML = h;
+}
+function weekStats(){
+  const slips = slipSet(), now = Date.now();
+  let ok=0, waterSum=0, scoreSum=0, moods=[], counted=0;
+  for(let i=0;i<7;i++){
+    const t = now - i*D, k = dkey(t), st = dayStatus(t, slips);
+    if(st==='none') continue;
+    counted++; if(st==='ok') ok++;
+    const g = S.days[k]; waterSum += g?.water||0;
+    scoreSum += goalsFor(k, slips).filter(Boolean).length / GOALS.length;
+    if(g?.review) moods.push(g.review.mood);
+  }
+  const cr = S.crises.filter(c=>c.t > now-7*D);
+  return {ok, counted, crises:cr.length, passed:cr.filter(c=>c.passed===true).length,
+    water: counted ? waterSum/counted : 0, score: counted ? Math.round(scoreSum/counted*100) : 0,
+    mood: moods.length ? MOODS[Math.round(moods.reduce((a,b)=>a+b,0)/moods.length)] : '—'};
+}
+function renderReport(){
+  const w = weekStats();
+  $('report').innerHTML = `
+    <div><div class="k">Sigarasız gün</div><div class="v">${w.ok}<small>/ ${w.counted||7}</small></div></div>
+    <div><div class="k">Atlatılan kriz</div><div class="v">${w.passed}<small>/ ${w.crises}</small></div></div>
+    <div><div class="k">Ortalama su</div><div class="v">${w.water.toFixed(1).replace('.',',')}<small>bardak</small></div></div>
+    <div><div class="k">Ruh hâli</div><div class="v">${w.mood}</div></div>
+    <div style="grid-column:span 2"><div class="k">Ortalama günlük puan</div><div class="bar"><i style="width:${w.score}%"></i></div><div class="meta"><span>%${w.score}</span><span></span></div></div>`;
+}
+
+function durTxt(ms){ return ms < D ? Math.max(1,Math.floor(ms/H))+' saat' : (ms/D).toFixed(1).replace('.',',')+' gün'; }
+function renderReduce(){
+  const c = calc();
+  $('reduce').innerHTML = `<div class="grid" style="gap:10px">
+      <div><div class="k">Bırakmasaydın</div><div class="v">${num(c.expectedT)}<small>sigara</small></div></div>
+      <div><div class="k">İçtiğin</div><div class="v">${num(c.smokedT)}<small>sigara</small></div></div></div>
+    <div class="bar"><i style="width:${c.reduction}%"></i></div>
+    <div class="meta"><span>%${c.reduction} daha az içtin</span><span></span></div>
+    <p class="empty">Kaymalar da bu yolculuğun parçası. Önemli olan toplamda ne kadar azalttığın.</p>`;
+}
+function renderAttempts(){
+  const c = calc(), now = Date.now();
+  const all = S.attempts.map((a,i)=>({...a, i:i+1}));
+  all.push({start:S.quit, end:now, smoked:c.smokedNow, i:S.attempts.length+1, cur:true});
+  const longest = Math.max(...all.map(a=>a.end-a.start));
+  const fd = t => new Date(t).toLocaleDateString('tr-TR',{day:'numeric',month:'short'});
+  $('attempts').innerHTML = `<div class="grid" style="gap:10px">
+      <div><div class="k">En uzun seri</div><div class="v" style="font-size:22px">${durTxt(longest)}</div></div>
+      <div><div class="k">Toplam bırakma süresi</div><div class="v" style="font-size:22px">${durTxt(c.msT)}</div></div></div>` +
+    all.reverse().map(a=>`<div class="att ${a.cur?'cur':''}"><b>${a.cur?'Şu anki deneme ('+a.i+'.)':a.i+'. deneme'}</b>
+      <span>${fd(a.start)} – ${a.cur?'bugün':fd(a.end)} · ${durTxt(a.end-a.start)}${a.smoked?' · '+a.smoked+' sigara kaydedildi':' · kayma yok'}</span></div>`).join('');
+}
+
+/* ================= Bilgi merkezi ================= */
+function renderLearn(){
+  $('learn').innerHTML = LEARN.map(([e,q,a],i)=>`<div class="acc" id="acc${i}"><button class="q" onclick="$('acc${i}').classList.toggle('open')"><span class="em">${e}</span>${q}</button><div class="a">${a}</div></div>`).join('');
+}
+
+/* ================= Alt sayfa ================= */
+function openSheet(html){ $('sheetBox').innerHTML = html; $('sheet').classList.add('on'); }
+function closeSheet(){ $('sheet').classList.remove('on'); }
+
+/* Akşam değerlendirmesi */
+let rv = {mood:2, crave:3, note:''};
+function openReview(){
+  const r = day().review; rv = r ? {...r} : {mood:2, crave:3, note:''};
+  openSheet(`<h3>Bugün nasıl geçti?</h3><p>Kısa bir değerlendirme, ilerlemeni görmeni kolaylaştırır.</p>
+    <label>Ruh hâlin</label><div class="moods">${MOODS.map((m,i)=>`<button class="${i===rv.mood?'on':''}" onclick="rv.mood=${i};document.querySelectorAll('.moods button').forEach((b,j)=>b.classList.toggle('on',j===${i}))">${m}</button>`).join('')}</div>
+    <label>Sigara isteği düzeyi: <b id="cv" style="color:var(--text)">${rv.crave}</b>/10</label>
+    <input type="range" min="0" max="10" value="${rv.crave}" oninput="rv.crave=+this.value;$('cv').textContent=this.value">
+    <label>Not (isteğe bağlı)</label><textarea id="rv-note" placeholder="Bugün beni ne zorladı, ne iyi geldi?">${escapeHtml(rv.note)}</textarea>
+    <button class="btn pri" onclick="saveReview()">Kaydet</button>`);
+}
+function saveReview(){
+  rv.note = $('rv-note').value.trim().slice(0,300);
+  day().review = {...rv, t:Date.now()}; save(); closeSheet(); renderReview(); renderRecovery(); toast('Değerlendirme kaydedildi 🌙');
+}
+
+/* ================= Kayma ve yeniden başlama ================= */
+let slipN = 1, slipTrig = null;
+function openSlip(){
+  slipN = 1; slipTrig = null;
+  openSheet(`<h3>Kaydedelim, yargı yok.</h3><p>Ne olduğunu bilmek bir sonraki sefere hazırlar.</p>
+    <label>Kaç sigara içtin?</label>
+    <div class="stepper"><button onclick="slipStep(-1)">−</button><b id="slipN">1</b><button onclick="slipStep(1)">+</button></div>
+    <label>Ne tetikledi? (isteğe bağlı)</label>
+    <div class="minichips">${TRIGS.map(t=>`<button data-t="${t[0]}" onclick="slipPick('${t[0]}')">${t[2]} ${t[1]}</button>`).join('')}</div>
+    <button class="btn pri" style="margin-top:22px" onclick="saveSlip(false)">Kaydet ve devam et</button>
+    <p class="note" style="text-align:center">Sayacın sürer; içtiğin sigaralar birikimden düşülür.</p>
+    <button class="btn sec" onclick="saveSlip(true)">Kaydet ve yeniden başla</button>
+    <p class="note" style="text-align:center">Sayaç sıfırlanır; birikim, rozetler, seviye ve toplam süre korunur.</p>
+    <button class="btn ghost" style="border:none" onclick="closeSheet()">Vazgeç</button>`);
+}
+function slipStep(d){ slipN = Math.max(1, Math.min(60, slipN+d)); $('slipN').textContent = slipN; }
+function slipPick(id){ slipTrig = slipTrig===id ? null : id; document.querySelectorAll('.minichips button').forEach(b=>b.classList.toggle('on', b.dataset.t===slipTrig)); }
+function saveSlip(reset){
+  const e = {t:Date.now(), n:slipN, trig:slipTrig};
+  S.slips.push(e); S.slipLog.push({...e});
+  if(slipTrig) S.crises.push({t:e.t, trig:slipTrig, passed:false});
+  if(reset){ restart(); return; }
+  save(); closeSheet(); renderWeek(); renderGoals(); renderTrigs(); tick();
+  toast(slipN+' sigara kaydedildi. Devam ediyoruz 💪');
+}
+function planSteps(){
+  const t = topTrigger();
+  return [
+    ['clear','Sigara, çakmak ve küllüğü ortadan kaldır.'],
+    ['trig', t ? `${t[2]} ${t[1]} anları için planın: ${t[3]}` : 'İstek geldiğinde ACİL butonuna basıp nedenini kaydet.'],
+    ['breath','İlk istekte 2 dakikalık nefes egzersizini yap.'],
+    ['review','Bu akşam günü değerlendir.'],
+    ['tell','Bir yakınına yeniden başladığını söyle, destek iste.']
+  ];
+}
+function planDone(id){
+  if(S.plan.done[id]) return true;
+  const from = dkey(S.plan.t);
+  if(id==='breath') return Object.keys(S.days).some(k=>k>=from && S.days[k].done && S.days[k].done.breath);
+  if(id==='review') return Object.keys(S.days).some(k=>k>=from && S.days[k].review && S.days[k].review.t>=S.plan.t);
+  return false;
+}
+function togglePlan(id){ S.plan.done[id] = !S.plan.done[id]; save(); renderRecovery(); }
+function renderRecovery(){
+  const box = $('recovery');
+  if(!S.plan){ box.innerHTML=''; return; }
+  const since = Date.now()-S.plan.t, steps = planSteps(), done = steps.filter(s=>planDone(s[0])).length;
+  if(since > 7*D || (since > 72*H && done===steps.length)){ box.innerHTML=''; return; }
+  const p = Math.min(1, since/(72*H));
+  box.innerHTML = `<div class="sech">Yeniden başlama süreci <span>${S.attempts.length+1}. deneme · ${done}/${steps.length}</span></div>
+    <div class="card">
+      <div class="k">${p<1 ? 'İlk 72 saat · en zor dönem' : 'İlk 72 saati geçtin! 🎉'}</div>
+      <div class="bar"><i style="width:${(p*100).toFixed(1)}%"></i></div>
+      <div class="meta"><span>${fmtDur(since)} geçti</span><span>${p<1 ? fmtDur(72*H-since)+' kaldı' : ''}</span></div>
+      <div style="margin-top:8px">${steps.map(([id,t])=>`<div class="goal ${planDone(id)?'done':''}" onclick="togglePlan('${id}')"><div class="cb"></div><div class="gt" style="font-size:14px;line-height:1.4">${t}</div></div>`).join('')}</div>
+    </div>`;
+}
+function restart(){
+  const c = calc(), now = Date.now();
+  S.bank.cigs += c.avoided; S.bank.saved += c.saved; S.bank.ms += c.el; S.bank.smoked += c.smokedNow;
+  S.attempts.push({start:S.quit, end:now, smoked:c.smokedNow});
+  S.quit = now; S.slips = []; S.plan = {t:now, done:{}};
+  markMilestones(); save(); scheduleNative();
+  const c2 = calc();
+  openSheet(`<h3>Yeniden başlıyoruz 🌱</h3>
+    <p>Bu bir başarısızlık değil; bu senin ${S.attempts.length+1}. denemen. Sigarayı kalıcı olarak bırakanların çoğu bunu birkaç denemede başarır. Kazanımların silinmedi:</p>
+    <div class="kept">
+      <div><b>${durTxt(c2.msT)}</b><small>toplam bırakma süresi</small></div>
+      <div><b>${tl(c2.savedT)}</b><small>birikim</small></div>
+      <div><b>${Object.keys(S.badges).length}</b><small>rozet</small></div>
+    </div>
+    <div class="sech" style="margin:22px 0 0">Yeniden başlama planı</div>
+    <div class="plan">${planSteps().map(st=>`<div>${st[1]}</div>`).join('')}</div>
+    <p class="note">Bu adımları ana ekrandan takip edebilirsin. İlk 72 saat en zor kısımdır; zorlanırsan ALO 171 ücretsiz destek verir.</p>
+    <button class="btn pri" onclick="closeSheet();go('home')">Hazırım</button>`);
+  renderWeek(); renderRecovery(); renderGoals(); tick();
+}
+
+/* ================= ACİL DESTEK ================= */
+let curCrisis = -1;
+function cs(name){ document.querySelectorAll('.cs').forEach(x=>x.classList.remove('on')); $('cs-'+name).classList.add('on'); $('crisis').scrollTop=0; }
+function openCrisis(){
+  $('chips').innerHTML = TRIGS.map(t=>`<button onclick="pickTrig('${t[0]}')"><span>${t[2]}</span>${t[1]}</button>`).join('');
+  curCrisis = -1; $('crisis').classList.add('on'); cs('trig');
+}
+function pickTrig(id){
+  S.crises.push({t:Date.now(), trig:id, passed:null});
+  curCrisis = S.crises.length-1; save();
+  const t = TRIGS.find(x=>x[0]===id);
+  $('advice').textContent = t ? t[3] : MOTTOS[Math.floor(Math.random()*MOTTOS.length)];
+  cs('tools');
+}
+function closeCrisis(){
+  stopBreathTimer(); stopGameTimer();
+  $('crisis').classList.remove('on');
+  checkBadges(calc());
+  if($('v-home').classList.contains('on')){ renderGoals(); renderTrigs(); renderWeek(); renderRecovery(); }
+}
+function resolve(ok){
+  if(curCrisis>=0){ S.crises[curCrisis].passed = ok; save(); }
+  if(ok){
+    const passed = S.crises.filter(c=>c.passed===true).length;
+    $('winText').textContent = `Toplam ${passed} krizi atlattın. Her seferinde istek biraz daha zayıflıyor.`;
+    cs('win');
+  } else {
+    $('advice').textContent = 'Sorun değil, istek hâlâ geçiyor. Başka bir araç dene; birkaç dakika daha dayan.';
+    cs('tools');
+  }
+}
+const INFO = {
+  water:['💧','Bir büyük bardak su iç','Yavaş yavaş, yudum yudum iç. Su hem ağzını meşgul eder hem de vücudunu rahatlatır.','Suyu içtim'],
+  walk:['🚶','Kısa bir yürüyüşe çık','5–10 dakikalık tempolu bir yürüyüş, sigara isteğini belirgin şekilde azaltır. Ortam değiştirmek de tetikleyiciden uzaklaştırır.','Yürüdüm'],
+  moti:['💬','','','Teşekkürler']
+};
+let curInfo = null;
+function info(k){
+  curInfo = k; const [e,t,x,b] = INFO[k];
+  $('iEmo').textContent = e; $('iBtn').textContent = b;
+  if(k==='moti'){
+    const c = calc();
+    $('iTitle').textContent = MOTTOS[Math.floor(Math.random()*MOTTOS.length)];
+    $('iText').textContent = `Şimdiye kadar ${num(c.cigsT)} sigara içmedin ve ${tl(c.savedT)} biriktirdin. Bir sigara bunları geri almaz ama yolunu zorlaştırır.`;
+  } else { $('iTitle').textContent = t; $('iText').textContent = x; }
+  cs('info');
+}
+function infoDone(){
+  const g = day();
+  if(curInfo==='water'){ g.water=Math.min(20,g.water+1); toast('Su kaydedildi 💧'); }
+  if(curInfo==='walk'){ g.done.walk=true; toast('Yürüyüş hedefi işaretlendi'); }
+  save(); cs('check');
+}
+
+/* Nefes: 4 al · 2 tut · 6 ver = 12 sn × 10 tur = 2 dakika */
+const PH = [['Nefes al',4,1],['Tut',2,1],['Ver',6,.62]];
+let bT=null, bEl=0, bPh=0, bLeft=0;
+function startBreath(){
+  cs('breath'); bEl=0; bPh=-1; bLeft=0;
+  const orb=$('orb'); orb.style.transition='none'; orb.style.transform='scale(.62)';
+  $('bPhase').textContent='Hazır ol'; $('bRing').style.strokeDashoffset=804.2; $('bTime').textContent='2:00';
+  setTimeout(()=>{ nextPhase(); bT=setInterval(bStep,1000); },800);
+}
+function nextPhase(){
+  bPh=(bPh+1)%3; const [t,s,sc]=PH[bPh]; bLeft=s;
+  const orb=$('orb'); orb.style.transition=`transform ${s}s ease-in-out`; orb.style.transform=`scale(${sc})`;
+  $('bPhase').textContent=t;
+}
+function bStep(){
+  bEl++; bLeft--;
+  $('bRing').style.strokeDashoffset = 804.2*(1-bEl/120);
+  const r=120-bEl; $('bTime').textContent=Math.floor(r/60)+':'+pad(r%60);
+  if(bEl>=120){ endBreath(true); return; }
+  if(bLeft<=0) nextPhase();
+}
+function stopBreathTimer(){ clearInterval(bT); bT=null; }
+function endBreath(full){
+  stopBreathTimer();
+  if(full || bEl>=30){ day().done.breath=true; S.stats.breaths++; save(); }
+  cs('check');
+}
+
+/* Baloncuk oyunu: 5 dakika */
+let gT=null, gSpawn=null, gLeft=300, gScore=0;
+function startGame(){
+  cs('game'); gLeft=300; gScore=0; $('gScore').textContent=0; $('gTime').textContent='5:00';
+  $('arena').innerHTML='';
+  gT=setInterval(()=>{ gLeft--; $('gTime').textContent=Math.floor(gLeft/60)+':'+pad(gLeft%60); if(gLeft<=0) endGame(); },1000);
+  gSpawn=setInterval(spawn,650); spawn();
+}
+function spawn(){
+  const a=$('arena'), w=a.clientWidth, h=a.clientHeight;
+  if(!w) return;
+  const s=44+Math.random()*40, b=document.createElement('div');
+  b.className='bub'; b.style.width=b.style.height=s+'px';
+  b.style.left=Math.random()*(w-s)+'px'; b.style.top=Math.random()*(h-s)+'px';
+  b.addEventListener('pointerdown',()=>{ if(b.dataset.p) return; b.dataset.p=1; gScore++; $('gScore').textContent=gScore; b.classList.add('gone'); if(navigator.vibrate) navigator.vibrate(12); setTimeout(()=>b.remove(),160); });
+  a.appendChild(b);
+  setTimeout(()=>{ if(!b.dataset.p){ b.classList.add('gone'); setTimeout(()=>b.remove(),160); } },2600);
+}
+function stopGameTimer(){ clearInterval(gT); clearInterval(gSpawn); gT=gSpawn=null; }
+function endGame(){ stopGameTimer(); toast(gScore+' baloncuk patlattın!'); cs('check'); }
+
+/* ================= Bildirimler ================= */
+const NOTIF_ROWS = [
+  ['morning','☀️ Sabah motivasyonu','Güne bir motivasyon mesajıyla başla.',true],
+  ['evening','🌙 Akşam değerlendirmesi','Günü 30 saniyede değerlendirmen için hatırlatma.',true],
+  ['hard','⏰ Zorlandığın saatlerde destek','En çok kriz yaşadığın saatten 10 dakika önce destek mesajı. En az 3 kriz kaydı gerekir.',false],
+  ['health','❤️ Sağlık dönüm noktaları','Vücudun yeni bir iyileşme aşamasına geçtiğinde haber verir.',false],
+  ['weekly','📊 Haftalık başarı raporu','Her pazar 20:00’de haftanın özeti.',false]
+];
+const nativeLN = () => window.Capacitor?.Plugins?.LocalNotifications || null;
+function renderNotif(){
+  const n = S.notif;
+  $('notif-list').innerHTML = NOTIF_ROWS.map(([id,t,d,hasTime])=>`
+    <div class="nrow"><div class="t"><b>${t}</b><small>${d}</small></div>
+      ${hasTime?`<input type="time" value="${n[id].time}" onchange="S.notif.${id}.time=this.value;notifChanged()">`:''}
+      <label class="sw"><input type="checkbox" ${n[id].on?'checked':''} onchange="S.notif.${id}.on=this.checked;notifChanged()"><span></span></label></div>`).join('');
+  $('custom-list').innerHTML = n.custom.length
+    ? n.custom.map((c,i)=>`<div class="nrow"><div class="t"><b>${c.time}</b><small>${escapeHtml(c.text)}</small></div><label class="sw"><input type="checkbox" ${c.on!==false?'checked':''} onchange="S.notif.custom[${i}].on=this.checked;notifChanged()"><span></span></label><button class="del" onclick="delCustom(${i})">×</button></div>`).join('')
+    : `<p class="empty" style="padding:14px 0">Henüz özel hatırlatma yok.</p>`;
+  const perm = nativeLN() ? 'native' : ('Notification' in window ? Notification.permission : 'unsupported');
+  $('perm-btn').style.display = perm==='granted' || perm==='unsupported' ? 'none' : 'block';
+  $('notif-note').textContent = nativeLN()
+    ? 'Bildirimler telefonun bildirim sistemiyle zamanlanır; uygulama kapalıyken de gelir.'
+    : 'Tarayıcıda bildirimler uygulama açıkken gelir. APK’ya çevirdiğinde Capacitor Local Notifications eklentisiyle uygulama kapalıyken de çalışır.';
+}
+function notifChanged(){ save(); scheduleNative(); }
+function addCustom(){
+  const time=$('c-time').value, text=$('c-text').value.trim();
+  if(!time || !text){ toast('Saat ve mesaj gir.'); return; }
+  S.notif.custom.push({time,text,on:true}); $('c-text').value='';
+  notifChanged(); renderNotif(); toast('Hatırlatma eklendi');
+}
+function delCustom(i){ S.notif.custom.splice(i,1); notifChanged(); renderNotif(); }
+async function askPerm(){
+  try{
+    if(nativeLN()){ await nativeLN().requestPermissions(); await scheduleNative(); }
+    else if('Notification' in window){ await Notification.requestPermission(); }
+  }catch(e){}
+  renderNotif();
+}
+function notify(title, body){
+  try{ if(!nativeLN() && 'Notification' in window && Notification.permission==='granted' && document.hidden){ new Notification(title,{body}); return; } }catch(e){}
+  $('bn-t').textContent = title; $('bn-b').textContent = body;
+  const b=$('banner'); b.classList.add('on'); clearTimeout(b._t); b._t=setTimeout(()=>b.classList.remove('on'),6000);
+}
+function weeklySummary(){ const w=weekStats(); return `Bu hafta ${w.ok} gün sigarasız, ${w.passed} kriz atlattın. Ortalama günlük puanın %${w.score}.`; }
+function shiftTime(time, mins){ let [h,m]=time.split(':').map(Number); let t=(h*60+m+mins+1440)%1440; return pad(Math.floor(t/60))+':'+pad(t%60); }
+
+/* Uygulama açıkken çalışan hatırlatıcılar (native eklenti yoksa) */
+function checkReminders(){
+  if(nativeLN()) return;
+  const n=S.notif, d=new Date(), hm=pad(d.getHours())+':'+pad(d.getMinutes()), k=dkey();
+  const fire=(id,t,b)=>{ const f=id+'@'+k; if(S.fired[f]) return; S.fired[f]=1; save(false); notify(t,b); };
+  if(n.morning.on && hm===n.morning.time) fire('m','Günaydın ☀️', MOTTOS[Math.floor(Date.now()/D)%MOTTOS.length]);
+  if(n.evening.on && hm===n.evening.time && !day().review) fire('e','Günü değerlendir 🌙','Bugün nasıl geçti? 30 saniyeni ayır.');
+  const hh=hardHour(); if(n.hard.on && hh!=null && hm===shiftTime(pad(hh)+':00',-10)) fire('h','Birazdan zor bir saat ⏰','Genelde bu saatlerde zorlanıyorsun. İstek gelirse ACİL butonu burada.');
+  if(n.weekly.on && d.getDay()===0 && hm==='20:00') fire('w','Haftalık raporun 📊', weeklySummary());
+  n.custom.forEach((c,i)=>{ if(c.on!==false && hm===c.time) fire('c'+i+c.time, 'Hatırlatma', c.text); });
+}
+function markMilestones(){ const el=Date.now()-S.quit; MS.forEach(([t],i)=>{ if(el>=t) S.fired['ms'+i+'_'+S.quit]=1; }); }
+function checkHealthNotif(el){
+  let hit=null;
+  MS.forEach(([t,txt],i)=>{ const f='ms'+i+'_'+S.quit; if(el>=t && !S.fired[f]){ S.fired[f]=1; hit=txt; } });
+  if(hit){ save(false); if(S.notif.health.on && !nativeLN()) notify('Yeni iyileşme aşaması ❤️', hit); }
+}
+function pruneFired(){ const k=dkey(); for(const f in S.fired){ if(!f.startsWith('ms') && !f.endsWith('@'+k)) delete S.fired[f]; } }
+
+/* APK (Capacitor) içinde gerçek bildirim zamanlaması */
+async function scheduleNative(){
+  const LN = nativeLN(); if(!LN || !S) return;
+  try{
+    const p = await LN.getPending();
+    if(p.notifications?.length) await LN.cancel({notifications:p.notifications.map(x=>({id:x.id}))});
+    const n=S.notif, list=[];
+    const daily=(id,time,title,body)=>{ const [h,m]=time.split(':').map(Number); list.push({id,title,body,schedule:{on:{hour:h,minute:m},allowWhileIdle:true}}); };
+    if(n.morning.on) daily(1,n.morning.time,'Günaydın ☀️','Bugün de sigarasız bir gün seni bekliyor.');
+    if(n.evening.on) daily(2,n.evening.time,'Günü değerlendir 🌙','Bugün nasıl geçti? 30 saniyeni ayır.');
+    const hh=hardHour(); if(n.hard.on && hh!=null) daily(3,shiftTime(pad(hh)+':00',-10),'Birazdan zor bir saat ⏰','İstek gelirse ACİL butonu burada.');
+    if(n.weekly.on) list.push({id:4,title:'Haftalık raporun 📊',body:'Bu haftaki ilerlemeni görmek için uygulamayı aç.',schedule:{on:{weekday:1,hour:20,minute:0},allowWhileIdle:true}});
+    n.custom.forEach((c,i)=>{ if(c.on!==false) daily(100+i,c.time,'Hatırlatma',c.text); });
+    if(n.health.on){ const now=Date.now(); MS.forEach(([t,txt],i)=>{ const at=S.quit+t; if(at>now) list.push({id:200+i,title:'Yeni iyileşme aşaması ❤️',body:txt,schedule:{at:new Date(at),allowWhileIdle:true}}); }); }
+    if(list.length) await LN.schedule({notifications:list});
+  }catch(e){}
+}
+
+/* ================= Yedekleme ================= */
+function exportData(){ return JSON.stringify({app:'nefes', version:3, exportedAt:new Date().toISOString(), data:S}, null, 2); }
+function bkName(){ return 'nefes-yedek-'+dkey()+'.json'; }
+function markBackup(){ S.backupAt = Date.now(); save(); if($('v-backup').classList.contains('on')) renderBackup(); }
+function backupLine(){
+  if(S.sync.on) return 'Bulut senkronizasyonu açık';
+  return S.backupAt ? 'Son yedek: '+new Date(S.backupAt).toLocaleDateString('tr-TR',{day:'numeric',month:'long'}) : 'Henüz yedek alınmadı';
+}
+async function backupShare(){
+  const txt = exportData();
+  try{
+    const f = new File([txt], bkName(), {type:'application/json'});
+    if(navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], title:'Nefes yedeği'}); markBackup(); toast('Yedek paylaşıldı'); return; }
+  }catch(e){ if(e && e.name==='AbortError') return; }
+  backupDownload();
+}
+function backupDownload(){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([exportData()], {type:'application/json'}));
+  a.download = bkName(); document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+  markBackup(); toast('Yedek indirildi');
+}
+async function backupCopy(){
+  try{ await navigator.clipboard.writeText(exportData()); markBackup(); toast('Yedek panoya kopyalandı'); }
+  catch(e){ toast('Kopyalanamadı; “İndir”i dene'); }
+}
+function validData(d){ return d && typeof d==='object' && typeof d.quit==='number' && d.per > 0; }
+function importText(txt){
+  let o; try{ o = JSON.parse(txt); }catch(e){ toast('Okunamadı: geçerli bir yedek değil'); return; }
+  const d = o && o.app==='nefes' ? o.data : o;
+  if(!validData(d)){ toast('Bu bir Nefes yedeği değil'); return; }
+  if(S && !confirm('Yedek yüklenecek ve bu cihazdaki verilerin yerine geçecek. Devam edilsin mi?')) return;
+  const keep = S && S.sync && S.sync.on ? S.sync : null;
+  S = d; defaults(); if(keep) S.sync = keep;
+  S.backupAt = Date.now(); save();
+  if($('imp-text')) $('imp-text').value='';
+  start(); toast('Yedek geri yüklendi ✓');
+}
+function importFile(inp){
+  const f = inp.files[0]; if(!f) return;
+  const r = new FileReader(); r.onload = () => importText(r.result); r.readAsText(f); inp.value='';
+}
+function renderBackupWarn(){
+  const now = Date.now(), need = !S.sync.on && now-S.backupAt > 7*D && now-S.first > D;
+  $('backup-warn').innerHTML = need ? `<button class="rowlink" style="border-color:rgba(251,191,36,.45)" onclick="go('backup')"><span class="em">💾</span><span><b>İlerlemeni yedekle</b><small>${S.backupAt ? 'Son yedek '+Math.floor((now-S.backupAt)/D)+' gün önce' : 'Henüz hiç yedek almadın'}. Telefon değişirse verilerin kaybolabilir.</small></span></button>` : '';
+}
+function renderBackup(){
+  const sy = S.sync;
+  $('bk-status').innerHTML = `
+    <div class="stat"><span>Dosya yedeği</span><b>${S.backupAt ? new Date(S.backupAt).toLocaleString('tr-TR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : 'Hiç alınmadı'}</b></div>
+    <div class="stat"><span>Bulut</span><b style="color:${sy.on ? (sy.err ? 'var(--amber)' : 'var(--lime)') : 'var(--muted)'}">${sy.on ? (sy.err ? 'Sorun var' : 'Açık') : 'Kapalı'}</b></div>
+    <div class="stat"><span>Kalıcı depolama</span><b id="persist-st">…</b></div>`;
+  try{ navigator.storage.persisted().then(v=>{ const el=$('persist-st'); if(el) el.textContent = v ? 'Korunuyor' : 'Tarayıcıya bağlı'; }); }catch(e){ $('persist-st').textContent='—'; }
+  renderSyncCard();
+}
+function renderSyncStatus(){ if($('v-backup').classList.contains('on')) renderBackup(); }
+
+/* ================= Bulut senkronizasyonu (Firebase Realtime Database, REST) ================= */
+const RULES = `{
+  "rules": {
+    "nefes": {
+      "$kod": {
+        ".read": "$kod.length >= 20",
+        ".write": "$kod.length >= 20"
+      }
+    }
+  }
+}`;
+function genCode(){ const ch='abcdefghjkmnpqrstuvwxyz23456789', a=new Uint32Array(24); crypto.getRandomValues(a); return Array.from(a, x=>ch[x%ch.length]).join(''); }
+function syncUrl(sy){ return sy.url.trim().replace(/\/+$/,'') + '/nefes/' + encodeURIComponent(sy.code.trim()) + '.json'; }
+function syncHelp(){
+  return `<details><summary>Kurulum adımları ve güvenlik kuralları</summary>
+    <ol class="steps">
+      <li>console.firebase.google.com adresinde bir proje aç (ücretsiz Spark planı yeterli).</li>
+      <li>Build → Realtime Database → veritabanı oluştur.</li>
+      <li>Rules (Kurallar) sekmesine aşağıdaki kuralları yapıştırıp yayınla.</li>
+      <li>Veritabanı adresini (…firebaseio.com ya da …firebasedatabase.app) buraya yaz.</li>
+      <li>“Yeni kod” ile bir senkron kodu oluştur ve bir yere not et. Yeni telefonda aynı adres ve kodla bağlan.</li>
+    </ol>
+    <pre class="code">${RULES}</pre>
+    <p class="note">Önemli: Senkron kodunu bilen herkes verilerini (notların dahil) okuyabilir. Kodu kimseyle paylaşma; uzun ve rastgele olduğu sürece tahmin edilemez.</p></details>`;
+}
+function renderSyncCard(){
+  const sy = S.sync;
+  if(sy.on){
+    $('sync-card').innerHTML = `
+      <div class="stat"><span>Durum</span><b style="color:${sy.err?'var(--amber)':'var(--lime)'}">${sy.err ? escapeHtml(sy.err) : 'Bağlı'}</b></div>
+      <div class="stat"><span>Son eşitleme</span><b>${sy.last ? new Date(sy.last).toLocaleString('tr-TR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—'}</b></div>
+      <label>Senkron kodun</label>
+      <div style="display:flex;gap:8px"><input readonly value="${escapeHtml(sy.code)}" style="font-size:14px;padding:12px"><button class="btn sec sm" style="margin:0;width:auto" onclick="navigator.clipboard.writeText(S.sync.code).then(()=>toast('Kod kopyalandı'))">Kopyala</button></div>
+      <p class="note">Değişiklikler birkaç saniye içinde otomatik gönderilir; uygulama açıldığında da buluttaki daha yeni veriler indirilir.</p>
+      <button class="btn pri sm" onclick="syncNow(false)">Şimdi eşitle</button>
+      <button class="btn ghost sm" onclick="disconnectSync()">Bağlantıyı kes</button>
+      ${syncHelp()}`;
+  } else {
+    $('sync-card').innerHTML = `
+      <p class="empty" style="margin:0">Kendi Firebase veritabanına bağlanarak verilerini otomatik yedekle ve birden fazla cihazda eşitle. Hesap girişi gerekmez; bir senkron kodu kullanılır.</p>
+      <label>Veritabanı adresi</label>
+      <input id="sy-url" placeholder="https://proje-adi-default-rtdb.firebaseio.com" value="${escapeHtml(sy.url)}" style="font-size:14px">
+      <label>Senkron kodu</label>
+      <div style="display:flex;gap:8px"><input id="sy-code" placeholder="En az 20 karakter" value="${escapeHtml(sy.code)}" style="font-size:14px"><button class="btn sec sm" style="margin:0;width:auto;white-space:nowrap" onclick="$('sy-code').value=genCode()">Yeni kod</button></div>
+      <button class="btn pri sm" onclick="connectSync()">Bağlan</button>
+      ${syncHelp()}`;
+  }
+}
+function readSyncForm(){
+  const url = $('sy-url').value.trim(), code = $('sy-code').value.trim();
+  if(!/^https:\/\/[^\s]+$/.test(url)){ toast('Geçerli bir veritabanı adresi gir (https://…)'); return null; }
+  if(!/^[A-Za-z0-9_-]{20,}$/.test(code)){ toast('Kod en az 20 harf/rakam olmalı'); return null; }
+  return {url, code};
+}
+async function fetchRemote(sy){
+  const r = await fetch(syncUrl(sy), {cache:'no-store'});
+  if(!r.ok) throw new Error(r.status===401||r.status===403 ? 'izin yok, kuralları kontrol et' : 'HTTP '+r.status);
+  return await r.json();
+}
+async function connectSync(){
+  const f = readSyncForm(); if(!f) return;
+  const cand = {...f, on:true, last:0, err:''};
+  let remote;
+  try{ remote = await fetchRemote(cand); }catch(e){ toast('Bağlanılamadı: '+e.message); return; }
+  if(remote && validData(remote.data) && !confirm('Bu kodla bulutta kayıtlı veri var. Hangisi daha yeniyse o kullanılacak. Devam edilsin mi?')) return;
+  S.sync = cand; save(false);
+  await syncNow(false); renderBackup();
+}
+function disconnectSync(){
+  if(!confirm('Bulut bağlantısı kesilsin mi? Buluttaki kopya silinmez, bu cihaz artık eşitlenmez.')) return;
+  S.sync.on = false; save(false); renderBackup(); toast('Bağlantı kesildi');
+}
+async function syncPush(){
+  if(!S || !S.sync.on) return;
+  try{
+    const r = await fetch(syncUrl(S.sync), {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({updatedAt:S.updatedAt, data:S})});
+    if(!r.ok) throw new Error(r.status===401||r.status===403 ? 'izin yok, kuralları kontrol et' : 'HTTP '+r.status);
+    S.sync.last = Date.now(); S.sync.err = '';
+  }catch(e){ S.sync.err = 'Gönderilemedi ('+e.message+')'; }
+  save(false); renderSyncStatus();
+}
+async function syncNow(silent){
+  if(!S || !S.sync.on) return;
+  try{
+    const remote = await fetchRemote(S.sync);
+    if(remote && validData(remote.data) && (remote.updatedAt||0) > (S.updatedAt||0)){
+      const sy = {...S.sync}; S = remote.data; defaults(); S.sync = {...sy, last:Date.now(), err:''};
+      save(false); refreshAll();
+      if(!silent) toast('Buluttaki daha yeni veriler indirildi');
+    } else {
+      await syncPush();
+      if(!silent && !S.sync.err) toast('Eşitlendi ✓');
+    }
+  }catch(e){ S.sync.err = 'Bağlanılamadı ('+e.message+')'; save(false); if(!silent) toast('Bulut bağlantısı kurulamadı'); }
+  renderSyncStatus();
+}
+function refreshAll(){
+  const v = document.querySelector('.view.on');
+  $('motto').textContent = MOTTOS[Math.floor(Date.now()/D) % MOTTOS.length];
+  go(v && v.id!=='v-setup' ? v.id.slice(2) : 'home');
+}
+function openCloudSetup(){
+  openSheet(`<h3>Bulut koduyla bağlan</h3><p>Önceki telefonunda kullandığın veritabanı adresini ve senkron kodunu gir.</p>
+    <label>Veritabanı adresi</label><input id="sy-url" placeholder="https://proje-adi-default-rtdb.firebaseio.com" style="font-size:14px">
+    <label>Senkron kodu</label><input id="sy-code" placeholder="Senkron kodun" style="font-size:14px">
+    <button class="btn pri" onclick="cloudRestore()">Verilerimi indir</button>
+    <button class="btn ghost" style="border:none" onclick="closeSheet()">Vazgeç</button>`);
+}
+async function cloudRestore(){
+  const f = readSyncForm(); if(!f) return;
+  const sy = {...f, on:true, last:Date.now(), err:''};
+  try{
+    const remote = await fetchRemote(sy);
+    if(!remote || !validData(remote.data)){ toast('Bu kodla kayıtlı veri bulunamadı'); return; }
+    S = remote.data; defaults(); S.sync = sy; save(false);
+    closeSheet(); start(); toast('Verilerin geri yüklendi ✓');
+  }catch(e){ toast('Bağlanılamadı: '+e.message); }
+}
+
+/* ================= Başlat ================= */
+function start(){
+  $('nav').style.display='block';
+  $('motto').textContent = MOTTOS[Math.floor(Date.now()/D) % MOTTOS.length];
+  pruneFired(); save(false);
+  go('home');
+  clearInterval(tickT); tickT=setInterval(tick,1000);
+  scheduleNative();
+  try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){}
+  if(S.sync.on) syncNow(true);
+}
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){ window.addEventListener('load', ()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden && S && S.sync && S.sync.on) syncNow(true); });
+load();
+if(S){ defaults(); start(); }
+else { show('setup'); $('f-quit').value = toLocal(Date.now()); }
+</script>
+</body>
+</html>
