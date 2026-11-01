@@ -1,6 +1,6 @@
 # Nefes – Sigara Bırakma Takip Uygulaması
 
-Sigarayı bırakma sürecini takip eden, modern ve minimalist bir mobil web uygulaması. Tek bir HTML dosyasından oluşur, internet gerekmeden çalışır ve telefona uygulama gibi kurulabilir.
+Sigarayı bırakma sürecini takip eden, modern ve minimalist bir mobil web uygulaması. Derleme aracı gerektirmeyen sade HTML, CSS ve JavaScript ile yazılmıştır; internet gerekmeden çalışır ve telefona uygulama gibi kurulabilir.
 
 **Canlı sürüm:** https://karadenizmehmet-debug.github.io/Quitcigaret/
 
@@ -28,10 +28,35 @@ Sigarayı bırakma sürecini takip eden, modern ve minimalist bir mobil web uygu
 
 | Dosya | Görevi |
 |---|---|
-| `index.html` | Uygulamanın tamamı |
-| `manifest.webmanifest` | Telefona “uygulama olarak” kurulabilmesi için |
-| `sw.js` | İnternetsiz çalışma (service worker) |
-| `icon-192.png`, `icon-512.png` | Uygulama ikonları |
+| `index.html` | Ekranların HTML iskeleti |
+| `css/style.css` | Tüm stiller |
+| `js/data.js` | Sabit veriler: dönüm noktaları, mesajlar, tetikleyiciler, hedefler |
+| `js/core.js` | Durum, kayıt ve hesaplamalar |
+| `js/content.js` | Rozet tanımları, seviyeler, bilgi merkezi metinleri |
+| `js/app.js` | Gezinme, kurulum, ayarlar, özet ekranı |
+| `js/screens.js` | Sağlık, tasarruf, bilgi merkezi |
+| `js/achievements.js` | Başarılar, rozetler, kutlama, grafikler, başarı kartı |
+| `js/recovery.js` | Kayma, yeniden başlama, kademeli bırakma, 30 günlük program |
+| `js/crisis.js` | ACİL destek ve nefes egzersizi |
+| `js/games.js` | Hafıza kartları, blok bulmaca, Dört Bağla |
+| `js/notifications.js` | Bildirimler |
+| `js/backup.js` | Dosya yedeği ve bulut senkronizasyonu |
+| `js/main.js` | Başlatma |
+| `manifest.webmanifest`, `sw.js`, `icon-*.png` | Telefona kurulum ve internetsiz çalışma |
+| `tests/test_app.py` | Uçtan uca testler |
+
+Betikler `index.html` içinde yukarıdaki sırayla yüklenir; sıra önemlidir (`content.js`, `core.js`'deki yardımcıları kullanır).
+Yeni bir dosya eklenirse `sw.js` içindeki önbellek listesine de eklenmeli ve `CACHE` sürümü artırılmalıdır.
+
+## Testler
+
+```bash
+pip install playwright && python -m playwright install chromium
+python tests/test_app.py            # tümü
+python tests/test_app.py games      # adında "games" geçenler
+```
+
+Kurulum, kayma ve yeniden başlama, yedek ve bulut senkronizasyonu, sağlık, kademeli bırakma, grafikler, başarı kartı, rozetler, ACİL ve oyunlar test edilir.
 
 ## Telefona kurulum
 
@@ -43,7 +68,7 @@ Canlı adresi Chrome’da aç → sağ üstteki menü → **Ana ekrana ekle / Uy
 npm init -y
 npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/local-notifications
 npx cap init Nefes com.karadeniz.nefes --web-dir www
-mkdir www && cp index.html manifest.webmanifest icon-*.png www/
+mkdir www && cp -r index.html css js manifest.webmanifest icon-*.png www/
 npx cap add android
 npx cap open android
 ```
