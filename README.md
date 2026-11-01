@@ -8,9 +8,10 @@ Sigarayı bırakma sürecini takip eden, modern ve minimalist bir mobil web uygu
 
 - **Özet:** Sigarasız geçen süre, biriktirilen para, içilmeyen sigara, tahmini kazanılan ömür, haftalık takvim şeridi ve seviye
 - **Sağlık:** WHO ve CDC kaynaklı 12 bilimsel dönüm noktası; gerçekleşme ve tahmini tarihleriyle
-- **ACİL destek:** Tetikleyici kaydı, 2 dakikalık nefes egzersizi, 5 dakikalık dikkat dağıtma oyunu, su, yürüyüş ve motivasyon
+- **ACİL destek:** Tetikleyici kaydı, 2 dakikalık nefes egzersizi, oyunlar, su, yürüyüş ve motivasyon
+- **Oyunlar (ACİL içinde):** Blok bulmaca (Tetris tarzı), hafıza kartları, baloncuk patlatma ve Dört Bağla (bilgisayara karşı, kolay/zor). Puan oyuna değil, atlatılan krize verilir.
 - **Tasarruf:** Günlük, haftalık, aylık ve yıllık hesap; kişisel tasarruf hedefi
-- **Başarılar:** 8 kategoride 63 rozet (Seri, Sağlık, Para, Sigara, Krizler, Nefes ve oyun, Alışkanlıklar, Özel), seviye sistemi, aylık takvim, haftalık rapor, azaltma oranı ve deneme geçmişi
+- **Başarılar:** 8 kategoride 66 rozet (Seri, Sağlık, Para, Sigara, Krizler, Nefes ve oyun, Alışkanlıklar, Özel), seviye sistemi, aylık takvim, haftalık rapor, azaltma oranı ve deneme geçmişi
 - **Kutlama anları:** Yeni rozet ve kriz atlatma anlarında konfeti ve titreşim
 - **Sesli ve titreşimli nefes rehberi:** Ekrana bakmadan, gözler kapalı egzersiz; ekran açık kalır
 - **Kayma takibi:** Kaç sigara içildiğini kaydeder; yeniden başlamada kazanımlar korunur ve 72 saatlik yeniden başlama planı sunulur
