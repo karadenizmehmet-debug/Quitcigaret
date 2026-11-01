@@ -28,33 +28,33 @@
 <div class="wrap view" id="v-setup">
   <div class="intro">
     <div class="logo"><i><svg viewBox="0 0 24 24" fill="none" stroke="#08130a" stroke-width="2.4" stroke-linecap="round"><path d="M4 12c4 0 6-3 8-6 2 3 4 6 8 6M4 16h16M7 20h10"/></svg></i></div>
-    <h2>Her nefes<br><em>yeni bir başlangıç.</em></h2>
-    <p class="sub" style="margin-top:14px">Birkaç bilgi gir; ilerlemeni, tasarrufunu ve sağlığındaki değişimi biz hesaplayalım.</p>
+    <h2 data-i18n-html="her_nefes_yeni_bir_baslangic">Her nefes<br><em>yeni bir başlangıç.</em></h2>
+    <p data-i18n="birkac_bilgi_gir_ilerlemeni_tasarr" class="sub" style="margin-top:14px">Birkaç bilgi gir; ilerlemeni, tasarrufunu ve sağlığındaki değişimi biz hesaplayalım.</p>
   </div>
-  <label>Nasıl bırakmak istiyorsun?</label>
-  <div class="seg" id="f-mode"><button class="on" data-m="now" onclick="setMode('now')">Hemen bırak</button><button data-m="reduce" onclick="setMode('reduce')">Kademeli azalt</button></div>
-  <div id="f-quitbox"><label>Bıraktığın an</label><input type="datetime-local" id="f-quit"></div>
-  <div id="f-reduce" style="display:none"><label>Kaç haftada bırakmak istiyorsun?</label><input type="number" id="f-weeks" inputmode="numeric" value="4" min="1" max="12">
-    <p class="note">Günlük sigara sınırın her hafta azalır; planın sonunda tamamen bırakırsın.</p></div>
-  <label>Günde kaç sigara içiyordun?</label><input type="number" id="f-per" inputmode="numeric" placeholder="20" min="1">
-  <label>Paket fiyatı (₺)</label><input type="number" id="f-price" inputmode="decimal" placeholder="100" min="0">
-  <label>Paketteki sigara sayısı</label><input type="number" id="f-pack" inputmode="numeric" placeholder="20" min="1">
-  <button class="btn pri" style="margin-top:28px" onclick="saveSetup()">Yolculuğa başla</button>
-  <div class="sech" style="margin-top:34px">Daha önce kullandın mı?</div>
-  <button class="btn sec" style="margin-top:0" onclick="$('imp-file2').click()">💾 Yedek dosyasından geri yükle</button>
+  <label data-i18n="nasil_birakmak_istiyorsun">Nasıl bırakmak istiyorsun?</label>
+  <div class="seg" id="f-mode"><button data-i18n="hemen_birak" class="on" data-m="now" onclick="setMode('now')">Hemen bırak</button><button data-i18n="kademeli_azalt" data-m="reduce" onclick="setMode('reduce')">Kademeli azalt</button></div>
+  <div id="f-quitbox"><label data-i18n="biraktigin_an">Bıraktığın an</label><input type="datetime-local" id="f-quit"></div>
+  <div id="f-reduce" style="display:none"><label data-i18n="kac_haftada_birakmak_istiyorsun">Kaç haftada bırakmak istiyorsun?</label><input type="number" id="f-weeks" inputmode="numeric" value="4" min="1" max="12">
+    <p data-i18n="gunluk_sigara_sinirin_her_hafta" class="note">Günlük sigara sınırın her hafta azalır; planın sonunda tamamen bırakırsın.</p></div>
+  <label data-i18n="gunde_kac_sigara_iciyordun">Günde kaç sigara içiyordun?</label><input type="number" id="f-per" inputmode="numeric" placeholder="20" min="1">
+  <label data-i18n="paket_fiyati">Paket fiyatı (₺)</label><input type="number" id="f-price" inputmode="decimal" placeholder="100" min="0">
+  <label data-i18n="paketteki_sigara_sayisi">Paketteki sigara sayısı</label><input type="number" id="f-pack" inputmode="numeric" placeholder="20" min="1">
+  <button data-i18n="yolculuga_basla" class="btn pri" style="margin-top:28px" onclick="saveSetup()">Yolculuğa başla</button>
+  <div data-i18n="daha_once_kullandin_mi" class="sech" style="margin-top:34px">Daha önce kullandın mı?</div>
+  <button data-i18n="yedek_dosyasindan_geri_yukle" class="btn sec" style="margin-top:0" onclick="$('imp-file2').click()">💾 Yedek dosyasından geri yükle</button>
   <input type="file" id="imp-file2" accept=".json,application/json,text/plain" style="display:none" onchange="importFile(this)">
-  <button class="btn sec" onclick="openCloudSetup()">☁️ Bulut koduyla bağlan</button>
-  <div class="foot">Mehmet Karadeniz, 2026-2027</div>
+  <button data-i18n="bulut_koduyla_baglan" class="btn sec" onclick="openCloudSetup()">☁️ Bulut koduyla bağlan</button>
+  <div data-i18n="mehmet_karadeniz_2026_2027" class="foot">Mehmet Karadeniz, 2026-2027</div>
 </div>
 
 <!-- ============ ÖZET ============ -->
 <div class="wrap view" id="v-home">
   <div class="top">
-    <div class="logo"><i><svg viewBox="0 0 24 24" fill="none" stroke="#08130a" stroke-width="2.4" stroke-linecap="round"><path d="M4 12c4 0 6-3 8-6 2 3 4 6 8 6M4 16h16M7 20h10"/></svg></i>Nefes</div>
+    <div data-i18n-text="nefes" class="logo"><i><svg viewBox="0 0 24 24" fill="none" stroke="#08130a" stroke-width="2.4" stroke-linecap="round"><path d="M4 12c4 0 6-3 8-6 2 3 4 6 8 6M4 16h16M7 20h10"/></svg></i>Nefes</div>
     <div class="tb">
-      <button class="iconbtn" onclick="go('learn')" aria-label="Bilgi merkezi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5zM4 19.5V21h16"/></svg></button>
-      <button class="iconbtn" onclick="go('notif')" aria-label="Bildirimler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg></button>
-      <button class="iconbtn" onclick="go('set')" aria-label="Ayarlar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
+      <button data-i18n-attr="aria-label:bilgi_merkezi" class="iconbtn" onclick="go('learn')" aria-label="Bilgi merkezi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5zM4 19.5V21h16"/></svg></button>
+      <button data-i18n-attr="aria-label:bildirimler" class="iconbtn" onclick="go('notif')" aria-label="Bildirimler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg></button>
+      <button data-i18n-attr="aria-label:ayarlar" class="iconbtn" onclick="go('set')" aria-label="Ayarlar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
     </div>
   </div>
 
@@ -64,17 +64,17 @@
         <circle cx="115" cy="115" r="103" fill="none" stroke="#252d29" stroke-width="14"/>
         <circle id="heroRing" cx="115" cy="115" r="103" fill="none" stroke="url(#gL)" stroke-width="14" stroke-linecap="round" stroke-dasharray="647.2" stroke-dashoffset="647.2" style="transition:stroke-dashoffset .8s"/>
       </svg>
-      <div class="c"><div class="d" id="days">0</div><div class="l" id="hero-l">gün sigarasız</div></div>
+      <div class="c"><div class="d" id="days">0</div><div data-i18n="gun_sigarasiz" class="l" id="hero-l">gün sigarasız</div></div>
     </div>
     <div class="tiles">
-      <div class="tile"><b id="hh">00</b><span>saat</span></div>
-      <div class="tile"><b id="mm">00</b><span>dakika</span></div>
-      <div class="tile"><b id="ss">00</b><span>saniye</span></div>
+      <div class="tile"><b id="hh">00</b><span data-i18n="saat">saat</span></div>
+      <div class="tile"><b id="mm">00</b><span data-i18n="dakika">dakika</span></div>
+      <div class="tile"><b id="ss">00</b><span data-i18n="saniye">saniye</span></div>
     </div>
   </div>
 
   <div class="card motto" style="margin-top:12px">
-    <div class="k">✦ Günün mesajı</div>
+    <div data-i18n="gunun_mesaji" class="k">✦ Günün mesajı</div>
     <div class="q" id="motto"></div>
   </div>
 
@@ -89,24 +89,24 @@
   <div class="grid" style="margin-top:12px">
     <div class="card" onclick="go('save')">
       <div class="ic" style="background:rgba(181,242,61,.14);color:var(--lime)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M16 15h2"/></svg></div>
-      <div class="k">Biriktirilen</div><div class="v" id="money">₺0</div>
+      <div data-i18n="biriktirilen" class="k">Biriktirilen</div><div class="v" id="money">₺0</div>
     </div>
     <div class="card">
       <div class="ic" style="background:rgba(45,212,191,.14);color:var(--teal)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 15h14v3H3zM20 15v3M17 11c0-2 3-2 3-5"/><path d="M4 4l16 16"/></svg></div>
-      <div class="k">İçilmeyen sigara</div><div class="v" id="cigs">0</div>
+      <div data-i18n="icilmeyen_sigara" class="k">İçilmeyen sigara</div><div class="v" id="cigs">0</div>
     </div>
     <div class="card">
       <div class="ic" style="background:rgba(139,92,246,.16);color:var(--violet)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg></div>
-      <div class="k">Tahmini kazanılan ömür</div><div class="v" id="life">0</div>
+      <div data-i18n="tahmini_kazanilan_omur" class="k">Tahmini kazanılan ömür</div><div class="v" id="life">0</div>
     </div>
     <div class="card">
       <div class="ic" style="background:rgba(251,191,36,.14);color:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg></div>
-      <div class="k" id="succ-k">Sigarasız gün oranı</div><div class="v" id="succ">%100</div>
+      <div data-i18n="sigarasiz_gun_orani" class="k" id="succ-k">Sigarasız gün oranı</div><div class="v" id="succ">%100</div>
     </div>
   </div>
 
   <div class="card" style="margin-top:12px">
-    <div class="k">Sağlık · sıradaki iyileşme aşaması</div>
+    <div data-i18n="saglik_siradaki_iyilesme_asamasi" class="k">Sağlık · sıradaki iyileşme aşaması</div>
     <div class="nextt" id="next-t">—</div>
     <div class="bar"><i id="next-b" style="width:0"></i></div>
     <div class="meta"><span id="next-p"></span><span id="next-r"></span></div>
@@ -114,266 +114,267 @@
 
   <div id="prog-card"></div>
 
-  <div class="sech">Bugünkü hedefler <span id="goal-sum"></span></div>
+  <div data-i18n-text="bugunku_hedefler" class="sech">Bugünkü hedefler <span id="goal-sum"></span></div>
   <div class="card" id="goals"></div>
   <div id="review-card"></div>
   <div id="backup-warn"></div>
 
-  <div class="sech">Tetikleyicilerin</div>
+  <div data-i18n="tetikleyicilerin" class="sech">Tetikleyicilerin</div>
   <div class="card" id="trig-card"></div>
 
-  <button class="rowlink" onclick="go('learn')"><span class="em">📚</span><span><b>Bilgi merkezi</b><small>Yoksunluk, ilk hafta, stres, kilo ve daha fazlası</small></span></button>
+  <button class="rowlink" onclick="go('learn')"><span class="em">📚</span><span><b data-i18n="bilgi_merkezi">Bilgi merkezi</b><small data-i18n="yoksunluk_ilk_hafta_stres_kilo">Yoksunluk, ilk hafta, stres, kilo ve daha fazlası</small></span></button>
 
-  <button class="btn ghost" style="margin-top:22px" onclick="openSlip()">Bir tane içtim</button>
+  <button data-i18n="bir_tane_ictim" class="btn ghost" style="margin-top:22px" onclick="openSlip()">Bir tane içtim</button>
 </div>
 
 <!-- ============ SAĞLIK ============ -->
 <div class="wrap view" id="v-health">
-  <div class="title">Vücudundaki değişim</div>
-  <div class="sub">Sigarayı bıraktığın andan itibaren vücudun kendini onarmaya başlar.</div>
+  <div data-i18n="vucudundaki_degisim" class="title">Vücudundaki değişim</div>
+  <div data-i18n="sigarayi_biraktigin_andan_itibaren" class="sub">Sigarayı bıraktığın andan itibaren vücudun kendini onarmaya başlar.</div>
   <div class="card" id="hsum"></div>
-  <div class="sech">Zaman çizelgesi</div>
+  <div data-i18n="zaman_cizelgesi" class="sech">Zaman çizelgesi</div>
   <div class="tl" id="timeline"></div>
-  <p class="note">Süreler Dünya Sağlık Örgütü (WHO) ve ABD Hastalık Kontrol Merkezi (CDC) gibi kaynaklarda yer alan genel ortalamalardır; kişiden kişiye değişir. Kişisel bir ölçüm değildir; bilgilendirme amaçlıdır ve tıbbi tavsiye yerine geçmez. Ayrıntı için bir aşamaya dokun.</p>
+  <p data-i18n="sureler_dunya_saglik_orgutu_who" class="note">Süreler Dünya Sağlık Örgütü (WHO) ve ABD Hastalık Kontrol Merkezi (CDC) gibi kaynaklarda yer alan genel ortalamalardır; kişiden kişiye değişir. Kişisel bir ölçüm değildir; bilgilendirme amaçlıdır ve tıbbi tavsiye yerine geçmez. Ayrıntı için bir aşamaya dokun.</p>
 </div>
 
 <!-- ============ TASARRUF ============ -->
 <div class="wrap view" id="v-save">
-  <div class="title">Tasarruf</div>
-  <div class="sub">Sigaraya gitmeyen her lira cebinde kalıyor.</div>
+  <div data-i18n="tasarruf" class="title">Tasarruf</div>
+  <div data-i18n="sigaraya_gitmeyen_her_lira_cebinde" class="sub">Sigaraya gitmeyen her lira cebinde kalıyor.</div>
   <div class="card money-hero">
-    <div class="k" style="justify-content:center">Şu ana kadar biriktirdiğin</div>
+    <div data-i18n="su_ana_kadar_biriktirdigin" class="k" style="justify-content:center">Şu ana kadar biriktirdiğin</div>
     <div class="big" id="sv-total">₺0</div>
     <div class="k" style="justify-content:center" id="sv-packs"></div>
   </div>
-  <div class="sech">Bırakmaya devam edersen</div>
+  <div data-i18n="birakmaya_devam_edersen" class="sech">Bırakmaya devam edersen</div>
   <div class="grid">
-    <div class="card"><div class="k">Günlük</div><div class="v" id="sv-d">₺0</div></div>
-    <div class="card"><div class="k">Haftalık</div><div class="v" id="sv-w">₺0</div></div>
-    <div class="card"><div class="k">Aylık</div><div class="v" id="sv-m">₺0</div></div>
-    <div class="card"><div class="k">Yıllık</div><div class="v" id="sv-y">₺0</div></div>
+    <div class="card"><div data-i18n="gunluk" class="k">Günlük</div><div class="v" id="sv-d">₺0</div></div>
+    <div class="card"><div data-i18n="haftalik" class="k">Haftalık</div><div class="v" id="sv-w">₺0</div></div>
+    <div class="card"><div data-i18n="aylik" class="k">Aylık</div><div class="v" id="sv-m">₺0</div></div>
+    <div class="card"><div data-i18n="yillik" class="k">Yıllık</div><div class="v" id="sv-y">₺0</div></div>
   </div>
-  <div class="sech">Tasarruf hedefin</div>
+  <div data-i18n="tasarruf_hedefin" class="sech">Tasarruf hedefin</div>
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:baseline">
-      <div style="font-size:18px;font-weight:700" id="g-name">Hedef belirle</div>
+      <div data-i18n="hedef_belirle" style="font-size:18px;font-weight:700" id="g-name">Hedef belirle</div>
       <div style="font-size:14px;color:var(--muted)" id="g-pct"></div>
     </div>
     <div class="bar" style="height:12px"><i id="g-bar" style="width:0"></i></div>
     <div class="meta"><span id="g-have"></span><span id="g-left"></span></div>
-    <label>Hedef</label>
-    <input id="g-in-name" placeholder="Örn. Yeni telefon">
+    <label data-i18n="hedef">Hedef</label>
+    <input data-i18n-attr="placeholder:orn_yeni_telefon" id="g-in-name" placeholder="Örn. Yeni telefon">
     <div class="presets" id="presets"></div>
-    <label>Tutar (₺)</label>
+    <label data-i18n="tutar">Tutar (₺)</label>
     <input type="number" id="g-in-amt" inputmode="decimal" placeholder="30000">
-    <button class="btn pri" onclick="saveGoal()">Hedefi kaydet</button>
+    <button data-i18n="hedefi_kaydet" class="btn pri" onclick="saveGoal()">Hedefi kaydet</button>
   </div>
 </div>
 
 <!-- ============ BAŞARI ============ -->
 <div class="wrap view" id="v-ach">
-  <div class="title">Başarılar</div>
-  <div class="sub">Rozetlerin ve seviyen kalıcıdır; bir kayma yaşasan bile silinmez.</div>
+  <div data-i18n="basarilar" class="title">Başarılar</div>
+  <div data-i18n="rozetlerin_ve_seviyen_kalicidir_bi" class="sub">Rozetlerin ve seviyen kalıcıdır; bir kayma yaşasan bile silinmez.</div>
   <div class="card level">
-    <div class="lvbadge"><small>SEVİYE</small><b id="lv-n">1</b></div>
+    <div class="lvbadge"><small data-i18n="seviye">SEVİYE</small><b id="lv-n">1</b></div>
     <div class="info">
-      <div class="nm" id="lv-name">Başlangıç</div>
+      <div data-i18n="baslangic" class="nm" id="lv-name">Başlangıç</div>
       <div class="bar"><i id="lv-bar" style="width:0;background:var(--grad2)"></i></div>
       <div class="meta"><span id="lv-xp"></span><span id="lv-next"></span></div>
     </div>
   </div>
-  <button class="btn pri" onclick="openShareCard()">📣 Başarımı paylaş</button>
-  <div class="sech">Rozetler</div>
+  <button data-i18n="basarimi_paylas" class="btn pri" onclick="openShareCard()">📣 Başarımı paylaş</button>
+  <div data-i18n="rozetler" class="sech">Rozetler</div>
   <div class="card coll" id="bdg-total"></div>
   <div class="cats" id="badges"></div>
-  <div class="sech">Gelişim <span>son 14 gün</span></div>
+  <div data-i18n-text="gelisim" class="sech">Gelişim <span data-i18n="son_14_gun">son 14 gün</span></div>
   <div id="charts"></div>
-  <div class="sech">Takvim</div>
+  <div data-i18n="takvim" class="sech">Takvim</div>
   <div class="card">
     <div class="calhead"><button onclick="calMove(-1)">‹</button><b id="cal-title"></b><button onclick="calMove(1)">›</button></div>
     <div class="cal" id="cal"></div>
-    <div class="legend"><span><i style="background:var(--lime)"></i>Sigarasız</span><span><i style="background:var(--amber)"></i>Kayma</span></div>
+    <div class="legend"><span data-i18n-text="sigarasiz"><i style="background:var(--lime)"></i>Sigarasız</span><span data-i18n-text="kayma"><i style="background:var(--amber)"></i>Kayma</span></div>
   </div>
-  <div class="sech">Haftalık rapor <span>son 7 gün</span></div>
+  <div data-i18n-text="haftalik_rapor" class="sech">Haftalık rapor <span data-i18n="son_7_gun">son 7 gün</span></div>
   <div class="card"><div class="rep" id="report"></div></div>
-  <div class="sech">Azaltma <span>başladığından beri</span></div>
+  <div data-i18n-text="azaltma" class="sech">Azaltma <span data-i18n="basladigindan_beri">başladığından beri</span></div>
   <div class="card" id="reduce"></div>
-  <div class="sech">Denemelerin</div>
+  <div data-i18n="denemelerin" class="sech">Denemelerin</div>
   <div class="card" id="attempts"></div>
 </div>
 
 <!-- ============ 30 GÜNLÜK PROGRAM ============ -->
 <div class="wrap view" id="v-prog">
-  <button class="back" onclick="go('home')">‹ Özet</button>
-  <div class="title">30 günlük program</div>
-  <div class="sub">Her gün küçük bir adım. Günler bırakma tarihinden itibaren sırayla açılır.</div>
+  <button data-i18n="ozet" class="back" onclick="go('home')">‹ Özet</button>
+  <div data-i18n="n30_gunluk_program" class="title">30 günlük program</div>
+  <div data-i18n="her_gun_kucuk_bir_adim" class="sub">Her gün küçük bir adım. Günler bırakma tarihinden itibaren sırayla açılır.</div>
   <div class="card" style="padding:4px 18px" id="prog-list"></div>
 </div>
 
 <!-- ============ YEDEKLEME ============ -->
 <div class="wrap view" id="v-backup">
-  <button class="back" onclick="go('set')">‹ Ayarlar</button>
-  <div class="title">Yedekleme ve senkronizasyon</div>
-  <div class="sub">Telefon değiştirdiğinde ya da tarayıcı verileri silindiğinde ilerlemen kaybolmasın.</div>
+  <button data-i18n="ayarlar_2" class="back" onclick="go('set')">‹ Ayarlar</button>
+  <div data-i18n="yedekleme_ve_senkronizasyon" class="title">Yedekleme ve senkronizasyon</div>
+  <div data-i18n="telefon_degistirdiginde_ya_da_tara" class="sub">Telefon değiştirdiğinde ya da tarayıcı verileri silindiğinde ilerlemen kaybolmasın.</div>
   <div class="card" id="bk-status"></div>
-  <div class="sech">Dosya yedeği</div>
+  <div data-i18n="dosya_yedegi" class="sech">Dosya yedeği</div>
   <div class="card">
-    <p class="empty" style="margin:0">Tüm verilerin tek bir JSON dosyasına kaydedilir. Dosyayı Google Drive’a, e-postana ya da WhatsApp’ta kendine gönderebilirsin.</p>
-    <button class="btn pri sm" onclick="backupShare()">Yedeği paylaş / kaydet</button>
-    <div class="grid" style="gap:10px"><button class="btn sec sm" onclick="backupDownload()">İndir</button><button class="btn sec sm" onclick="backupCopy()">Panoya kopyala</button></div>
+    <p data-i18n="tum_verilerin_tek_bir_json" class="empty" style="margin:0">Tüm verilerin tek bir JSON dosyasına kaydedilir. Dosyayı Google Drive’a, e-postana ya da WhatsApp’ta kendine gönderebilirsin.</p>
+    <button data-i18n="yedegi_paylas_kaydet" class="btn pri sm" onclick="backupShare()">Yedeği paylaş / kaydet</button>
+    <div class="grid" style="gap:10px"><button data-i18n="indir" class="btn sec sm" onclick="backupDownload()">İndir</button><button data-i18n="panoya_kopyala" class="btn sec sm" onclick="backupCopy()">Panoya kopyala</button></div>
   </div>
-  <div class="sech">Geri yükle</div>
+  <div data-i18n="geri_yukle" class="sech">Geri yükle</div>
   <div class="card">
-    <button class="btn sec sm" style="margin-top:0" onclick="$('imp-file').click()">Yedek dosyası seç</button>
+    <button data-i18n="yedek_dosyasi_sec" class="btn sec sm" style="margin-top:0" onclick="$('imp-file').click()">Yedek dosyası seç</button>
     <input type="file" id="imp-file" accept=".json,application/json,text/plain" style="display:none" onchange="importFile(this)">
-    <textarea id="imp-text" placeholder="…ya da yedek metnini buraya yapıştır" style="margin-top:12px"></textarea>
-    <button class="btn sec sm" onclick="importText($('imp-text').value)">Metinden geri yükle</button>
+    <textarea data-i18n-attr="placeholder:ya_da_yedek_metnini_buraya" id="imp-text" placeholder="…ya da yedek metnini buraya yapıştır" style="margin-top:12px"></textarea>
+    <button data-i18n="metinden_geri_yukle" class="btn sec sm" onclick="importText($('imp-text').value)">Metinden geri yükle</button>
   </div>
-  <div class="sech">Bulut senkronizasyonu <span>isteğe bağlı</span></div>
+  <div data-i18n-text="bulut_senkronizasyonu" class="sech">Bulut senkronizasyonu <span data-i18n="istege_bagli">isteğe bağlı</span></div>
   <div class="card" id="sync-card"></div>
 </div>
 
 <!-- ============ BİLGİ MERKEZİ ============ -->
 <div class="wrap view" id="v-learn">
-  <button class="back" onclick="go('home')">‹ Özet</button>
-  <div class="title">Bilgi merkezi</div>
-  <div class="sub">Ne yaşadığını anlamak, onunla baş etmeyi kolaylaştırır.</div>
-  <a class="rowlink help" href="tel:171"><span class="em">📞</span><span><b>ALO 171 Sigara Bırakma Danışma Hattı</b><small>Sağlık Bakanlığı · ücretsiz uzman desteği</small></span></a>
+  <button data-i18n="ozet" class="back" onclick="go('home')">‹ Özet</button>
+  <div data-i18n="bilgi_merkezi" class="title">Bilgi merkezi</div>
+  <div data-i18n="ne_yasadigini_anlamak_onunla_bas" class="sub">Ne yaşadığını anlamak, onunla baş etmeyi kolaylaştırır.</div>
+  <a class="rowlink help" href="tel:171"><span class="em">📞</span><span><b data-i18n="alo_171_sigara_birakma_danisma">ALO 171 Sigara Bırakma Danışma Hattı</b><small data-i18n="saglik_bakanligi_ucretsiz_uzman_de">Sağlık Bakanlığı · ücretsiz uzman desteği</small></span></a>
   <div id="learn"></div>
-  <p class="note" style="margin-top:16px">Bu bölüm genel bilgilendirme amaçlıdır. İlaç veya nikotin bandı gibi destekler için mutlaka doktoruna danış.</p>
+  <p data-i18n="bu_bolum_genel_bilgilendirme_amacl" class="note" style="margin-top:16px">Bu bölüm genel bilgilendirme amaçlıdır. İlaç veya nikotin bandı gibi destekler için mutlaka doktoruna danış.</p>
 </div>
 
 <!-- ============ BİLDİRİMLER ============ -->
 <div class="wrap view" id="v-notif">
-  <button class="back" onclick="go('home')">‹ Özet</button>
-  <div class="title">Bildirimler</div>
-  <div class="sub">Az ama yerinde. Hepsini istediğin gibi aç, kapat ve saatini ayarla.</div>
-  <button class="btn sec sm" id="perm-btn" onclick="askPerm()" style="margin:0 0 12px">Bildirimlere izin ver</button>
+  <button data-i18n="ozet" class="back" onclick="go('home')">‹ Özet</button>
+  <div data-i18n="bildirimler" class="title">Bildirimler</div>
+  <div data-i18n="az_ama_yerinde_hepsini_istedigin" class="sub">Az ama yerinde. Hepsini istediğin gibi aç, kapat ve saatini ayarla.</div>
+  <button data-i18n="bildirimlere_izin_ver" class="btn sec sm" id="perm-btn" onclick="askPerm()" style="margin:0 0 12px">Bildirimlere izin ver</button>
   <div class="card" style="padding:4px 18px" id="notif-list"></div>
-  <div class="sech">Özel hatırlatmalar</div>
+  <div data-i18n="ozel_hatirlatmalar" class="sech">Özel hatırlatmalar</div>
   <div class="card" style="padding:4px 18px" id="custom-list"></div>
   <div class="card" style="margin-top:12px">
     <div style="display:flex;gap:10px;align-items:center">
       <input type="time" id="c-time" value="15:00">
-      <input id="c-text" placeholder="Örn. Ara öğünde su iç" style="padding:10px 12px;font-size:15px;border-radius:12px;background:var(--card2)">
+      <input data-i18n-attr="placeholder:orn_ara_ogunde_su_ic" id="c-text" placeholder="Örn. Ara öğünde su iç" style="padding:10px 12px;font-size:15px;border-radius:12px;background:var(--card2)">
     </div>
-    <button class="btn pri sm" onclick="addCustom()">Hatırlatma ekle</button>
+    <button data-i18n="hatirlatma_ekle" class="btn pri sm" onclick="addCustom()">Hatırlatma ekle</button>
   </div>
   <p class="note" style="margin-top:14px" id="notif-note"></p>
 </div>
 
 <!-- ============ AYARLAR ============ -->
 <div class="wrap view" id="v-set">
-  <button class="back" onclick="go('home')">‹ Özet</button>
-  <div class="title">Ayarlar</div>
-  <div class="sub">Bilgilerini güncelle.</div>
-  <button class="rowlink" style="margin-top:0" onclick="openReducePlan()"><span class="em">📉</span><span><b>Kademeli bırakma planı</b><small id="set-rd"></small></span></button>
-  <button class="rowlink" onclick="go('backup')"><span class="em">💾</span><span><b>Yedekleme ve senkronizasyon</b><small id="set-bk"></small></span></button>
-  <label>Bıraktığın an</label><input type="datetime-local" id="s-quit">
-  <label>Günlük sigara</label><input type="number" id="s-per" inputmode="numeric">
-  <label>Paket fiyatı (₺)</label><input type="number" id="s-price" inputmode="decimal">
-  <label>Paketteki sigara</label><input type="number" id="s-pack" inputmode="numeric">
-  <button class="btn pri" style="margin-top:24px" onclick="saveSettings()">Kaydet</button>
-  <button class="btn dng" onclick="resetAll()">Tüm verileri sil</button>
-  <div class="foot">Nefes · Mehmet Karadeniz, 2026-2027</div>
+  <button data-i18n="ozet" class="back" onclick="go('home')">‹ Özet</button>
+  <div data-i18n="ayarlar" class="title">Ayarlar</div>
+  <div data-i18n="bilgilerini_guncelle" class="sub">Bilgilerini güncelle.</div>
+  <label for="s-lang" data-i18n="dil_language">Dil / Language</label><select id="s-lang" onchange="setLang(this.value)"></select>
+  <button class="rowlink" onclick="openReducePlan()"><span class="em">📉</span><span><b data-i18n="kademeli_birakma_plani">Kademeli bırakma planı</b><small id="set-rd"></small></span></button>
+  <button class="rowlink" onclick="go('backup')"><span class="em">💾</span><span><b data-i18n="yedekleme_ve_senkronizasyon">Yedekleme ve senkronizasyon</b><small id="set-bk"></small></span></button>
+  <label data-i18n="biraktigin_an">Bıraktığın an</label><input type="datetime-local" id="s-quit">
+  <label data-i18n="gunluk_sigara">Günlük sigara</label><input type="number" id="s-per" inputmode="numeric">
+  <label data-i18n="paket_fiyati">Paket fiyatı (₺)</label><input type="number" id="s-price" inputmode="decimal">
+  <label data-i18n="paketteki_sigara">Paketteki sigara</label><input type="number" id="s-pack" inputmode="numeric">
+  <button data-i18n="kaydet" class="btn pri" style="margin-top:24px" onclick="saveSettings()">Kaydet</button>
+  <button data-i18n="tum_verileri_sil" class="btn dng" onclick="resetAll()">Tüm verileri sil</button>
+  <div data-i18n="nefes_mehmet_karadeniz_2026_2027" class="foot">Nefes · Mehmet Karadeniz, 2026-2027</div>
 </div>
 
 <!-- ============ ALT MENÜ ============ -->
 <nav id="nav" style="display:none"><div class="in">
-  <button data-v="home" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Özet</button>
-  <button data-v="health" onclick="go('health')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Sağlık</button>
-  <button class="sos" onclick="openCrisis()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4"/><circle cx="12" cy="12" r="3"/></svg>ACİL</button>
-  <button data-v="save" onclick="go('save')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9h-4a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4H9M12 6v2M12 16v2"/></svg>Tasarruf</button>
-  <button data-v="ach" onclick="go('ach')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/></svg>Başarı</button>
+  <button data-i18n-text="ozet_2" data-v="home" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Özet</button>
+  <button data-i18n-text="saglik" data-v="health" onclick="go('health')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Sağlık</button>
+  <button data-i18n-text="acil" class="sos" onclick="openCrisis()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4"/><circle cx="12" cy="12" r="3"/></svg>ACİL</button>
+  <button data-i18n-text="tasarruf" data-v="save" onclick="go('save')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9h-4a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4H9M12 6v2M12 16v2"/></svg>Tasarruf</button>
+  <button data-i18n-text="basari" data-v="ach" onclick="go('ach')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/></svg>Başarı</button>
 </div></nav>
 
 <!-- ============ ACİL DESTEK ============ -->
 <div class="ov" id="crisis"><div class="in">
   <button class="x" onclick="closeCrisis()">×</button>
   <div class="cs" id="cs-trig">
-    <div class="title" style="margin-top:10px">Şu anda neden sigara içmek istiyorsun?</div>
-    <div class="sub">Cevabın kaydedilir; zamanla seni en çok neyin tetiklediğini görürsün.</div>
+    <div data-i18n="su_anda_neden_sigara_icmek" class="title" style="margin-top:10px">Şu anda neden sigara içmek istiyorsun?</div>
+    <div data-i18n="cevabin_kaydedilir_zamanla_seni_en" class="sub">Cevabın kaydedilir; zamanla seni en çok neyin tetiklediğini görürsün.</div>
     <div class="chips" id="chips"></div>
-    <button class="link" onclick="pickTrig(null)">Atla</button>
+    <button data-i18n="atla" class="link" onclick="pickTrig(null)">Atla</button>
   </div>
   <div class="cs" id="cs-tools">
-    <div class="title" style="margin-top:10px">Bu istek geçecek.</div>
-    <div class="sub">Sigara isteği genellikle 3–5 dakika içinde zirveye çıkıp söner. Bu süreyi birlikte geçirelim.</div>
+    <div data-i18n="bu_istek_gececek" class="title" style="margin-top:10px">Bu istek geçecek.</div>
+    <div data-i18n="sigara_istegi_genellikle_3_5" class="sub">Sigara isteği genellikle 3–5 dakika içinde zirveye çıkıp söner. Bu süreyi birlikte geçirelim.</div>
     <div class="advice" id="advice"></div>
     <div class="tools">
       <button class="tool wide" onclick="startBreath()">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 8h10a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h8"/></svg></div>
-        <div><b style="color:#fff">Nefes egzersizi</b><small>2 dakika · en etkili yöntem</small></div>
+        <div><b data-i18n="nefes_egzersizi" style="color:#fff">Nefes egzersizi</b><small data-i18n="n2_dakika_en_etkili_yontem">2 dakika · en etkili yöntem</small></div>
       </button>
-      <button class="tool" onclick="renderGamePicker();cs('games')"><div style="font-size:26px">🎮</div><b>Oyunlar</b><small>3–5 dk dikkat dağıtma</small></button>
-      <button class="tool" onclick="info('water')"><div style="font-size:26px">💧</div><b>Su iç</b><small>Bir büyük bardak</small></button>
-      <button class="tool" onclick="info('walk')"><div style="font-size:26px">🚶</div><b>Kısa yürüyüş</b><small>5–10 dakika</small></button>
-      <button class="tool" onclick="info('moti')"><div style="font-size:26px">💬</div><b>Motivasyon</b><small>Neden bıraktın?</small></button>
+      <button class="tool" onclick="renderGamePicker();cs('games')"><div style="font-size:26px">🎮</div><b data-i18n="oyunlar">Oyunlar</b><small data-i18n="n3_5_dk_dikkat_dagitma">3–5 dk dikkat dağıtma</small></button>
+      <button class="tool" onclick="info('water')"><div style="font-size:26px">💧</div><b data-i18n="su_ic">Su iç</b><small data-i18n="bir_buyuk_bardak">Bir büyük bardak</small></button>
+      <button class="tool" onclick="info('walk')"><div style="font-size:26px">🚶</div><b data-i18n="kisa_yuruyus">Kısa yürüyüş</b><small data-i18n="n5_10_dakika">5–10 dakika</small></button>
+      <button class="tool" onclick="info('moti')"><div style="font-size:26px">💬</div><b data-i18n="motivasyon">Motivasyon</b><small data-i18n="neden_biraktin">Neden bıraktın?</small></button>
     </div>
-    <button class="btn sec" style="margin-top:16px" onclick="cs('check')">İsteğim geçti mi? Kontrol et</button>
-    <a class="link" style="display:block;text-align:center" href="tel:171">Profesyonel destek: ALO 171</a>
+    <button data-i18n="istegim_gecti_mi_kontrol_et" class="btn sec" style="margin-top:16px" onclick="cs('check')">İsteğim geçti mi? Kontrol et</button>
+    <a data-i18n="profesyonel_destek_alo_171" class="link" style="display:block;text-align:center" href="tel:171">Profesyonel destek: ALO 171</a>
   </div>
   <div class="cs" id="cs-breath">
     <div class="breath">
-      <div class="sub" style="margin:0">Burnundan al, ağzından yavaşça ver</div>
+      <div data-i18n="burnundan_al_agzindan_yavasca_ver" class="sub" style="margin:0">Burnundan al, ağzından yavaşça ver</div>
       <div class="bwrap">
         <svg width="270" height="270" viewBox="0 0 270 270">
           <circle cx="135" cy="135" r="128" fill="none" stroke="#252d29" stroke-width="6"/>
           <circle id="bRing" cx="135" cy="135" r="128" fill="none" stroke="url(#gV)" stroke-width="6" stroke-linecap="round" stroke-dasharray="804.2" stroke-dashoffset="804.2"/>
         </svg>
-        <div class="orb" id="orb"><span id="bPhase">Hazır ol</span></div>
+        <div class="orb" id="orb"><span data-i18n="hazir_ol" id="bPhase">Hazır ol</span></div>
       </div>
       <div class="btime" id="bTime">2:00</div>
-      <div class="bopts"><button id="bo-voice" onclick="togglePref('voice')">🔊 Sesli rehber</button><button id="bo-vibe" onclick="togglePref('vibe')">📳 Titreşim</button></div>
+      <div class="bopts"><button data-i18n="sesli_rehber" id="bo-voice" onclick="togglePref('voice')">🔊 Sesli rehber</button><button data-i18n="titresim" id="bo-vibe" onclick="togglePref('vibe')">📳 Titreşim</button></div>
       <p class="note" id="bo-hint" style="text-align:center;max-width:300px"></p>
-      <button class="btn ghost" style="max-width:320px" onclick="endBreath(false)">Bitir</button>
+      <button data-i18n="bitir" class="btn ghost" style="max-width:320px" onclick="endBreath(false)">Bitir</button>
     </div>
   </div>
   <div class="cs" id="cs-games">
-    <div class="title" style="margin-top:10px">Bir oyun seç</div>
-    <div class="sub">Görsel dikkat isteyen kısa bir oyun, isteğin zihindeki canlılığını azaltır. 3–5 dakika yeterli.</div>
-    <button class="rowlink" style="margin-top:0" onclick="startBlocks()"><span class="em">🧩</span><span><b>Blok bulmaca</b><small>Satırları tamamla · araştırmalarda en çok denenen tür</small><small class="rec" id="rec-blocks"></small></span></button>
-    <button class="rowlink" onclick="startMemory()"><span class="em">🃏</span><span><b>Hafıza kartları</b><small>8 eşleşen çifti bul</small><small class="rec" id="rec-memory"></small></span></button>
-    <button class="rowlink" onclick="startGame()"><span class="em">🫧</span><span><b>Baloncuk patlat</b><small>5 dakika boyunca patlat</small><small class="rec" id="rec-bubble"></small></span></button>
-    <button class="rowlink" onclick="startC4()"><span class="em">🔴</span><span><b>Dört Bağla</b><small>Bilgisayara karşı dört pulu yan yana getir</small><small class="rec" id="rec-c4"></small></span></button>
-    <button class="btn ghost" onclick="cs('tools')">Geri</button>
+    <div data-i18n="bir_oyun_sec" class="title" style="margin-top:10px">Bir oyun seç</div>
+    <div data-i18n="gorsel_dikkat_isteyen_kisa_bir" class="sub">Görsel dikkat isteyen kısa bir oyun, isteğin zihindeki canlılığını azaltır. 3–5 dakika yeterli.</div>
+    <button class="rowlink" style="margin-top:0" onclick="startBlocks()"><span class="em">🧩</span><span><b data-i18n="blok_bulmaca">Blok bulmaca</b><small data-i18n="satirlari_tamamla_arastirmalarda_e">Satırları tamamla · araştırmalarda en çok denenen tür</small><small class="rec" id="rec-blocks"></small></span></button>
+    <button class="rowlink" onclick="startMemory()"><span class="em">🃏</span><span><b data-i18n="hafiza_kartlari">Hafıza kartları</b><small data-i18n="n8_eslesen_cifti_bul">8 eşleşen çifti bul</small><small class="rec" id="rec-memory"></small></span></button>
+    <button class="rowlink" onclick="startGame()"><span class="em">🫧</span><span><b data-i18n="baloncuk_patlat">Baloncuk patlat</b><small data-i18n="n5_dakika_boyunca_patlat">5 dakika boyunca patlat</small><small class="rec" id="rec-bubble"></small></span></button>
+    <button class="rowlink" onclick="startC4()"><span class="em">🔴</span><span><b data-i18n="dort_bagla">Dört Bağla</b><small data-i18n="bilgisayara_karsi_dort_pulu_yan">Bilgisayara karşı dört pulu yan yana getir</small><small class="rec" id="rec-c4"></small></span></button>
+    <button data-i18n="geri" class="btn ghost" onclick="cs('tools')">Geri</button>
   </div>
   <div class="cs" id="cs-memory">
-    <div class="ghead"><div><div class="k">Hamle · <span class="rec" id="mRec"></span></div><b id="mMoves">0</b></div><div style="text-align:right"><div class="k" style="justify-content:flex-end">Süre</div><b id="mTime">0:00</b></div></div>
+    <div class="ghead"><div><div data-i18n-text="hamle" class="k">Hamle · <span class="rec" id="mRec"></span></div><b id="mMoves">0</b></div><div style="text-align:right"><div data-i18n="sure" class="k" style="justify-content:flex-end">Süre</div><b id="mTime">0:00</b></div></div>
     <div class="mgrid" id="mgrid"></div>
-    <button class="btn ghost" onclick="endMemory()">Bitir</button>
+    <button data-i18n="bitir" class="btn ghost" onclick="endMemory()">Bitir</button>
   </div>
   <div class="cs" id="cs-blocks">
-    <div class="ghead"><div><div class="k">Puan · <span class="rec" id="tRec"></span></div><b id="tScore">0</b></div><div style="text-align:right"><div class="k" style="justify-content:flex-end">Satır</div><b id="tLines">0</b></div></div>
+    <div class="ghead"><div><div data-i18n-text="puan" class="k">Puan · <span class="rec" id="tRec"></span></div><b id="tScore">0</b></div><div style="text-align:right"><div data-i18n="satir" class="k" style="justify-content:flex-end">Satır</div><b id="tLines">0</b></div></div>
     <div class="tbox"><canvas id="tcv" width="300" height="600"></canvas></div>
-    <div class="ctrl"><button onclick="tMove(-1)" aria-label="Sola">←</button><button onclick="tRot()" aria-label="Döndür">↻</button><button onclick="tMove(1)" aria-label="Sağa">→</button><button onclick="tDrop()" aria-label="Bırak">⤓</button></div>
-    <p class="note" style="text-align:center">Kaydır: sağa/sola · Dokun: döndür · Aşağı kaydır: bırak</p>
-    <button class="btn ghost" onclick="endBlocks()">Bitir</button>
+    <div class="ctrl"><button data-i18n-attr="aria-label:sola" onclick="tMove(-1)" aria-label="Sola">←</button><button data-i18n-attr="aria-label:dondur" onclick="tRot()" aria-label="Döndür">↻</button><button data-i18n-attr="aria-label:saga" onclick="tMove(1)" aria-label="Sağa">→</button><button data-i18n-attr="aria-label:birak" onclick="tDrop()" aria-label="Bırak">⤓</button></div>
+    <p data-i18n="kaydir_saga_sola_dokun_dondur" class="note" style="text-align:center">Kaydır: sağa/sola · Dokun: döndür · Aşağı kaydır: bırak</p>
+    <button data-i18n="bitir" class="btn ghost" onclick="endBlocks()">Bitir</button>
   </div>
   <div class="cs" id="cs-c4">
-    <div class="ghead"><div class="seg" id="c4lvl" style="flex:1"><button class="on" data-l="1" onclick="c4Level(1)">Kolay</button><button data-l="5" onclick="c4Level(5)">Zor</button></div></div>
+    <div class="ghead"><div class="seg" id="c4lvl" style="flex:1"><button data-i18n="kolay" class="on" data-l="1" onclick="c4Level(1)">Kolay</button><button data-i18n="zor" data-l="5" onclick="c4Level(5)">Zor</button></div></div>
     <div class="c4st" id="c4st"></div>
     <div class="c4wrap"><div class="c4" id="c4"></div></div>
-    <div class="grid" style="gap:10px"><button class="btn sec sm" onclick="startC4()">Yeni oyun</button><button class="btn ghost sm" onclick="endC4()">Bitir</button></div>
+    <div class="grid" style="gap:10px"><button data-i18n="yeni_oyun" class="btn sec sm" onclick="startC4()">Yeni oyun</button><button data-i18n="bitir" class="btn ghost sm" onclick="endC4()">Bitir</button></div>
   </div>
   <div class="cs" id="cs-game">
-    <div class="gbar" style="margin-top:12px"><div><div class="k">Patlatılan · <span class="rec" id="gRec"></span></div><b id="gScore">0</b></div><div style="text-align:right"><div class="k" style="justify-content:flex-end">Kalan süre</div><b id="gTime">5:00</b></div></div>
+    <div class="gbar" style="margin-top:12px"><div><div data-i18n-text="patlatilan" class="k">Patlatılan · <span class="rec" id="gRec"></span></div><b id="gScore">0</b></div><div style="text-align:right"><div data-i18n="kalan_sure" class="k" style="justify-content:flex-end">Kalan süre</div><b id="gTime">5:00</b></div></div>
     <div class="arena" id="arena"></div>
-    <button class="btn ghost" onclick="endGame()">Bitir</button>
+    <button data-i18n="bitir" class="btn ghost" onclick="endGame()">Bitir</button>
   </div>
   <div class="cs" id="cs-info">
     <div class="center"><div class="emoji" id="iEmo"></div><h2 id="iTitle"></h2><p id="iText"></p></div>
-    <button class="btn pri" id="iBtn" onclick="infoDone()">Yaptım</button>
-    <button class="btn ghost" onclick="cs('tools')">Geri</button>
+    <button data-i18n="yaptim" class="btn pri" id="iBtn" onclick="infoDone()">Yaptım</button>
+    <button data-i18n="geri" class="btn ghost" onclick="cs('tools')">Geri</button>
   </div>
   <div class="cs" id="cs-check">
-    <div class="center"><div class="emoji">🤔</div><h2>Sigara isteğin geçti mi?</h2><p>Dürüst ol, burada yargı yok.</p></div>
-    <button class="btn pri" onclick="resolve(true)">Evet, geçti</button>
-    <button class="btn sec" onclick="resolve(false)">Hâlâ istiyorum</button>
+    <div class="center"><div class="emoji">🤔</div><h2 data-i18n="sigara_istegin_gecti_mi">Sigara isteğin geçti mi?</h2><p data-i18n="durust_ol_burada_yargi_yok">Dürüst ol, burada yargı yok.</p></div>
+    <button data-i18n="evet_gecti" class="btn pri" onclick="resolve(true)">Evet, geçti</button>
+    <button data-i18n="hala_istiyorum" class="btn sec" onclick="resolve(false)">Hâlâ istiyorum</button>
   </div>
   <div class="cs" id="cs-win">
-    <div class="center"><div class="emoji">🎉</div><h2>Harika! Bir krizi daha atlattın.</h2><p id="winText"></p></div>
-    <button class="btn pri" onclick="closeCrisis()">Devam et</button>
+    <div class="center"><div class="emoji">🎉</div><h2 data-i18n="harika_bir_krizi_daha_atlattin">Harika! Bir krizi daha atlattın.</h2><p id="winText"></p></div>
+    <button data-i18n="devam_et" class="btn pri" onclick="closeCrisis()">Devam et</button>
   </div>
 </div></div>
 
@@ -382,9 +383,11 @@
 <div class="toast" id="toast"></div>
 <div class="celebrate" id="celebrate" onclick="closeCelebrate()"><div>
   <div class="cb-hex" id="cb-emo"></div><div class="cb-k" id="cb-k"></div><h2 id="cb-t"></h2><p id="cb-p"></p>
-  <button class="btn pri" style="max-width:320px;margin-top:24px">Harika!</button></div></div>
+  <button data-i18n="harika" class="btn pri" style="max-width:320px;margin-top:24px">Harika!</button></div></div>
 <canvas id="confetti"></canvas>
 
+<script src="js/i18n/tr.js"></script>
+<script src="js/i18n.js"></script>
 <script src="js/data.js"></script>
 <script src="js/core.js"></script>
 <script src="js/content.js"></script>

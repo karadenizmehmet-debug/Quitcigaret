@@ -5,8 +5,9 @@
 let S = null, tickT = null, calOff = 0;
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2,'0');
-const tl = n => new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',maximumFractionDigits:0}).format(Math.max(0,n));
-const num = n => new Intl.NumberFormat('tr-TR').format(Math.floor(n));
+const tl = n => new Intl.NumberFormat(LOCALE,{style:'currency',currency:CURRENCY,maximumFractionDigits:0}).format(Math.max(0,n));
+const num = n => new Intl.NumberFormat(LOCALE).format(Math.floor(n));
+const dec1 = n => new Intl.NumberFormat(LOCALE,{minimumFractionDigits:1,maximumFractionDigits:1}).format(n);
 const dkey = (t=Date.now()) => { const d=new Date(t); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
 const toLocal = t => { const d=new Date(t); return new Date(d - d.getTimezoneOffset()*MIN).toISOString().slice(0,16); };
 const startOfDay = t => { const d=new Date(t); d.setHours(0,0,0,0); return d.getTime(); };
@@ -51,16 +52,16 @@ function calc(){
     reduction: expectedT>=1 ? Math.max(0,Math.min(100,Math.round((1-smokedT/expectedT)*100))) : 100};
 }
 function fmtDur(ms){
-  if(ms < H) return Math.max(1,Math.ceil(ms/MIN))+' dk';
-  if(ms < D) return Math.ceil(ms/H)+' saat';
-  if(ms < 365*D) return Math.ceil(ms/D)+' gün';
-  return (ms/(365*D)).toFixed(1).replace('.',',')+' yıl';
+  if(ms < H) return Math.max(1,Math.ceil(ms/MIN))+_t('u_dk');
+  if(ms < D) return Math.ceil(ms/H)+_t('u_saat');
+  if(ms < 365*D) return Math.ceil(ms/D)+_t('gun');
+  return dec1(ms/(365*D))+_t('yil');
 }
 function label(ms){
-  if(ms < H) return Math.round(ms/MIN)+' dakika';
-  if(ms < D) return Math.round(ms/H)+' saat';
-  if(ms < 365*D){ const d=Math.round(ms/D); if(d===14) return '2 hafta'; return d>=60 && d%30===0 ? d/30+' ay' : d+' gün'; }
-  return Math.round(ms/(365*D))+' yıl';
+  if(ms < H) return Math.round(ms/MIN)+_t('u_dakika');
+  if(ms < D) return Math.round(ms/H)+_t('u_saat');
+  if(ms < 365*D){ const d=Math.round(ms/D); if(d===14) return _t('n2_hafta'); return d>=60 && d%30===0 ? d/30+_t('u_ay') : d+_t('gun'); }
+  return Math.round(ms/(365*D))+_t('yil');
 }
 
 function goalsFor(k, slips){

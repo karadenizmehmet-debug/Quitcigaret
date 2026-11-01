@@ -6,48 +6,48 @@ const KEY = 'nefes_v2';
 const MIN = 60e3, H = 60*MIN, D = 24*H;
 
 const MS = [
-  [20*MIN, 'Nabız ve tansiyon normale dönmeye başlar.', 'Nikotinin damarları daraltıcı etkisi azaldıkça kalp atışı yavaşlar ve kan basıncı düşer. El ve ayakların ısısı artmaya başlar.'],
-  [8*H,    'Kandaki karbonmonoksit yarıya iner, oksijen yükselir.', 'Sigara dumanındaki karbonmonoksit, oksijenin yerine kana bağlanır. Bıraktıktan sonra hızla atılır ve dokulara daha fazla oksijen ulaşır.'],
-  [24*H,   'Karbonmonoksit vücuttan büyük ölçüde atılır.', 'Kalp krizi riski azalmaya başlar; akciğerler mukus ve kalıntıları temizlemeye başlar.'],
-  [48*H,   'Tat ve koku duyuları keskinleşir.', 'Zarar görmüş sinir uçları yeniden büyümeye başlar. Yemeklerin tadını daha iyi alırsın. Vücutta nikotin kalmaz.'],
-  [72*H,   'Bronşlar gevşer, nefes almak kolaylaşır.', 'Akciğer kapasitesi artmaya başlar. Nikotin yoksunluğu bu dönemde zirve yapabilir; en zor kısmı geçiyorsun.'],
-  [14*D,   'Kan dolaşımı iyileşir, yürümek kolaylaşır.', 'Dolaşım ve akciğer fonksiyonu 2–12 hafta içinde belirgin şekilde iyileşir. Fiziksel aktivite daha az yorar.'],
-  [90*D,   'Akciğer fonksiyonu belirgin şekilde artar.', 'Akciğer fonksiyonunda %10’a varan iyileşme görülebilir. Enerji düzeyin yükselir.'],
-  [270*D,  'Öksürük ve nefes darlığı azalır.', 'Akciğerlerdeki tüysü yapılar (silyalar) yenilenir; mukusu temizleme ve enfeksiyonla savaşma yeteneği artar.'],
-  [365*D,  'Koroner kalp hastalığı riski yarıya iner.', 'Bir yıl sonra kalp hastalığı riskin, sigaraya devam eden birine göre yaklaşık yarı yarıya azalır.'],
-  [5*365*D,'İnme riski içmeyen birinin düzeyine iner.', 'Ağız, boğaz, yemek borusu ve mesane kanseri riskleri yarıya iner. İnme riski hiç içmemiş birine yaklaşır.'],
-  [10*365*D,'Akciğer kanseri riski yaklaşık yarıya iner.', 'Akciğer kanserinden ölüm riski, içmeye devam eden birinin yaklaşık yarısıdır. Pankreas kanseri riski de azalır.'],
-  [15*365*D,'Kalp hastalığı riski hiç içmemiş biri gibi olur.', 'Koroner kalp hastalığı riski, hiç sigara içmemiş birinin düzeyine iner.']
+  [20*MIN, _t('nabiz_ve_tansiyon_normale_donmeye'), _t('nikotinin_damarlari_daraltici_etki')],
+  [8*H,    _t('kandaki_karbonmonoksit_yariya_iner'), _t('sigara_dumanindaki_karbonmonoksit')],
+  [24*H,   _t('karbonmonoksit_vucuttan_buyuk_olcu'), _t('kalp_krizi_riski_azalmaya_baslar')],
+  [48*H,   _t('tat_ve_koku_duyulari_keskinlesir'), _t('zarar_gormus_sinir_uclari_yeniden')],
+  [72*H,   _t('bronslar_gevser_nefes_almak_kolayl'), _t('akciger_kapasitesi_artmaya_baslar')],
+  [14*D,   _t('kan_dolasimi_iyilesir_yurumek_kola'), _t('dolasim_ve_akciger_fonksiyonu_2')],
+  [90*D,   _t('akciger_fonksiyonu_belirgin_sekild'), _t('akciger_fonksiyonunda_10_a_varan')],
+  [270*D,  _t('oksuruk_ve_nefes_darligi_azalir'), _t('akcigerlerdeki_tuysu_yapilar_silya')],
+  [365*D,  _t('koroner_kalp_hastaligi_riski_yariy'), _t('bir_yil_sonra_kalp_hastaligi')],
+  [5*365*D,_t('inme_riski_icmeyen_birinin_duzeyin'), _t('agiz_bogaz_yemek_borusu_ve')],
+  [10*365*D,_t('akciger_kanseri_riski_yaklasik_yar'), _t('akciger_kanserinden_olum_riski_icm')],
+  [15*365*D,_t('kalp_hastaligi_riski_hic_icmemis'), _t('koroner_kalp_hastaligi_riski_hic')]
 ];
 
 
 const MOTTOS = [
-  'Bugün içmediğin her sigara, yarın aldığın daha derin bir nefes.',
-  'İstek bir dalga gibidir; yükselir, zirve yapar ve geçer.',
-  'Bırakmak bir kere verilen karar değil, her gün yeniden seçilen bir yol.',
-  'Vücudun şu anda kendini onarıyor. Ona fırsat ver.',
-  'Zor olan ilk günlerdi; sen zaten yoldasın.',
-  'Sigara stresi azaltmaz, sadece yoksunluğu kısa süreliğine susturur.',
-  'Kendine verdiğin söz, başkalarına verdiklerin kadar değerli.',
-  'Her “hayır” bir sonrakini kolaylaştırır.',
-  'Biriktirdiğin para, kendine yaptığın bir yatırım.',
-  'Ailen ve sevdiklerin daha temiz bir havayı hak ediyor. Sen de.',
-  'Mükemmel olmak zorunda değilsin, devam etmen yeterli.',
-  'Bir kriz atlattığında beynin yeni bir alışkanlık öğreniyor.',
-  'Nefes almak bir hak; onu geri kazanıyorsun.',
-  'Bugün bir gün daha. Bu kadar basit.',
-  'Merdiveni çıkarken nefesin daha az daralıyorsa, işe yarıyor demektir.'
+  _t('bugun_icmedigin_her_sigara_yarin'),
+  _t('istek_bir_dalga_gibidir_yukselir'),
+  _t('birakmak_bir_kere_verilen_karar'),
+  _t('vucudun_su_anda_kendini_onariyor'),
+  _t('zor_olan_ilk_gunlerdi_sen'),
+  _t('sigara_stresi_azaltmaz_sadece_yoks'),
+  _t('kendine_verdigin_soz_baskalarina_v'),
+  _t('her_hayir_bir_sonrakini_kolaylasti'),
+  _t('biriktirdigin_para_kendine_yaptigi'),
+  _t('ailen_ve_sevdiklerin_daha_temiz'),
+  _t('mukemmel_olmak_zorunda_degilsin_de'),
+  _t('bir_kriz_atlattiginda_beynin_yeni'),
+  _t('nefes_almak_bir_hak_onu'),
+  _t('bugun_bir_gun_daha_bu'),
+  _t('merdiveni_cikarken_nefesin_daha_az')
 ];
 
 const TRIGS = [
-  ['stres','Stresliyim','😣','Nikotin stresi azaltıyormuş gibi hissettirir ama aslında yoksunluk stresini besler. Önce 2 dakikalık nefes egzersizini dene; vücudun gerçekten sakinleşir.'],
-  ['sikinti','Canım sıkılıyor','😐','Can sıkıntısı en sık tetikleyicilerden biri. Ellerini ve zihnini meşgul et: baloncuk oyunu ya da kısa bir yürüyüş işe yarar.'],
-  ['kahve','Kahve içiyorum','☕','Kahve ve sigara beyninde birbirine bağlanmış. Kahveni farklı bir yerde ya da farklı bir bardakta iç; rutini bozmak bağı zayıflatır.'],
-  ['yemek','Yemekten sonra','🍽️','Yemek sonrası alışkanlığı kırmak için masadan hemen kalk, dişlerini fırçala ya da sakız çiğne.'],
-  ['arkadas','Arkadaş ortamı','👥','Sigara içen arkadaşlarına bıraktığını söyle. Elinde içecek tut ve içilen alandan kısa süreliğine uzaklaş.'],
-  ['nikotin','Nikotin isteği','🧲','Fiziksel istek gerçek ama geçici. Bol su iç, derin nefes al. İlk haftalardan sonra belirgin şekilde azalır.']
+  ['stres',_t('stresliyim'),'😣',_t('nikotin_stresi_azaltiyormus_gibi_h')],
+  ['sikinti',_t('canim_sikiliyor'),'😐',_t('can_sikintisi_en_sik_tetikleyicile')],
+  ['kahve',_t('kahve_iciyorum'),'☕',_t('kahve_ve_sigara_beyninde_birbirine')],
+  ['yemek',_t('yemekten_sonra'),'🍽️',_t('yemek_sonrasi_aliskanligi_kirmak_i')],
+  ['arkadas',_t('arkadas_ortami'),'👥',_t('sigara_icen_arkadaslarina_biraktig')],
+  ['nikotin',_t('nikotin_istegi'),'🧲',_t('fiziksel_istek_gercek_ama_gecici')]
 ];
 
-const GOALS = [['smokefree','Bugün sigarasız','auto'],['water','8 bardak su','count'],['walk','15 dakika yürüyüş','check'],['breath','1 nefes egzersizi','auto'],['coffee','Kahveyi sigarasız iç','check']];
-const PRESETS = ['📱 Telefon','🏖️ Tatil','💻 Bilgisayar','🎁 Hediye','🚲 Bisiklet'];
+const GOALS = [['smokefree',_t('bugun_sigarasiz'),'auto'],['water',_t('n8_bardak_su'),'count'],['walk',_t('n15_dakika_yuruyus'),'check'],['breath',_t('n1_nefes_egzersizi'),'auto'],['coffee',_t('kahveyi_sigarasiz_ic'),'check']];
+const PRESETS = [_t('telefon'),_t('tatil'),_t('bilgisayar'),_t('hediye'),_t('bisiklet')];
 const MOODS = ['😫','😕','😐','🙂','😄'];

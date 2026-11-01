@@ -1,7 +1,7 @@
 // Nefes – çevrimdışı çalışma için service worker
 // Mehmet Karadeniz, 2026-2027
-const CACHE = 'nefes-v9';
-const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './css/style.css',
+const CACHE = 'nefes-v10';
+const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './css/style.css', './js/i18n/tr.js', './js/i18n.js',
   ...['data','core','content','app','screens','achievements','recovery','crisis','games','notifications','backup','main'].map(f => './js/' + f + '.js')];
 
 self.addEventListener('install', e => {

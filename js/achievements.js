@@ -19,7 +19,7 @@ function bctx(){
 function badgeProgress(b,c){ return Math.max(0, b.v(c)/b.t); }
 function badgeLeft(b,c){
   const v = b.v(c);
-  if(b.fmt==='time') return fmtDur(Math.max(0,b.t-v))+' kaldı';
+  if(b.fmt==='time') return fmtDur(Math.max(0,b.t-v))+_t('kaldi');
   if(b.fmt==='tl') return tl(v)+' / '+tl(b.t);
   if(b.fmt==='pct') return '%'+Math.floor(Math.min(1,v)*100);
   return num(Math.min(v,b.t))+' / '+num(b.t);
@@ -32,22 +32,22 @@ function checkBadges(){
   if(!changed) return;
   if(!fresh.length){ save(); if($('v-ach').classList.contains('on')) renderAch(); return; }
   save();
-  if(document.hidden){ notify(fresh.length===1 ? 'Yeni rozet: '+fresh[0].n+' '+fresh[0].e : fresh.length+' yeni rozet kazandın 🏅', fresh.map(b=>b.n).slice(0,3).join(', ')); }
-  else if(fresh.length===1){ const b=fresh[0]; celebrate(b.e, 'Yeni rozet · '+CATS.find(x=>x[0]===b.cat)[2], b.n, b.d); }
-  else celebrate('🏅','Yeni rozetler', fresh.length+' yeni rozet kazandın!', fresh.slice(0,5).map(b=>b.e+' '+b.n).join(' · ')+(fresh.length>5?' …':''));
+  if(document.hidden){ notify(fresh.length===1 ? _t('yeni_rozet')+fresh[0].n+' '+fresh[0].e : fresh.length+_t('yeni_rozet_kazandin'), fresh.map(b=>b.n).slice(0,3).join(', ')); }
+  else if(fresh.length===1){ const b=fresh[0]; celebrate(b.e, _t('yeni_rozet_2')+CATS.find(x=>x[0]===b.cat)[2], b.n, b.d); }
+  else celebrate('🏅',_t('yeni_rozetler'), fresh.length+_t('yeni_rozet_kazandin_2'), fresh.slice(0,5).map(b=>b.e+' '+b.n).join(' · ')+(fresh.length>5?' …':''));
   if($('v-ach').classList.contains('on')) renderAch();
 }
 function openCat(id){
   const cat = CATS.find(x=>x[0]===id), c = bctx(), list = BADGES.filter(b=>b.cat===id), got = list.filter(b=>S.badges[b.id]).length;
   openSheet(`<div style="display:flex;align-items:center;gap:14px"><div class="ce" style="width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:${cat[3]}26">${cat[1]}</div>
-      <div><h3 style="margin:0">${cat[2]}</h3><p>${got} / ${list.length} rozet</p></div></div>
+      <div><h3 style="margin:0">${cat[2]}</h3><p>${got} / ${list.length} ${_t('rozet')}</p></div></div>
     <div class="badges" style="margin-top:16px">${list.map(b=>{
       const on = !!S.badges[b.id], p = Math.min(1, badgeProgress(b,c));
       return `<div class="bdg ${on?'on':''}"><div class="hx"><span>${b.e}</span></div><b>${b.n}</b>
-        <small>${on ? new Date(S.badges[b.id]).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'}) : b.d}</small>
+        <small>${on ? new Date(S.badges[b.id]).toLocaleDateString(LOCALE,{day:'numeric',month:'short',year:'numeric'}) : b.d}</small>
         ${on?'':`<div class="pb"><i style="width:${(p*100).toFixed(0)}%"></i></div><small class="pr">${badgeLeft(b,c)}</small>`}</div>`;
     }).join('')}</div>
-    <button class="btn ghost" style="border:none" onclick="closeSheet()">Kapat</button>`);
+    <button class="btn ghost" style="border:none" onclick="closeSheet()">${_t('kapat')}</button>`);
 }
 
 /* ================= Kutlama ================= */
@@ -81,10 +81,10 @@ function renderAch(){
   const lv = xpInfo(c);
   $('lv-n').textContent = lv.n; $('lv-name').textContent = lv.name;
   $('lv-bar').style.width = (lv.p*100).toFixed(1)+'%';
-  $('lv-xp').textContent = num(lv.xp)+' puan';
-  $('lv-next').textContent = lv.next ? 'Sonraki seviye: '+num(lv.next) : 'En üst seviye';
+  $('lv-xp').textContent = num(lv.xp)+_t('u_puan');
+  $('lv-next').textContent = lv.next ? _t('sonraki_seviye')+num(lv.next) : _t('en_ust_seviye');
   const bc = bctx(), earned = BADGES.filter(b=>S.badges[b.id]).length;
-  $('bdg-total').innerHTML = `<div class="k" style="justify-content:space-between"><b style="color:var(--text);font-size:15px">Toplam koleksiyon</b><b style="color:var(--lime);font-size:18px">${earned} / ${BADGES.length}</b></div>
+  $('bdg-total').innerHTML = `<div class="k" style="justify-content:space-between"><b style="color:var(--text);font-size:15px">${_t('toplam_koleksiyon')}</b><b style="color:var(--lime);font-size:18px">${earned} / ${BADGES.length}</b></div>
     <div class="bar"><i style="width:${(earned/BADGES.length*100).toFixed(1)}%"></i></div>`;
   $('badges').innerHTML = CATS.map(([id,e,n,col])=>{
     const list = BADGES.filter(b=>b.cat===id), got = list.filter(b=>S.badges[b.id]).length;
@@ -96,9 +96,9 @@ function renderAch(){
 function calMove(n){ calOff+=n; renderCal(); }
 function renderCal(){
   const slips = slipSet(), base = new Date(); base.setDate(1); base.setHours(12,0,0,0); base.setMonth(base.getMonth()+calOff);
-  $('cal-title').textContent = base.toLocaleDateString('tr-TR',{month:'long',year:'numeric'});
+  $('cal-title').textContent = base.toLocaleDateString(LOCALE,{month:'long',year:'numeric'});
   const lead = (base.getDay()+6)%7, daysIn = new Date(base.getFullYear(), base.getMonth()+1, 0).getDate();
-  let h = ['P','S','Ç','P','C','C','P'].map(x=>`<div class="h">${x}</div>`).join('');
+  let h = [...Array(7)].map((_,i)=>new Date(2024,0,1+i).toLocaleDateString(LOCALE,{weekday:'narrow'})).map(x=>`<div class="h">${x}</div>`).join('');
   for(let i=0;i<lead;i++) h += '<div class="c blank"></div>';
   for(let d=1; d<=daysIn; d++){
     const t = new Date(base.getFullYear(), base.getMonth(), d, 12).getTime();
@@ -126,34 +126,34 @@ function weekStats(){
 function renderReport(){
   const w = weekStats();
   $('report').innerHTML = `
-    <div><div class="k">Sigarasız gün</div><div class="v">${w.ok}<small>/ ${w.counted||7}</small></div></div>
-    <div><div class="k">Atlatılan kriz</div><div class="v">${w.passed}<small>/ ${w.crises}</small></div></div>
-    <div><div class="k">Ortalama su</div><div class="v">${w.water.toFixed(1).replace('.',',')}<small>bardak</small></div></div>
-    <div><div class="k">Ruh hâli</div><div class="v">${w.mood}</div></div>
-    <div style="grid-column:span 2"><div class="k">Ortalama günlük puan</div><div class="bar"><i style="width:${w.score}%"></i></div><div class="meta"><span>%${w.score}</span><span></span></div></div>`;
+    <div><div class="k">${_t('sigarasiz_gun')}</div><div class="v">${w.ok}<small>/ ${w.counted||7}</small></div></div>
+    <div><div class="k">${_t('atlatilan_kriz')}</div><div class="v">${w.passed}<small>/ ${w.crises}</small></div></div>
+    <div><div class="k">${_t('ortalama_su')}</div><div class="v">${dec1(w.water)}<small>${_t('bardak')}</small></div></div>
+    <div><div class="k">${_t('ruh_hali')}</div><div class="v">${w.mood}</div></div>
+    <div style="grid-column:span 2"><div class="k">${_t('ortalama_gunluk_puan')}</div><div class="bar"><i style="width:${w.score}%"></i></div><div class="meta"><span>%${w.score}</span><span></span></div></div>`;
 }
 
-function durTxt(ms){ return ms < D ? Math.max(1,Math.floor(ms/H))+' saat' : (ms/D).toFixed(1).replace('.',',')+' gün'; }
+function durTxt(ms){ return ms < D ? Math.max(1,Math.floor(ms/H))+_t('u_saat') : dec1(ms/D)+_t('gun'); }
 function renderReduce(){
   const c = calc();
   $('reduce').innerHTML = `<div class="grid" style="gap:10px">
-      <div><div class="k">Bırakmasaydın</div><div class="v">${num(c.expectedT)}<small>sigara</small></div></div>
-      <div><div class="k">İçtiğin</div><div class="v">${num(c.smokedT)}<small>sigara</small></div></div></div>
+      <div><div class="k">${_t('birakmasaydin')}</div><div class="v">${num(c.expectedT)}<small>${_t('sigara')}</small></div></div>
+      <div><div class="k">${_t('ictigin')}</div><div class="v">${num(c.smokedT)}<small>${_t('sigara')}</small></div></div></div>
     <div class="bar"><i style="width:${c.reduction}%"></i></div>
-    <div class="meta"><span>%${c.reduction} daha az içtin</span><span></span></div>
-    <p class="empty">Kaymalar da bu yolculuğun parçası. Önemli olan toplamda ne kadar azalttığın.</p>`;
+    <div class="meta"><span>%${c.reduction} ${_t('daha_az_ictin')}</span><span></span></div>
+    <p class="empty">${_t('kaymalar_da_bu_yolculugun_parcasi')}</p>`;
 }
 function renderAttempts(){
   const c = calc(), now = Date.now();
   const all = S.attempts.map((a,i)=>({...a, i:i+1}));
   all.push({start:S.quit, end:now, smoked:c.smokedNow, i:S.attempts.length+1, cur:true});
   const longest = Math.max(...all.map(a=>a.end-a.start));
-  const fd = t => new Date(t).toLocaleDateString('tr-TR',{day:'numeric',month:'short'});
+  const fd = t => new Date(t).toLocaleDateString(LOCALE,{day:'numeric',month:'short'});
   $('attempts').innerHTML = `<div class="grid" style="gap:10px">
-      <div><div class="k">En uzun seri</div><div class="v" style="font-size:22px">${durTxt(longest)}</div></div>
-      <div><div class="k">Toplam bırakma süresi</div><div class="v" style="font-size:22px">${durTxt(c.msT)}</div></div></div>` +
-    all.reverse().map(a=>`<div class="att ${a.cur?'cur':''}"><b>${a.cur?'Şu anki deneme ('+a.i+'.)':a.i+'. deneme'}</b>
-      <span>${fd(a.start)} – ${a.cur?'bugün':fd(a.end)} · ${durTxt(a.end-a.start)}${a.smoked?' · '+a.smoked+' sigara kaydedildi':' · kayma yok'}</span></div>`).join('');
+      <div><div class="k">${_t('en_uzun_seri')}</div><div class="v" style="font-size:22px">${durTxt(longest)}</div></div>
+      <div><div class="k">${_t('toplam_birakma_suresi')}</div><div class="v" style="font-size:22px">${durTxt(c.msT)}</div></div></div>` +
+    all.reverse().map(a=>`<div class="att ${a.cur?'cur':''}"><b>${a.cur?_t('su_anki_deneme')+a.i+'.)':a.i+_t('deneme_2')}</b>
+      <span>${fd(a.start)} – ${a.cur?_t('bugun'):fd(a.end)} · ${durTxt(a.end-a.start)}${a.smoked?' · '+a.smoked+_t('sigara_kaydedildi'):_t('kayma_yok')}</span></div>`).join('');
 }
 
 /* ================= Gelişim grafikleri ================= */
@@ -175,7 +175,7 @@ function barChart(id, vals, labels, tips, opts={}){
       ${path?`<path class="bar-m" d="${path}" fill="${opts.color||'var(--teal)'}" opacity=".85"/>`:''}</g>`;
     if(labels[i]) g += `<text x="${x+bw/2}" y="${base+14}" fill="var(--muted)" font-size="10" text-anchor="middle">${labels[i]}</text>`;
   });
-  return `<svg viewBox="0 -6 ${CH.w} ${h+26}" role="img">${g}</svg><div class="tip" id="${id}-tip">${opts.hint||'Ayrıntı için bir çubuğa dokun.'}</div>`;
+  return `<svg viewBox="0 -6 ${CH.w} ${h+26}" role="img">${g}</svg><div class="tip" id="${id}-tip">${opts.hint||_t('ayrinti_icin_bir_cubuga_dokun')}</div>`;
 }
 function lineChart(id, vals, labels, tips, max){
   const h = 110, n = vals.length, plotW = CH.w-CH.pad-8, X = i => CH.pad+4 + i*(plotW/(n-1)), Y = v => h - v/max*h;
@@ -189,7 +189,7 @@ function lineChart(id, vals, labels, tips, max){
       ${v!=null?`<circle cx="${X(i)}" cy="${Y(v)}" r="4" fill="var(--violet)" stroke="var(--card)" stroke-width="2"/>`:''}</g>`;
     if(labels[i]) g += `<text x="${X(i)}" y="${h+14}" fill="var(--muted)" font-size="10" text-anchor="middle">${labels[i]}</text>`;
   });
-  return `<svg viewBox="0 -6 ${CH.w} ${h+26}" role="img">${g}</svg><div class="tip" id="${id}-tip">Ayrıntı için bir noktaya dokun.</div>`;
+  return `<svg viewBox="0 -6 ${CH.w} ${h+26}" role="img">${g}</svg><div class="tip" id="${id}-tip">${_t('ayrinti_icin_bir_noktaya_dokun')}</div>`;
 }
 function renderCharts(){
   const days = [], now = Date.now();
@@ -201,26 +201,26 @@ function renderCharts(){
   const smoked = days.map(d=> S.slipLog.filter(e=>dkey(e.t)===d.k).reduce((a,e)=>a+(e.n||1),0) + (S.reduce?.log?.[d.k]||0));
   const hours = Array(24).fill(0), wdays = Array(7).fill(0);
   S.crises.forEach(c=>{ const d=new Date(c.t); hours[d.getHours()]++; wdays[(d.getDay()+6)%7]++; });
-  const WD = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+  const WD = [_t('pzt'),_t('sal'),_t('car'),_t('per'),_t('cum'),_t('cmt'),_t('paz')];
   const hasReview = crave.some(v=>v!=null), hasSmoked = smoked.some(Boolean), hasCrisis = S.crises.length > 0;
   const card = (title, sub, body) => `<div class="card chart" style="margin-top:12px"><div class="k" style="justify-content:space-between"><b style="color:var(--text);font-size:14px">${title}</b><span>${sub}</span></div><div style="margin-top:12px">${body}</div></div>`;
   const empty = t => `<p class="empty" style="margin:0">${t}</p>`;
   let h = '';
-  h += card('Sigara isteği düzeyi', '0–10', hasReview
-    ? lineChart('ch-crave', crave, lab, days.map((d,i)=> crave[i]==null ? `${dl(d)}: değerlendirme yok` : `<b>${dl(d)}</b> · istek düzeyi <b>${crave[i]}/10</b>`), 10)
-    : empty('Akşam değerlendirmesi yaptıkça burada istek düzeyinin nasıl değiştiğini göreceksin.'));
-  h += card('Ruh hâli', 'akşam değerlendirmesi', hasReview
+  h += card(_t('sigara_istegi_duzeyi_2'), '0–10', hasReview
+    ? lineChart('ch-crave', crave, lab, days.map((d,i)=> crave[i]==null ? `${dl(d)}${_t('degerlendirme_yok')}` : `<b>${dl(d)}</b> ${_t('istek_duzeyi_2')} <b>${crave[i]}/10</b>`), 10)
+    : empty(_t('aksam_degerlendirmesi_yaptikca_bur')));
+  h += card(_t('ruh_hali'), _t('aksam_degerlendirmesi'), hasReview
     ? `<div class="moodstrip">${moods.map((m,i)=>`<div><span>${m}</span><small>${days[i].d.getDate()}</small></div>`).join('')}</div>`
-    : empty('Değerlendirme yaptıkça günlük ruh hâlin burada sıralanır.'));
-  h += card('İçilen sigara', 'günlük', hasSmoked
-    ? barChart('ch-smoked', smoked, lab, days.map((d,i)=>`<b>${dl(d)}</b> · <b>${smoked[i]}</b> sigara`), {color:'var(--amber)', h:90})
-    : empty('Son 14 günde kayıtlı sigara yok. 👏'));
-  h += card('Zor saatler', 'krizlerin saate göre', hasCrisis
-    ? barChart('ch-hours', hours, hours.map((_,i)=> i%6===0 ? pad(i) : ''), hours.map((v,i)=>`<b>${pad(i)}:00–${pad(i)}:59</b> · <b>${v}</b> kriz`))
-    : empty('ACİL butonunu kullandıkça en çok zorlandığın saatler burada görünür.'));
-  h += card('Zor günler', 'krizlerin haftanın gününe göre', hasCrisis
-    ? barChart('ch-wd', wdays, WD, wdays.map((v,i)=>`<b>${WD[i]}</b> · <b>${v}</b> kriz`), {h:90})
-    : empty('Kriz kayıtların arttıkça haftanın hangi günlerinin daha zor olduğunu görürsün.'));
+    : empty(_t('degerlendirme_yaptikca_gunluk_ruh')));
+  h += card(_t('icilen_sigara'), _t('gunluk_2'), hasSmoked
+    ? barChart('ch-smoked', smoked, lab, days.map((d,i)=>`<b>${dl(d)}</b> · <b>${smoked[i]}</b> ${_t('sigara')}`), {color:'var(--amber)', h:90})
+    : empty(_t('son_14_gunde_kayitli_sigara')));
+  h += card(_t('zor_saatler'), _t('krizlerin_saate_gore'), hasCrisis
+    ? barChart('ch-hours', hours, hours.map((_,i)=> i%6===0 ? pad(i) : ''), hours.map((v,i)=>`<b>${pad(i)}:00–${pad(i)}:59</b> · <b>${v}</b> ${_t('kriz')}`))
+    : empty(_t('acil_butonunu_kullandikca_en_cok')));
+  h += card(_t('zor_gunler'), _t('krizlerin_haftanin_gunune_gore'), hasCrisis
+    ? barChart('ch-wd', wdays, WD, wdays.map((v,i)=>`<b>${WD[i]}</b> · <b>${v}</b> ${_t('kriz')}`), {h:90})
+    : empty(_t('kriz_kayitlarin_arttikca_haftanin')));
   $('charts').innerHTML = h;
 }
 
@@ -239,15 +239,15 @@ function drawShareCard(){
   x.save(); x.translate(90+6,90+6); x.scale(3,3); x.beginPath();
   x.moveTo(4,12); x.bezierCurveTo(8,12,10,9,12,6); x.bezierCurveTo(14,9,16,12,20,12);
   x.moveTo(4,16); x.lineTo(20,16); x.moveTo(7,20); x.lineTo(17,20); x.lineWidth=2.2; x.stroke(); x.restore();
-  x.fillStyle = '#eef2ef'; x.font = `800 52px ${F}`; x.textBaseline='middle'; x.fillText('Nefes', 196, 134);
+  x.fillStyle = '#eef2ef'; x.font = `800 52px ${F}`; x.textBaseline='middle'; x.fillText(_t('nefes'), 196, 134);
   // ana sayı
   const el = c.el, big = el >= D ? Math.floor(el/D) : el >= H ? Math.floor(el/H) : Math.max(0, Math.floor(el/MIN));
-  const unit = el >= D ? 'gündür sigarasızım' : el >= H ? 'saattir sigarasızım' : 'dakikadır sigarasızım';
+  const unit = el >= D ? _t('gundur_sigarasizim') : el >= H ? _t('saattir_sigarasizim') : _t('dakikadir_sigarasizim');
   x.textAlign='center'; x.textBaseline='alphabetic';
   x.font = `800 340px ${F}`; x.fillStyle = lg; x.fillText(String(big), W/2, 620);
   x.font = `600 56px ${F}`; x.fillStyle = '#eef2ef'; x.fillText(unit, W/2, 712);
   // istatistik kutuları
-  const stats = [[tl(c.savedT),'biriktirdim'],[num(c.cigsT),'sigara içmedim'],[Object.keys(S.badges).length+' rozet','kazandım']];
+  const stats = [[tl(c.savedT),'biriktirdim'],[num(c.cigsT),_t('sigara_icmedim')],[Object.keys(S.badges).length+_t('u_rozet'),_t('kazandim')]];
   stats.forEach(([v,l],i)=>{
     const bx = 90 + i*310, by = 820;
     x.fillStyle = '#141917'; rr(x,bx,by,280,200,32); x.fill(); x.strokeStyle='#252d29'; x.lineWidth=2; x.stroke();
@@ -255,26 +255,26 @@ function drawShareCard(){
     x.fillStyle = '#87928c'; x.font = `500 30px ${F}`; x.fillText(l, bx+140, by+155);
   });
   const ms = MS.filter(m=>el>=m[0]).length;
-  x.fillStyle = '#87928c'; x.font = `500 34px ${F}`; x.fillText(`${ms}/${MS.length} sağlık dönüm noktası · Seviye ${xpInfo(c).n}`, W/2, 1110);
+  x.fillStyle = '#87928c'; x.font = `500 34px ${F}`; x.fillText(`${ms}/${MS.length} ${_t('saglik_donum_noktasi_seviye')} ${xpInfo(c).n}`, W/2, 1110);
   x.fillStyle = lg; rr(x,90,1180,W-180,4,2); x.fill();
-  x.fillStyle = '#eef2ef'; x.font = `700 40px ${F}`; x.fillText('Her nefes yeni bir başlangıç.', W/2, 1262);
+  x.fillStyle = '#eef2ef'; x.font = `700 40px ${F}`; x.fillText(_t('her_nefes_yeni_bir_baslangic_2'), W/2, 1262);
   return cv;
 }
 let shareBlob = null;
 function openShareCard(){
   const cv = drawShareCard();
   cv.toBlob(b=>{ shareBlob = b; });
-  openSheet(`<h3>Başarı kartın</h3><p>Paylaş ya da indirip istediğin yere gönder.</p>
-    <img class="shareimg" src="${cv.toDataURL('image/png')}" alt="Başarı kartı">
-    <button class="btn pri" onclick="shareCard()">Paylaş</button>
-    <button class="btn sec" onclick="downloadCard()">İndir</button>
-    <button class="btn ghost" style="border:none" onclick="closeSheet()">Kapat</button>`);
+  openSheet(`<h3>${_t('basari_kartin')}</h3><p>${_t('paylas_ya_da_indirip_istedigin')}</p>
+    <img class="shareimg" src="${cv.toDataURL('image/png')}" alt="${_t('basari_karti')}">
+    <button class="btn pri" onclick="shareCard()">${_t('paylas')}</button>
+    <button class="btn sec" onclick="downloadCard()">${_t('indir')}</button>
+    <button class="btn ghost" style="border:none" onclick="closeSheet()">${_t('kapat')}</button>`);
 }
 async function shareCard(){
-  if(!shareBlob){ toast('Hazırlanıyor, tekrar dene'); return; }
+  if(!shareBlob){ toast(_t('hazirlaniyor_tekrar_dene')); return; }
   const f = new File([shareBlob], 'nefes-basari.png', {type:'image/png'});
   try{
-    if(navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], text:'Sigarayı bırakma yolculuğumda ilerliyorum 🌱'}); S.stats.shares++; save(); return; }
+    if(navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], text:_t('sigarayi_birakma_yolculugumda_iler')}); S.stats.shares++; save(); return; }
   }catch(e){ if(e && e.name==='AbortError') return; }
   downloadCard();
 }
@@ -282,5 +282,5 @@ function downloadCard(){
   if(!shareBlob) return;
   const a = document.createElement('a'); a.href = URL.createObjectURL(shareBlob); a.download = 'nefes-basari.png';
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),5000);
-  S.stats.shares++; save(); toast('Kart indirildi');
+  S.stats.shares++; save(); toast(_t('kart_indirildi'));
 }

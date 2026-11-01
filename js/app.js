@@ -29,21 +29,27 @@ function setMode(m){
 function saveSetup(){
   const q=$('f-quit').value, per=+$('f-per').value, price=+$('f-price').value, pack=+$('f-pack').value||20;
   const weeks = Math.max(1, Math.min(12, +$('f-weeks').value||4));
-  if(!per || (setupMode==='now' && !q)){ toast(setupMode==='now' ? 'Bırakma zamanını ve günlük sigara sayısını gir.' : 'Günlük sigara sayısını gir.'); return; }
+  if(!per || (setupMode==='now' && !q)){ toast(setupMode==='now' ? _t('birakma_zamanini_ve_gunluk_sigara') : _t('gunluk_sigara_sayisini_gir')); return; }
   if(setupMode==='reduce'){
     const st = startOfDay(Date.now());
     S = {quit:st+weeks*7*D, per, price:price||0, pack, reduce:{start:st, weeks, from:per, log:{}}};
   } else S = {quit:new Date(q).getTime(), per, price:price||0, pack};
   defaults(); markMilestones(); save(); start();
 }
-function fillSettings(){ $('set-bk').textContent = backupLine(); $('set-rd').textContent = reduceActive() ? 'Aktif · '+(rWeek()+1)+'. hafta' : 'Sigarayı haftalar içinde azaltarak bırak'; $('s-quit').value=toLocal(S.quit); $('s-per').value=S.per; $('s-price').value=S.price; $('s-pack').value=S.pack; }
+function fillLangs(){
+  const sel = $('s-lang'); if(!sel) return;
+  const opts = Object.values(LANGS).filter(l=>l.code!=='xx').map(l=>`<option value="${l.code}" ${l.code===LANG?'selected':''}>${l.name}</option>`);
+  if(!LANGS.en) opts.push(`<option disabled>English · ${_t('yakinda')}</option>`);
+  sel.innerHTML = opts.join('');
+}
+function fillSettings(){ fillLangs(); $('set-bk').textContent = backupLine(); $('set-rd').textContent = reduceActive() ? _t('aktif')+(rWeek()+1)+_t('hafta_2') : _t('sigarayi_haftalar_icinde_azaltarak'); $('s-quit').value=toLocal(S.quit); $('s-per').value=S.per; $('s-price').value=S.price; $('s-pack').value=S.pack; }
 function saveSettings(){
   const q=$('s-quit').value; if(q){ S.quit=new Date(q).getTime(); S.first=Math.min(S.first,S.quit); markMilestones(); }
   S.per=+$('s-per').value||S.per; S.price=+$('s-price').value||0; S.pack=+$('s-pack').value||20;
-  save(); scheduleNative(); toast('Kaydedildi'); go('home');
+  save(); scheduleNative(); toast(_t('kaydedildi')); go('home');
 }
 function resetAll(){
-  if(!confirm('Tüm veriler silinecek. Emin misin?')) return;
+  if(!confirm(_t('tum_veriler_silinecek_emin_misin'))) return;
   try{ localStorage.removeItem(KEY); }catch(e){}
   location.reload();
 }
@@ -54,46 +60,46 @@ function tick(){
   const c = calc(), el = c.el, future = S.quit > Date.now();
   const shown = future ? S.quit - Date.now() : el;
   $('days').textContent = Math.floor(shown/D);
-  $('hero-l').textContent = future ? 'gün sonra bırakıyorsun' : 'gün sigarasız';
+  $('hero-l').textContent = future ? _t('gun_sonra_birakiyorsun') : _t('gun_sigarasiz');
   $('hh').textContent = pad(Math.floor(shown%D/H));
   $('mm').textContent = pad(Math.floor(shown%H/MIN));
   $('ss').textContent = pad(Math.floor(shown%MIN/1e3));
   $('money').textContent = tl(c.savedT);
   $('cigs').textContent = num(c.cigsT);
   const lm = c.cigsT*11;
-  $('life').innerHTML = lm < 1440 ? Math.floor(lm/60)+'<small>saat</small>' : (lm/1440).toFixed(1).replace('.',',')+'<small>gün</small>';
+  $('life').innerHTML = lm < 1440 ? Math.floor(lm/60)+_t('saat_2') : dec1(lm/1440)+_t('gun_4');
   if(reduceActive()){
     const r = S.reduce, n = Math.min(Math.floor((startOfDay(Date.now())-r.start)/D)+1, 999); let ok = 0;
     for(let i=0;i<n;i++){ const k = dkey(r.start + i*D + 12*H); if(rCount(k) <= rLimit(Math.floor(i/7))) ok++; }
-    $('succ-k').textContent = 'Plan uyumu';
-    $('succ').innerHTML = '%'+Math.round(ok/n*100)+'<small>'+ok+'/'+n+' gün</small>';
+    $('succ-k').textContent = _t('plan_uyumu');
+    $('succ').innerHTML = '%'+Math.round(ok/n*100)+'<small>'+ok+'/'+n+_t('gun_5');
   } else {
-    $('succ-k').textContent = 'Sigarasız gün oranı';
-    $('succ').innerHTML = '%'+c.succ+'<small>'+c.okDays+'/'+c.totalDays+' gün</small>';
+    $('succ-k').textContent = _t('sigarasiz_gun_orani');
+    $('succ').innerHTML = '%'+c.succ+'<small>'+c.okDays+'/'+c.totalDays+_t('gun_5');
   }
 
   const i = MS.findIndex(x=>x[0]>el);
   if(future){
     const span = S.reduce ? S.quit - S.reduce.start : 1;
-    $('next-t').textContent = 'Sağlık kazanımların bırakma gününde başlar.';
+    $('next-t').textContent = _t('saglik_kazanimlarin_birakma_gunund');
     $('next-b').style.width = '0'; $('next-p').textContent = '';
-    $('next-r').textContent = new Date(S.quit).toLocaleDateString('tr-TR',{day:'numeric',month:'long'});
+    $('next-r').textContent = new Date(S.quit).toLocaleDateString(LOCALE,{day:'numeric',month:'long'});
     $('heroRing').style.strokeDashoffset = 647.2*(1-Math.min(1,Math.max(0,1-(S.quit-Date.now())/span)));
   } else if(i>=0){
     const prev = i ? MS[i-1][0] : 0, p = (el-prev)/(MS[i][0]-prev);
     $('next-t').textContent = MS[i][1];
     $('next-b').style.width = (p*100).toFixed(1)+'%';
-    $('next-p').textContent = MS.filter(x=>el>=x[0]).length+'/'+MS.length+' dönüm noktası';
-    $('next-r').textContent = fmtDur(MS[i][0]-el)+' kaldı';
+    $('next-p').textContent = MS.filter(x=>el>=x[0]).length+'/'+MS.length+_t('donum_noktasi');
+    $('next-r').textContent = fmtDur(MS[i][0]-el)+_t('kaldi');
     $('heroRing').style.strokeDashoffset = 647.2*(1-p);
   } else {
-    $('next-t').textContent='Tüm iyileşme aşamalarını tamamladın! 🎉'; $('next-b').style.width='100%';
+    $('next-t').textContent=_t('tum_iyilesme_asamalarini_tamamladi'); $('next-b').style.width='100%';
     $('next-p').textContent=''; $('next-r').textContent=''; $('heroRing').style.strokeDashoffset=0;
   }
 
   if($('v-save').classList.contains('on')){
     $('sv-total').textContent = tl(c.savedT);
-    $('sv-packs').textContent = num(c.cigsT/S.pack)+' paket içilmedi';
+    $('sv-packs').textContent = num(c.cigsT/S.pack)+_t('paket_icilmedi');
     $('sv-d').textContent = tl(c.daily); $('sv-w').textContent = tl(c.daily*7);
     $('sv-m').textContent = tl(c.daily*30); $('sv-y').textContent = tl(c.daily*365);
     if(S.goal && S.goal.amount){
@@ -101,17 +107,17 @@ function tick(){
       $('g-name').textContent = S.goal.name; $('g-pct').textContent = '%'+Math.floor(p*100);
       $('g-bar').style.width = (p*100).toFixed(1)+'%';
       $('g-have').textContent = tl(c.savedT)+' / '+tl(S.goal.amount);
-      $('g-left').textContent = p>=1 ? 'Hedefe ulaştın! 🎉' : c.daily>0 ? Math.ceil((S.goal.amount-c.savedT)/c.daily)+' gün kaldı' : '';
+      $('g-left').textContent = p>=1 ? _t('hedefe_ulastin_2') : c.daily>0 ? Math.ceil((S.goal.amount-c.savedT)/c.daily)+_t('gun_kaldi') : '';
     } else {
-      $('g-name').textContent='Hedef belirle'; $('g-pct').textContent=''; $('g-bar').style.width='0';
-      $('g-have').textContent='Biriktirdiğin parayla ne almak istersin?'; $('g-left').textContent='';
+      $('g-name').textContent=_t('hedef_belirle'); $('g-pct').textContent=''; $('g-bar').style.width='0';
+      $('g-have').textContent=_t('biriktirdigin_parayla_ne_almak_ist'); $('g-left').textContent='';
     }
   }
   const sec = Math.floor(Date.now()/1e3);
   if(sec%10===0){
     if($('v-health').classList.contains('on')) renderHealth();
     checkBadges(); checkHealthNotif(el); checkReminders();
-    const lv = xpInfo(c); $('lvchip').textContent = 'Seviye '+lv.n+' · '+lv.name;
+    const lv = xpInfo(c); $('lvchip').textContent = _t('seviye_2')+lv.n+' · '+lv.name;
   }
 }
 
@@ -119,15 +125,15 @@ function tick(){
 function renderWeek(){
   const slips = slipSet(), now = new Date();
   const mon = new Date(now); mon.setHours(12,0,0,0); mon.setDate(mon.getDate()-((mon.getDay()+6)%7));
-  const names = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
-  $('today').textContent = now.toLocaleDateString('tr-TR',{day:'numeric',month:'long',weekday:'long'});
+  const names = [_t('pzt'),_t('sal'),_t('car'),_t('per'),_t('cum'),_t('cmt'),_t('paz')];
+  $('today').textContent = now.toLocaleDateString(LOCALE,{day:'numeric',month:'long',weekday:'long'});
   $('week').innerHTML = names.map((n,i)=>{
     const d = new Date(mon); d.setDate(mon.getDate()+i);
     const st = dayStatus(d.getTime(), slips), isT = dkey(d)===dkey();
     const ic = st==='ok' ? '✓' : st==='slip' ? '•' : d.getDate();
     return `<div class="wd ${st} ${isT?'today':''}"><b>${ic}</b>${n}</div>`;
   }).join('');
-  const lv = xpInfo(calc()); $('lvchip').textContent = 'Seviye '+lv.n+' · '+lv.name;
+  const lv = xpInfo(calc()); $('lvchip').textContent = _t('seviye_2')+lv.n+' · '+lv.name;
 }
 function renderGoals(){
   const g = day(), res = goalsFor(dkey(), slipSet());
@@ -136,12 +142,12 @@ function renderGoals(){
     const ok = res[i];
     const right = type==='count'
       ? `<div class="cnt"><button onclick="water(-1);event.stopPropagation()">−</button><b>${g.water}/8</b><button onclick="water(1);event.stopPropagation()">+</button></div>` : '';
-    const sub = type==='auto' ? `<span class="auto">${id==='smokefree'?'Otomatik takip edilir':'Acil destekten yapılınca işaretlenir'}</span>` : '';
-    if(id==='smokefree' && reduceActive()) txt = 'Bugün sınırın içinde kal';
+    const sub = type==='auto' ? `<span class="auto">${id==='smokefree'?_t('otomatik_takip_edilir'):_t('acil_destekten_yapilinca_isaretlen')}</span>` : '';
+    if(id==='smokefree' && reduceActive()) txt = _t('bugun_sinirin_icinde_kal');
     const click = type==='check' ? `onclick="toggleGoal('${id}')"` : '';
     return `<div class="goal ${ok?'done':''}" ${click}><div class="cb"></div><div class="gt">${txt}${sub}</div>${right}</div>`;
   }).join('');
-  $('goal-sum').textContent = 'Günlük puan %'+Math.round(done/GOALS.length*100);
+  $('goal-sum').textContent = _t('gunluk_puan')+Math.round(done/GOALS.length*100);
 }
 function toggleGoal(id){ const g=day(); g.done[id]=!g.done[id]; save(); renderGoals(); }
 function water(n){ const g=day(); g.water=Math.max(0,Math.min(20,g.water+n)); save(); renderGoals(); }
@@ -149,14 +155,14 @@ function water(n){ const g=day(); g.water=Math.max(0,Math.min(20,g.water+n)); sa
 function renderReview(){
   const r = day().review;
   $('review-card').innerHTML = r
-    ? `<button class="rowlink" onclick="openReview()"><span class="em">${MOODS[r.mood]}</span><span><b>Bugünü değerlendirdin</b><small>İstek düzeyi ${r.crave}/10${r.note?' · '+escapeHtml(r.note).slice(0,40):''}</small></span></button>`
-    : `<button class="rowlink" onclick="openReview()"><span class="em">🌙</span><span><b>Günü değerlendir</b><small>Bugün nasıl geçti? 30 saniye sürer</small></span></button>`;
+    ? `<button class="rowlink" onclick="openReview()"><span class="em">${MOODS[r.mood]}</span><span><b>${_t('bugunu_degerlendirdin')}</b><small>${_t('istek_duzeyi')} ${r.crave}/10${r.note?' · '+escapeHtml(r.note).slice(0,40):''}</small></span></button>`
+    : _t('gunu_degerlendir_bugun_nasil_gecti');
 }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
 
 function renderTrigs(){
   const all = S.crises, list = all.filter(c=>c.trig);
-  if(!all.length){ $('trig-card').innerHTML = `<div class="k">Henüz kayıt yok</div><p class="empty">Sigara isteği geldiğinde ortadaki <b style="color:var(--lime)">ACİL</b> butonuna bas. Uygulama zamanla seni en çok neyin tetiklediğini öğrenir.</p>`; return; }
+  if(!all.length){ $('trig-card').innerHTML = _t('henuz_kayit_yok_sigara_istegi'); return; }
   const cnt = {}; list.forEach(c=>cnt[c.trig]=(cnt[c.trig]||0)+1);
   const max = Math.max(1,...Object.values(cnt));
   const passed = all.filter(c=>c.passed===true).length;
@@ -164,10 +170,10 @@ function renderTrigs(){
   const hh = hardHour();
   $('trig-card').innerHTML =
     `<div class="grid" style="gap:10px">
-      <div><div class="k">Toplam kriz</div><div class="v">${all.length}</div></div>
-      <div><div class="k">Atlatılan</div><div class="v" style="color:var(--lime)">${passed}</div></div>
+      <div><div class="k">${_t('toplam_kriz')}</div><div class="v">${all.length}</div></div>
+      <div><div class="k">${_t('atlatilan')}</div><div class="v" style="color:var(--lime)">${passed}</div></div>
     </div>
-    ${topT?`<p class="empty" style="margin-top:12px">En sık tetikleyicin: <b style="color:var(--text)">${topT[2]} ${topT[1]}</b>${hh!=null?`<br>En çok zorlandığın saat: <b style="color:var(--text)">${pad(hh)}:00 civarı</b>`:''}</p>`:''}
+    ${topT?`<p class="empty" style="margin-top:12px">${_t('en_sik_tetikleyicin')} <b style="color:var(--text)">${topT[2]} ${topT[1]}</b>${hh!=null?`<br>${_t('en_cok_zorlandigin_saat')} <b style="color:var(--text)">${pad(hh)}${_t('n00_civari')}</b>`:''}</p>`:''}
     ${TRIGS.filter(t=>cnt[t[0]]).map(t=>`<div class="tr"><span class="n">${t[2]} ${t[1]}</span><span class="b"><i style="width:${cnt[t[0]]/max*100}%"></i></span><span class="x">${cnt[t[0]]}</span></div>`).join('')}`;
 }
 function topTrigger(){

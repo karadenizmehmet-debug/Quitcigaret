@@ -5,13 +5,13 @@
 const mmss = n => Math.floor(n/60)+':'+pad(n%60);
 function stopMini(){ clearInterval(mT); clearInterval(tTimer); mT = tTimer = null; tOver = true; }
 function gamePlayed(){ S.stats.games = (S.stats.games||0)+1; save(); }
-function newRecord(what){ toast('🏆 Yeni rekor: '+what); confetti(); buzz([30,50,30,50,100]); }
+function newRecord(what){ toast(_t('yeni_rekor')+what); confetti(); buzz([30,50,30,50,100]); }
 function recordsLine(id){
   const st = S.stats;
-  if(id==='blocks') return st.bestBlocks ? `Rekor: ${num(st.bestBlocks)} puan · ${st.bestLines||0} satır` : 'Henüz rekor yok';
-  if(id==='memory') return st.memBestMoves ? `Rekor: ${st.memBestMoves} hamle · ${mmss(st.memBestTime)}` : 'Henüz rekor yok';
-  if(id==='bubble') return st.bestGame ? `Rekor: ${st.bestGame} baloncuk` : 'Henüz rekor yok';
-  if(id==='c4') return (st.c4Wins||0) ? `${st.c4Wins} galibiyet${st.c4HardWins?' · zorda '+st.c4HardWins:''}` : 'Henüz galibiyet yok';
+  if(id==='blocks') return st.bestBlocks ? `${_t('rekor')} ${num(st.bestBlocks)} ${_t('puan_2')} ${st.bestLines||0} ${_t('satir_2')}` : _t('henuz_rekor_yok');
+  if(id==='memory') return st.memBestMoves ? `Rekor: ${st.memBestMoves} hamle · ${mmss(st.memBestTime)}` : _t('henuz_rekor_yok');
+  if(id==='bubble') return st.bestGame ? `Rekor: ${st.bestGame} baloncuk` : _t('henuz_rekor_yok');
+  if(id==='c4') return (st.c4Wins||0) ? `${st.c4Wins} galibiyet${st.c4HardWins?_t('zorda')+st.c4HardWins:''}` : _t('henuz_galibiyet_yok');
   return '';
 }
 function renderGamePicker(){ ['blocks','memory','bubble','c4'].forEach(id=>{ const el=$('rec-'+id); if(el) el.textContent = recordsLine(id); }); }
@@ -40,7 +40,7 @@ function mFlip(el){
       const recM = !S.stats.memBestMoves || mMoves < S.stats.memBestMoves, recT = !S.stats.memBestTime || mSec < S.stats.memBestTime;
       if(recM) S.stats.memBestMoves = mMoves; if(recT) S.stats.memBestTime = mSec;
       gamePlayed();
-      if((recM||recT) && S.stats.memWins>1) newRecord(recM ? mMoves+' hamle' : mmss(mSec)); else { toast(`Tamamladın! ${mMoves} hamle · ${mmss(mSec)}`); confetti(); }
+      if((recM||recT) && S.stats.memWins>1) newRecord(recM ? mMoves+_t('u_hamle') : mmss(mSec)); else { toast(`${_t('tamamladin')} ${mMoves} ${_t('hamle_2')} ${mmss(mSec)}`); confetti(); }
       setTimeout(()=>cs('check'), 1600); }
   } else { mLock=true; setTimeout(()=>{ a.classList.remove('open'); b.classList.remove('open'); mOpen=[]; mLock=false; }, 750); }
 }
@@ -100,9 +100,9 @@ function blocksDone(){
   const prev = S.stats.bestBlocks||0;
   S.stats.bestBlocks = Math.max(prev, tScore); S.stats.bestLines = Math.max(S.stats.bestLines||0, tLines);
   gamePlayed();
-  if(prev && tScore > prev) newRecord(num(tScore)+' puan');
+  if(prev && tScore > prev) newRecord(num(tScore)+_t('u_puan'));
 }
-function blocksOver(){ tOver=true; clearInterval(tTimer); blocksDone(); drawT(); toast('Oyun bitti · '+num(tScore)+' puan'); setTimeout(()=>cs('check'), 1200); }
+function blocksOver(){ tOver=true; clearInterval(tTimer); blocksDone(); drawT(); toast(_t('oyun_bitti')+num(tScore)+_t('u_puan')); setTimeout(()=>cs('check'), 1200); }
 function endBlocks(){ const wasOn = !tOver; stopMini(); if(wasOn) blocksDone(); cs('check'); }
 (function(){
   let sx=0, sy=0, st=0;
@@ -127,7 +127,7 @@ function endBlocks(){ const wasOn = !tOver; stopMini(); if(wasOn) blocksDone(); 
 const CR=6, CC=7, C4ORDER=[3,2,4,1,5,0,6];
 let cB, cTurn=1, cOver=true, cDepth=1, cLast=null, cWin=[];
 function c4Level(d){ cDepth=d; document.querySelectorAll('#c4lvl button').forEach(b=>b.classList.toggle('on', +b.dataset.l===d)); startC4(); }
-function startC4(){ cs('c4'); cB=Array.from({length:CR},()=>Array(CC).fill(0)); cTurn=1; cOver=false; cLast=null; cWin=[]; drawC4('Sıra sende · istediğin sütuna dokun'); }
+function startC4(){ cs('c4'); cB=Array.from({length:CR},()=>Array(CC).fill(0)); cTurn=1; cOver=false; cLast=null; cWin=[]; drawC4(_t('sira_sende_istedigin_sutuna_dokun')); }
 function drawC4(msg){
   $('c4st').textContent = msg;
   let h=''; for(let r=0;r<CR;r++) for(let c=0;c<CC;c++){
@@ -183,16 +183,16 @@ function c4Play(col){
   const r=c4Drop(cB,col,1); if(r<0) return;
   cLast=[r,col]; buzz(10);
   const w=c4Line(cB,1);
-  if(w){ cOver=true; cWin=w; drawC4('Kazandın! 🎉'); S.stats.c4Wins=(S.stats.c4Wins||0)+1; if(cDepth>1) S.stats.c4HardWins=(S.stats.c4HardWins||0)+1; gamePlayed(); confetti(); buzz([40,60,120]); return; }
-  if(c4Full(cB)){ cOver=true; drawC4('Berabere'); gamePlayed(); return; }
-  cTurn=2; drawC4('Bilgisayar düşünüyor…');
+  if(w){ cOver=true; cWin=w; drawC4(_t('kazandin')); S.stats.c4Wins=(S.stats.c4Wins||0)+1; if(cDepth>1) S.stats.c4HardWins=(S.stats.c4HardWins||0)+1; gamePlayed(); confetti(); buzz([40,60,120]); return; }
+  if(c4Full(cB)){ cOver=true; drawC4(_t('berabere')); gamePlayed(); return; }
+  cTurn=2; drawC4(_t('bilgisayar_dusunuyor'));
   setTimeout(()=>{
     if(cOver || !$('cs-c4').classList.contains('on')) return;
     const c=c4Best(), r2=c4Drop(cB,c,2); cLast=[r2,c];
     const w2=c4Line(cB,2);
-    if(w2){ cOver=true; cWin=w2; drawC4('Bilgisayar kazandı · bir daha dene'); gamePlayed(); return; }
-    if(c4Full(cB)){ cOver=true; drawC4('Berabere'); gamePlayed(); return; }
-    cTurn=1; drawC4('Sıra sende');
+    if(w2){ cOver=true; cWin=w2; drawC4(_t('bilgisayar_kazandi_bir_daha_dene')); gamePlayed(); return; }
+    if(c4Full(cB)){ cOver=true; drawC4(_t('berabere')); gamePlayed(); return; }
+    cTurn=1; drawC4(_t('sira_sende'));
   }, 420);
 }
 function endC4(){ if(!cOver && cB && cB.some(r=>r.some(Boolean))) gamePlayed(); cOver=true; cs('check'); }

@@ -27,8 +27,9 @@ localStorage.setItem('nefes_v2', JSON.stringify({quit:now-12.5*D, per:20, price:
   badges:{first:now-11*D,k3:now-9*D,c1:now-5*D}, stats:{breaths:2}}));
 """
 
+OPEN = []
 def new_page(browser, db=None):
-    ctx = browser.new_context(viewport=VIEW, accept_downloads=True)
+    ctx = browser.new_context(viewport=VIEW, accept_downloads=True); OPEN.append(ctx)
     if db is not None:
         H = {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,PUT,OPTIONS", "Access-Control-Allow-Headers": "Content-Type"}
         def fb(route, req):
@@ -149,8 +150,8 @@ def test_badges(b):
 
 def test_crisis_breath_and_celebration(b):
     pg = new_page(b); seeded(pg)
-    pg.click(".sos"); pg.click("#chips button >> nth=0"); pg.click(".tool.wide"); pg.click("#bo-voice"); pg.wait_for_timeout(1800)
-    assert '[220]' in pg.evaluate("window._vib")
+    pg.click(".sos"); pg.click("#chips button >> nth=0"); pg.click(".tool.wide"); pg.click("#bo-voice")
+    pg.wait_for_function("(window._vib||[]).includes('[220]')", timeout=6000)
     pg.click("#cs-breath >> text=Bitir"); pg.click("text=Evet, geçti"); pg.wait_for_timeout(200)
     assert pg.evaluate("getComputedStyle(document.getElementById('confetti')).display") == "block"
     no_errors(pg)
@@ -184,6 +185,26 @@ def test_games_and_records(b):
     assert pg.evaluate("cB[5][3]===2 || cB[4][3]===2"), "bilgisayar üçlüyü kapatmadı"
     no_errors(pg)
 
+def test_i18n_keys_complete(b):
+    import re
+    tr = (ROOT/"js"/"i18n"/"tr.js").read_text()
+    keys = set(re.findall(r"^    (\w+): ", tr, re.M))
+    used = set()
+    for f in (ROOT/"js").glob("*.js"):
+        used |= set(re.findall(r"_t\('([a-z0-9_]+)'", f.read_text()))
+    html = (ROOT/"index.html").read_text()
+    used |= set(re.findall(r'data-i18n(?:-html|-text)?="([a-z0-9_]+)"', html))
+    for grp in re.findall(r'data-i18n-attr="([^"]+)"', html):
+        used |= {pair.split(":")[1] for pair in grp.split(";")}
+    missing = used - keys
+    assert not missing, f"dil dosyasında olmayan anahtarlar: {sorted(missing)[:10]}"
+    # sahte dil: uygulama hatasız açılmalı ve metinler işaretli olmalı
+    pg = new_page(b); pg.evaluate("localStorage.setItem('nefes_lang','xx')"); seeded(pg)
+    pg.evaluate("localStorage.setItem('nefes_lang','xx')"); pg.reload(); pg.wait_for_timeout(300)
+    assert "⟦" in pg.inner_text("nav") and "⟦" in pg.inner_text("#v-home")
+    pg.evaluate("go('set')"); assert pg.locator("#s-lang option").count() >= 1
+    no_errors(pg)
+
 # ---------------------------------------------------------------- çalıştırıcı
 def main():
     tests = [(n, f) for n, f in globals().items() if n.startswith("test_")]
@@ -199,6 +220,8 @@ def main():
                 fn(browser); print(f"  ✓ {name}  ({time.time()-t0:.1f} sn)")
             except Exception as e:
                 failed += 1; print(f"  ✗ {name}\n    {type(e).__name__}: {e}"); traceback.print_exc(limit=1)
+            finally:
+                while OPEN: OPEN.pop().close()
         browser.close()
     print(f"\n{len(tests)-failed}/{len(tests)} test geçti" if not only else ("BAŞARISIZ" if failed else "tamam"))
     sys.exit(1 if failed else 0)
