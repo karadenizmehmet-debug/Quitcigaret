@@ -1,6 +1,6 @@
 // Nefes – çevrimdışı çalışma için service worker
 // Mehmet Karadeniz, 2026-2027
-const CACHE = 'nefes-v7';
+const CACHE = 'nefes-v8';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {

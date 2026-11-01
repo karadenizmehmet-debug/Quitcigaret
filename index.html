@@ -301,6 +301,8 @@ details summary{cursor:pointer;color:var(--lime);font-size:14px;margin-top:14px}
 .cat small{display:block;color:var(--muted);font-size:13px;margin-top:2px;font-variant-numeric:tabular-nums}
 .cat .cbar{height:5px;background:var(--line);border-radius:5px;margin-top:10px;overflow:hidden}
 .cat .cbar i{display:block;height:100%;border-radius:5px}
+.cat:last-child:nth-child(odd){grid-column:span 2}
+.rec{color:var(--amber);font-weight:600}
 .bdg small.pr{font-variant-numeric:tabular-nums}
 .celebrate{position:fixed;inset:0;z-index:80;background:rgba(10,12,11,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:24px;text-align:center}
 .celebrate.on{display:flex;animation:fade .3s}
@@ -703,7 +705,7 @@ nav .sos svg{width:24px;height:24px}
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 8h10a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h8"/></svg></div>
         <div><b style="color:#fff">Nefes egzersizi</b><small>2 dakika · en etkili yöntem</small></div>
       </button>
-      <button class="tool" onclick="cs('games')"><div style="font-size:26px">🎮</div><b>Oyunlar</b><small>3–5 dk dikkat dağıtma</small></button>
+      <button class="tool" onclick="renderGamePicker();cs('games')"><div style="font-size:26px">🎮</div><b>Oyunlar</b><small>3–5 dk dikkat dağıtma</small></button>
       <button class="tool" onclick="info('water')"><div style="font-size:26px">💧</div><b>Su iç</b><small>Bir büyük bardak</small></button>
       <button class="tool" onclick="info('walk')"><div style="font-size:26px">🚶</div><b>Kısa yürüyüş</b><small>5–10 dakika</small></button>
       <button class="tool" onclick="info('moti')"><div style="font-size:26px">💬</div><b>Motivasyon</b><small>Neden bıraktın?</small></button>
@@ -730,19 +732,19 @@ nav .sos svg{width:24px;height:24px}
   <div class="cs" id="cs-games">
     <div class="title" style="margin-top:10px">Bir oyun seç</div>
     <div class="sub">Görsel dikkat isteyen kısa bir oyun, isteğin zihindeki canlılığını azaltır. 3–5 dakika yeterli.</div>
-    <button class="rowlink" style="margin-top:0" onclick="startBlocks()"><span class="em">🧩</span><span><b>Blok bulmaca</b><small>Satırları tamamla · araştırmalarda en çok denenen tür</small></span></button>
-    <button class="rowlink" onclick="startMemory()"><span class="em">🃏</span><span><b>Hafıza kartları</b><small>8 eşleşen çifti bul</small></span></button>
-    <button class="rowlink" onclick="startGame()"><span class="em">🫧</span><span><b>Baloncuk patlat</b><small>5 dakika boyunca patlat</small></span></button>
-    <button class="rowlink" onclick="startC4()"><span class="em">🔴</span><span><b>Dört Bağla</b><small>Bilgisayara karşı dört pulu yan yana getir</small></span></button>
+    <button class="rowlink" style="margin-top:0" onclick="startBlocks()"><span class="em">🧩</span><span><b>Blok bulmaca</b><small>Satırları tamamla · araştırmalarda en çok denenen tür</small><small class="rec" id="rec-blocks"></small></span></button>
+    <button class="rowlink" onclick="startMemory()"><span class="em">🃏</span><span><b>Hafıza kartları</b><small>8 eşleşen çifti bul</small><small class="rec" id="rec-memory"></small></span></button>
+    <button class="rowlink" onclick="startGame()"><span class="em">🫧</span><span><b>Baloncuk patlat</b><small>5 dakika boyunca patlat</small><small class="rec" id="rec-bubble"></small></span></button>
+    <button class="rowlink" onclick="startC4()"><span class="em">🔴</span><span><b>Dört Bağla</b><small>Bilgisayara karşı dört pulu yan yana getir</small><small class="rec" id="rec-c4"></small></span></button>
     <button class="btn ghost" onclick="cs('tools')">Geri</button>
   </div>
   <div class="cs" id="cs-memory">
-    <div class="ghead"><div><div class="k">Hamle</div><b id="mMoves">0</b></div><div style="text-align:right"><div class="k" style="justify-content:flex-end">Süre</div><b id="mTime">0:00</b></div></div>
+    <div class="ghead"><div><div class="k">Hamle · <span class="rec" id="mRec"></span></div><b id="mMoves">0</b></div><div style="text-align:right"><div class="k" style="justify-content:flex-end">Süre</div><b id="mTime">0:00</b></div></div>
     <div class="mgrid" id="mgrid"></div>
     <button class="btn ghost" onclick="endMemory()">Bitir</button>
   </div>
   <div class="cs" id="cs-blocks">
-    <div class="ghead"><div><div class="k">Puan</div><b id="tScore">0</b></div><div style="text-align:right"><div class="k" style="justify-content:flex-end">Satır</div><b id="tLines">0</b></div></div>
+    <div class="ghead"><div><div class="k">Puan · <span class="rec" id="tRec"></span></div><b id="tScore">0</b></div><div style="text-align:right"><div class="k" style="justify-content:flex-end">Satır</div><b id="tLines">0</b></div></div>
     <div class="tbox"><canvas id="tcv" width="300" height="600"></canvas></div>
     <div class="ctrl"><button onclick="tMove(-1)" aria-label="Sola">←</button><button onclick="tRot()" aria-label="Döndür">↻</button><button onclick="tMove(1)" aria-label="Sağa">→</button><button onclick="tDrop()" aria-label="Bırak">⤓</button></div>
     <p class="note" style="text-align:center">Kaydır: sağa/sola · Dokun: döndür · Aşağı kaydır: bırak</p>
@@ -755,7 +757,7 @@ nav .sos svg{width:24px;height:24px}
     <div class="grid" style="gap:10px"><button class="btn sec sm" onclick="startC4()">Yeni oyun</button><button class="btn ghost sm" onclick="endC4()">Bitir</button></div>
   </div>
   <div class="cs" id="cs-game">
-    <div class="gbar" style="margin-top:12px"><div><div class="k">Patlatılan</div><b id="gScore">0</b></div><div style="text-align:right"><div class="k" style="justify-content:flex-end">Kalan süre</div><b id="gTime">5:00</b></div></div>
+    <div class="gbar" style="margin-top:12px"><div><div class="k">Patlatılan · <span class="rec" id="gRec"></span></div><b id="gScore">0</b></div><div style="text-align:right"><div class="k" style="justify-content:flex-end">Kalan süre</div><b id="gTime">5:00</b></div></div>
     <div class="arena" id="arena"></div>
     <button class="btn ghost" onclick="endGame()">Bitir</button>
   </div>
@@ -837,60 +839,79 @@ const MOODS = ['😫','😕','😐','🙂','😄'];
 
 const CATS = [
   ['seri','🔥','Seri','#fb923c'], ['saglik','❤️','Sağlık','#fb7185'], ['para','💰','Para','#fbbf24'], ['sigara','🚭','Sigara','#60a5fa'],
-  ['kriz','🛡️','Krizler','#a78bfa'], ['nefes','🫁','Nefes ve oyun','#2dd4bf'], ['aliskanlik','🌱','Alışkanlıklar','#b5f23d'], ['ozel','⭐','Özel','#f472b6']
+  ['kriz','🛡️','Krizler','#a78bfa'], ['nefes','🫁','Nefes','#2dd4bf'], ['oyun','🎮','Oyunlar','#38bdf8'], ['aliskanlik','🌱','Alışkanlıklar','#b5f23d'], ['ozel','⭐','Özel','#f472b6']
 ];
 const B = (cat,id,e,n,d,t,v,fmt) => ({cat,id,e,n,d,t,v,fmt});
 const HB = [['💓','Nabız dengede'],['🩸','Oksijen yükseldi'],['🌬️','Karbonmonoksit temizlendi'],['👅','Tatlar geri döndü'],['🫁','Rahat nefes'],['🚶','Dolaşım güçlendi'],
   ['📈','Güçlü akciğerler'],['🍃','Öksürük azaldı'],['❤️','Kalbe bir yıl'],['🧠','İnme riski azaldı'],['🎗️','On yıllık zafer'],['🏅','Kalp kadar sağlam']];
+const T = (id,days,e,n) => B('seri',id,e,n,(days<1?Math.round(days*24)+' saat':days+' gün')+' sigarasız',days*D,c=>c.el,'time');
 const BADGES = [
-  B('seri','first','🌱','İlk adım','24 saat sigarasız',D,c=>c.el,'time'),
-  B('seri','k3','💪','Kararlılık','3 gün sigarasız',3*D,c=>c.el,'time'),
-  B('seri','k7','🔥','Güçlü irade','7 gün sigarasız',7*D,c=>c.el,'time'),
-  B('seri','k14','🌅','Yeni başlangıç','14 gün sigarasız',14*D,c=>c.el,'time'),
-  B('seri','k30','🕊️','Bir ay özgürlük','30 gün sigarasız',30*D,c=>c.el,'time'),
-  B('seri','k90','🏆','Büyük başarı','90 gün sigarasız',90*D,c=>c.el,'time'),
-  B('seri','k180','🌳','Yarım yıl','180 gün sigarasız',180*D,c=>c.el,'time'),
-  B('seri','k365','👑','Özgür hayat','1 yıl sigarasız',365*D,c=>c.el,'time'),
+  T('first',1,'🌱','İlk adım'), T('k2',2,'🌤️','İki gün'), T('k3',3,'💪','Kararlılık'), T('k7',7,'🔥','Güçlü irade'),
+  T('k10',10,'🔟','On gün'), T('k14',14,'🌅','Yeni başlangıç'), T('k21',21,'🧱','Yeni alışkanlık'), T('k30',30,'🕊️','Bir ay özgürlük'),
+  T('k60',60,'🌻','İki ay'), T('k90',90,'🏆','Büyük başarı'), T('k120',120,'🍀','Dört ay'), T('k180',180,'🌳','Yarım yıl'),
+  T('k270',270,'🌈','Dokuz ay'), T('k365',365,'👑','Özgür hayat'), T('k730',730,'🎖️','İki yıl'), T('k1095',1095,'🏛️','Üç yıl'),
   ...MS.map(([t,txt],i)=>B('saglik','h'+i,HB[i][0],HB[i][1],label(t)+': '+txt,t,c=>c.el,'time')),
-  B('para','s500','🪙','İlk birikim','₺500 biriktir',500,c=>c.savedT,'tl'),
-  B('para','s1k','💰','Kumbaracı','₺1.000 biriktir',1000,c=>c.savedT,'tl'),
-  B('para','s2500','💵','Tasarrufçu','₺2.500 biriktir',2500,c=>c.savedT,'tl'),
-  B('para','s5k','💳','Bütçe ustası','₺5.000 biriktir',5000,c=>c.savedT,'tl'),
-  B('para','s10k','🏦','Servet yolunda','₺10.000 biriktir',10000,c=>c.savedT,'tl'),
-  B('para','s25k','💎','Büyük birikim','₺25.000 biriktir',25000,c=>c.savedT,'tl'),
-  B('para','s50k','🏝️','Hayallerine bir adım','₺50.000 biriktir',50000,c=>c.savedT,'tl'),
+  ...[[100,'s100','🪙','İlk kuruşlar'],[250,'s250','👛','Cep harçlığı'],[500,'s500','💴','İlk birikim'],[750,'s750','🧾','Fatura parası'],[1000,'s1k','💰','Kumbaracı'],
+      [2500,'s2500','💵','Tasarrufçu'],[5000,'s5k','💳','Bütçe ustası'],[10000,'s10k','🏦','Servet yolunda'],[25000,'s25k','💎','Büyük birikim'],
+      [50000,'s50k','🏝️','Hayallerine bir adım'],[100000,'s100k','🏰','Yüz bin']]
+     .map(([n,id,e,nm])=>B('para',id,e,nm,'₺'+n.toLocaleString('tr-TR')+' biriktir',n,c=>c.savedT,'tl')),
   B('para','goal','🎯','Hedefe ulaştın','Tasarruf hedefini tamamla',1,c=>S.goal&&S.goal.amount?c.savedT/S.goal.amount:0,'pct'),
-  ...[[100,'🚭','İlk yüz'],[250,'🧯','Çeyrek bin'],[500,'🌬️','Beş yüz'],[1000,'🌿','Binlik'],[2500,'🌲','Dev adım'],[5000,'🏔️','Beş bin'],[10000,'🌍','On bin']]
-     .map(([n,e,nm])=>B('sigara','n'+n,e,nm,n.toLocaleString('tr-TR')+' sigara içme',n,c=>c.cigsT,'n')),
-  B('kriz','c1','🛡️','İlk zafer','İlk krizi atlat',1,c=>c.passed,'n'),
-  B('kriz','c5','🥋','Savaşçı','5 krizi atlat',5,c=>c.passed,'n'),
-  B('kriz','c10','⚔️','Kriz ustası','10 krizi atlat',10,c=>c.passed,'n'),
-  B('kriz','c25','🏹','Sağlam irade','25 krizi atlat',25,c=>c.passed,'n'),
-  B('kriz','c50','🧘','Sükûnet','50 krizi atlat',50,c=>c.passed,'n'),
-  B('kriz','c100','🗿','Sarsılmaz','100 krizi atlat',100,c=>c.passed,'n'),
-  B('nefes','b1','🌬️','İlk nefes','İlk nefes egzersizini yap',1,()=>S.stats.breaths,'n'),
-  B('nefes','b5','🫁','Nefes ustası','5 nefes egzersizi',5,()=>S.stats.breaths,'n'),
-  B('nefes','b20','🌊','Derin nefes','20 nefes egzersizi',20,()=>S.stats.breaths,'n'),
-  B('nefes','b50','🧘‍♂️','Nefes bilgesi','50 nefes egzersizi',50,()=>S.stats.breaths,'n'),
-  B('nefes','g1','🎮','İlk oyun','Bir oyun oyna',1,()=>S.stats.games||0,'n'),
-  B('nefes','g10','🎮','Oyuncu','10 kez oyna',10,()=>S.stats.games||0,'n'),
-  B('nefes','g50','🫧','Keskin nişancı','Baloncukta tek oyunda 50',50,()=>S.stats.bestGame||0,'n'),
-  B('nefes','mem','🃏','Hafıza ustası','Hafıza kartlarını tamamla',1,()=>S.stats.memWins||0,'n'),
-  B('nefes','tet','🧩','Blok ustası','Blok bulmacada 1.000 puan',1000,()=>S.stats.bestBlocks||0,'n'),
-  B('nefes','c4','🔴','Dört bağladın','Dört Bağla’da bilgisayarı yen',1,()=>S.stats.c4Wins||0,'n'),
+  ...[[50,'n50','🚬','Elli'],[100,'n100','🚭','İlk yüz'],[250,'n250','🧯','Çeyrek bin'],[500,'n500','🌬️','Beş yüz'],[1000,'n1000','🌿','Binlik'],[2500,'n2500','🌲','Dev adım'],
+      [5000,'n5000','🏔️','Beş bin'],[10000,'n10000','🌍','On bin'],[20000,'n20000','🌌','Yirmi bin'],[50000,'n50000','🪐','Elli bin']]
+     .map(([n,id,e,nm])=>B('sigara',id,e,nm,n.toLocaleString('tr-TR')+' sigara içme',n,c=>c.cigsT,'n')),
+  B('sigara','pk1','📦','İlk paket','Bir paket içme',1,c=>c.cigsT/S.pack,'n'),
+  B('sigara','pk10','🗃️','On paket','10 paket içme',10,c=>c.cigsT/S.pack,'n'),
+  B('sigara','pk100','🏗️','Yüz paket','100 paket içme',100,c=>c.cigsT/S.pack,'n'),
+  ...[[1,'c1','🛡️','İlk zafer'],[3,'c3','🪖','Üç zafer'],[5,'c5','🥋','Savaşçı'],[10,'c10','⚔️','Kriz ustası'],[25,'c25','🏹','Sağlam irade'],
+      [50,'c50','🧘','Sükûnet'],[100,'c100','🗿','Sarsılmaz'],[250,'c250','🐉','Efsane']]
+     .map(([n,id,e,nm])=>B('kriz',id,e,nm,n===1?'İlk krizi atlat':n+' krizi atlat',n,c=>c.passed,'n')),
+  B('kriz','night','🌃','Gece bekçisi','Gece 22:00–06:00 arası 3 krizi atlat',3,c=>c.nightPassed,'n'),
+  B('kriz','trig3','🔍','Kendini tanı','3 farklı tetikleyiciyi kaydet',3,c=>c.trigKinds,'n'),
+  B('kriz','trig6','🗺️','Tetikleyici haritası','6 tetikleyicinin hepsini kaydet',6,c=>c.trigKinds,'n'),
+  ...[[1,'b1','🌬️','İlk nefes'],[5,'b5','🫁','Nefes ustası'],[10,'b10','🍃','On nefes'],[20,'b20','🌊','Derin nefes'],[50,'b50','🧘‍♂️','Nefes bilgesi'],[100,'b100','🕉️','Yüz nefes']]
+     .map(([n,id,e,nm])=>B('nefes',id,e,nm,n===1?'İlk nefes egzersizini yap':n+' nefes egzersizi',n,()=>S.stats.breaths,'n')),
+  B('oyun','g1','🎮','İlk oyun','Bir oyun oyna',1,()=>S.stats.games||0,'n'),
+  B('oyun','g10','🕹️','Oyuncu','10 oyun oyna',10,()=>S.stats.games||0,'n'),
+  B('oyun','g25','👾','Tutkun','25 oyun oyna',25,()=>S.stats.games||0,'n'),
+  B('oyun','g100','🏟️','Yüz oyun','100 oyun oyna',100,()=>S.stats.games||0,'n'),
+  B('oyun','g50','🫧','Keskin nişancı','Baloncukta tek oyunda 50',50,()=>S.stats.bestGame||0,'n'),
+  B('oyun','bub100','🎈','Baloncuk ustası','Baloncukta tek oyunda 100',100,()=>S.stats.bestGame||0,'n'),
+  B('oyun','mem','🃏','Hafıza ustası','Hafıza kartlarını tamamla',1,()=>S.stats.memWins||0,'n'),
+  B('oyun','mem5','🧠','Güçlü hafıza','Hafıza kartlarını 5 kez tamamla',5,()=>S.stats.memWins||0,'n'),
+  B('oyun','memM','🎴','Az hamle','Hafıza kartlarını 14 hamle ya da daha azında bitir',1,()=>S.stats.memBestMoves && S.stats.memBestMoves<=14 ? 1 : 0,'n'),
+  B('oyun','memT','⏱️','Şimşek hafıza','Hafıza kartlarını 45 saniyede bitir',1,()=>S.stats.memBestTime && S.stats.memBestTime<=45 ? 1 : 0,'n'),
+  B('oyun','tet','🧩','Blok ustası','Blok bulmacada 1.000 puan',1000,()=>S.stats.bestBlocks||0,'n'),
+  B('oyun','tet3k','🏗️','Blok mimarı','Blok bulmacada 3.000 puan',3000,()=>S.stats.bestBlocks||0,'n'),
+  B('oyun','tetL','📏','Satır avcısı','Blok bulmacada tek oyunda 20 satır',20,()=>S.stats.bestLines||0,'n'),
+  B('oyun','c4','🔴','Dört bağladın','Dört Bağla’da bilgisayarı yen',1,()=>S.stats.c4Wins||0,'n'),
+  B('oyun','c4w5','🟣','Strateji ustası','Dört Bağla’da 5 galibiyet',5,()=>S.stats.c4Wins||0,'n'),
+  B('oyun','c4h','♟️','Zoru yendin','Dört Bağla’da zor seviyede kazan',1,()=>S.stats.c4HardWins||0,'n'),
   B('aliskanlik','r1','🌙','İlk değerlendirme','Günü ilk kez değerlendir',1,c=>c.reviews,'n'),
   B('aliskanlik','r7','📔','Düzenli günlük','7 akşam değerlendirmesi',7,c=>c.reviews,'n'),
   B('aliskanlik','r30','📚','Günlük ustası','30 akşam değerlendirmesi',30,c=>c.reviews,'n'),
+  B('aliskanlik','r100','🗂️','Yüz değerlendirme','100 akşam değerlendirmesi',100,c=>c.reviews,'n'),
+  B('aliskanlik','calm','😌','Sakin günler','3 günü istek düzeyi 2 ya da altında bitir',3,c=>c.calmDays,'n'),
+  B('aliskanlik','happy','😄','Güzel günler','Ruh hâlini 7 gün 🙂 ya da 😄 olarak değerlendir',7,c=>c.happyDays,'n'),
+  B('aliskanlik','w1','🥤','İlk su hedefi','Bir günde 8 bardak su',1,c=>c.waterDays,'n'),
   B('aliskanlik','w7','💧','Su dostu','7 gün 8 bardak su',7,c=>c.waterDays,'n'),
   B('aliskanlik','w30','🌊','Su ustası','30 gün 8 bardak su',30,c=>c.waterDays,'n'),
+  B('aliskanlik','w100','🏞️','Su bilgesi','100 gün 8 bardak su',100,c=>c.waterDays,'n'),
+  B('aliskanlik','walk7','🚶','Yürüyüşçü','7 gün yürüyüş hedefi',7,c=>c.walkDays,'n'),
+  B('aliskanlik','walk30','🥾','Gezgin','30 gün yürüyüş hedefi',30,c=>c.walkDays,'n'),
+  B('aliskanlik','cof7','☕','Temiz kahve','7 gün kahveyi sigarasız iç',7,c=>c.coffeeDays,'n'),
   B('aliskanlik','p7','🗓️','İlk hafta görevleri','7 program görevi',7,c=>c.progDone,'n'),
+  B('aliskanlik','p15','📅','Yarı yol','15 program görevi',15,c=>c.progDone,'n'),
   B('aliskanlik','p30','🏁','Program tamam','30 program görevi',30,c=>c.progDone,'n'),
   B('aliskanlik','f1','✅','Mükemmel gün','Bir günün tüm hedeflerini tamamla',1,c=>c.fullDays,'n'),
   B('aliskanlik','f7','🌟','Mükemmel hafta','7 mükemmel gün',7,c=>c.fullDays,'n'),
+  B('aliskanlik','f30','💫','Mükemmel ay','30 mükemmel gün',30,c=>c.fullDays,'n'),
   B('ozel','share','📣','İlham kaynağı','Başarı kartını paylaş ya da indir',1,()=>S.stats.shares||0,'n'),
+  B('ozel','share5','📢','Ses getiren','Başarı kartını 5 kez paylaş',5,()=>S.stats.shares||0,'n'),
+  B('ozel','goalset','📌','Hedef koydun','Bir tasarruf hedefi belirle',1,()=>S.goal&&S.goal.amount?1:0,'n'),
   B('ozel','bk','💾','Güvende','İlk yedeğini al',1,()=>S.backupAt?1:0,'n'),
   B('ozel','sync','☁️','Bulutta','Bulut senkronunu aç',1,()=>S.sync.on?1:0,'n'),
   B('ozel','learn','📖','Meraklı','Bilgi merkezinde 5 konu oku',5,()=>(S.stats.read||[]).length,'n'),
+  B('ozel','learnAll','🎓','Bilgili','Bilgi merkezindeki tüm konuları oku',8,()=>(S.stats.read||[]).length,'n'),
   B('ozel','back','🔁','Geri dönüş','Yeniden başladıktan sonra 3 gün sigarasız',3*D,c=>S.attempts.length?c.el:0,'time'),
   B('ozel','reduce','📉','Adım adım','Kademeli bırakma planını tamamla',1,()=>S.reduce&&!S.reduce.aborted&&Date.now()>=S.quit?1:0,'n')
 ];
@@ -938,6 +959,8 @@ const LEARN = [
     <p>Uzmanların ortak önerileri:</p>
     <ul><li>Bir bırakma tarihi belirle ve çevrene söyle.</li><li>Tetikleyicilerini tanı ve her biri için bir plan yap.</li><li>Evdeki sigara, çakmak ve küllükleri kaldır.</li><li>Kayma olursa pes etme; çoğu kişi birkaç denemede kalıcı olarak bırakır.</li><li>Gerekirse profesyonel destek al.</li></ul>`]
 ];
+
+BADGES.find(b=>b.id==='learnAll').t = LEARN.length;
 
 /* ================= Durum ================= */
 let S = null, tickT = null, calOff = 0;
@@ -1247,6 +1270,12 @@ function bctx(){
   c.waterDays = ds.filter(d=>d.water>=8).length;
   c.progDone = Object.values(S.prog.done).filter(Boolean).length;
   c.fullDays = Object.keys(S.days).filter(k=>goalsFor(k,slips).every(Boolean)).length;
+  c.walkDays = ds.filter(d=>d.done && d.done.walk).length;
+  c.coffeeDays = ds.filter(d=>d.done && d.done.coffee).length;
+  c.calmDays = ds.filter(d=>d.review && d.review.crave<=2).length;
+  c.happyDays = ds.filter(d=>d.review && d.review.mood>=3).length;
+  c.nightPassed = S.crises.filter(x=>{ const h=new Date(x.t).getHours(); return x.passed===true && (h>=22 || h<6); }).length;
+  c.trigKinds = new Set(S.crises.map(x=>x.trig).filter(Boolean)).size;
   return c;
 }
 function badgeProgress(b,c){ return Math.max(0, b.v(c)/b.t); }
@@ -1623,6 +1652,7 @@ function endBreath(full){
 let gT=null, gSpawn=null, gLeft=300, gScore=0;
 function startGame(){
   cs('game'); gLeft=300; gScore=0; $('gScore').textContent=0; $('gTime').textContent='5:00';
+  $('gRec').textContent = S.stats.bestGame ? 'rekor '+S.stats.bestGame : '';
   $('arena').innerHTML='';
   gT=setInterval(()=>{ gLeft--; $('gTime').textContent=Math.floor(gLeft/60)+':'+pad(gLeft%60); if(gLeft<=0) endGame(); },1000);
   gSpawn=setInterval(spawn,650); spawn();
@@ -1638,12 +1668,22 @@ function spawn(){
   setTimeout(()=>{ if(!b.dataset.p){ b.classList.add('gone'); setTimeout(()=>b.remove(),160); } },2600);
 }
 function stopGameTimer(){ clearInterval(gT); clearInterval(gSpawn); gT=gSpawn=null; }
-function endGame(){ stopGameTimer(); S.stats.bestGame=Math.max(S.stats.bestGame,gScore); gamePlayed(); toast(gScore+' baloncuk patlattın!'); cs('check'); }
+function endGame(){ stopGameTimer(); const prev=S.stats.bestGame||0; S.stats.bestGame=Math.max(prev,gScore); gamePlayed(); if(prev && gScore>prev) newRecord(gScore+' baloncuk'); toast(gScore+' baloncuk patlattın!'); cs('check'); }
 
 /* ================= Ortak oyun yardımcıları ================= */
 const mmss = n => Math.floor(n/60)+':'+pad(n%60);
 function stopMini(){ clearInterval(mT); clearInterval(tTimer); mT = tTimer = null; tOver = true; }
 function gamePlayed(){ S.stats.games = (S.stats.games||0)+1; save(); }
+function newRecord(what){ toast('🏆 Yeni rekor: '+what); confetti(); buzz([30,50,30,50,100]); }
+function recordsLine(id){
+  const st = S.stats;
+  if(id==='blocks') return st.bestBlocks ? `Rekor: ${num(st.bestBlocks)} puan · ${st.bestLines||0} satır` : 'Henüz rekor yok';
+  if(id==='memory') return st.memBestMoves ? `Rekor: ${st.memBestMoves} hamle · ${mmss(st.memBestTime)}` : 'Henüz rekor yok';
+  if(id==='bubble') return st.bestGame ? `Rekor: ${st.bestGame} baloncuk` : 'Henüz rekor yok';
+  if(id==='c4') return (st.c4Wins||0) ? `${st.c4Wins} galibiyet${st.c4HardWins?' · zorda '+st.c4HardWins:''}` : 'Henüz galibiyet yok';
+  return '';
+}
+function renderGamePicker(){ ['blocks','memory','bubble','c4'].forEach(id=>{ const el=$('rec-'+id); if(el) el.textContent = recordsLine(id); }); }
 
 /* ================= Hafıza kartları ================= */
 const MEM_E = ['🍎','🌿','💧','☀️','🎵','🚲','📚','🌙'];
@@ -1652,6 +1692,7 @@ function startMemory(){
   cs('memory'); stopMini();
   const deck = [...MEM_E, ...MEM_E]; for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; }
   mSec=0; mMoves=0; mOpen=[]; mLock=false; mDone=0; $('mMoves').textContent='0'; $('mTime').textContent='0:00';
+  $('mRec').textContent = S.stats.memBestMoves ? 'rekor '+S.stats.memBestMoves : '';
   $('mgrid').innerHTML = deck.map(e=>`<button class="mcard" data-e="${e}" onclick="mFlip(this)"><span>${e}</span></button>`).join('');
   mT = setInterval(()=>{ mSec++; $('mTime').textContent=mmss(mSec); }, 1000);
 }
@@ -1663,7 +1704,13 @@ function mFlip(el){
   const [a,b] = mOpen;
   if(a.dataset.e === b.dataset.e){
     a.classList.add('ok'); b.classList.add('ok'); mOpen=[]; mDone++; buzz(15);
-    if(mDone === MEM_E.length){ clearInterval(mT); S.stats.memWins=(S.stats.memWins||0)+1; gamePlayed(); toast(`Tamamladın! ${mMoves} hamle · ${mmss(mSec)}`); confetti(); setTimeout(()=>cs('check'), 1400); }
+    if(mDone === MEM_E.length){
+      clearInterval(mT); S.stats.memWins=(S.stats.memWins||0)+1;
+      const recM = !S.stats.memBestMoves || mMoves < S.stats.memBestMoves, recT = !S.stats.memBestTime || mSec < S.stats.memBestTime;
+      if(recM) S.stats.memBestMoves = mMoves; if(recT) S.stats.memBestTime = mSec;
+      gamePlayed();
+      if((recM||recT) && S.stats.memWins>1) newRecord(recM ? mMoves+' hamle' : mmss(mSec)); else { toast(`Tamamladın! ${mMoves} hamle · ${mmss(mSec)}`); confetti(); }
+      setTimeout(()=>cs('check'), 1600); }
   } else { mLock=true; setTimeout(()=>{ a.classList.remove('open'); b.classList.remove('open'); mOpen=[]; mLock=false; }, 750); }
 }
 function endMemory(){ clearInterval(mT); if(mDone < MEM_E.length && mMoves) gamePlayed(); cs('check'); }
@@ -1676,6 +1723,7 @@ let tB, tP, tScore=0, tLines=0, tTimer=null, tOver=true;
 function startBlocks(){
   cs('blocks'); stopMini();
   tB = Array.from({length:TH}, ()=>Array(TW).fill(null)); tScore=0; tLines=0; tOver=false;
+  $('tRec').textContent = S.stats.bestBlocks ? 'rekor '+num(S.stats.bestBlocks) : '';
   newPiece(); drawT(); tTimer = setInterval(tStep, 650);
 }
 function newPiece(){
@@ -1717,7 +1765,12 @@ function drawT(){
   }
   $('tScore').textContent = num(tScore); $('tLines').textContent = tLines;
 }
-function blocksDone(){ S.stats.bestBlocks = Math.max(S.stats.bestBlocks||0, tScore); gamePlayed(); }
+function blocksDone(){
+  const prev = S.stats.bestBlocks||0;
+  S.stats.bestBlocks = Math.max(prev, tScore); S.stats.bestLines = Math.max(S.stats.bestLines||0, tLines);
+  gamePlayed();
+  if(prev && tScore > prev) newRecord(num(tScore)+' puan');
+}
 function blocksOver(){ tOver=true; clearInterval(tTimer); blocksDone(); drawT(); toast('Oyun bitti · '+num(tScore)+' puan'); setTimeout(()=>cs('check'), 1200); }
 function endBlocks(){ const wasOn = !tOver; stopMini(); if(wasOn) blocksDone(); cs('check'); }
 (function(){
@@ -1799,7 +1852,7 @@ function c4Play(col){
   const r=c4Drop(cB,col,1); if(r<0) return;
   cLast=[r,col]; buzz(10);
   const w=c4Line(cB,1);
-  if(w){ cOver=true; cWin=w; drawC4('Kazandın! 🎉'); S.stats.c4Wins=(S.stats.c4Wins||0)+1; gamePlayed(); confetti(); buzz([40,60,120]); return; }
+  if(w){ cOver=true; cWin=w; drawC4('Kazandın! 🎉'); S.stats.c4Wins=(S.stats.c4Wins||0)+1; if(cDepth>1) S.stats.c4HardWins=(S.stats.c4HardWins||0)+1; gamePlayed(); confetti(); buzz([40,60,120]); return; }
   if(c4Full(cB)){ cOver=true; drawC4('Berabere'); gamePlayed(); return; }
   cTurn=2; drawC4('Bilgisayar düşünüyor…');
   setTimeout(()=>{
