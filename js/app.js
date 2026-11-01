@@ -42,7 +42,7 @@ function fillLangs(){
   if(!LANGS.en) opts.push(`<option disabled>English · ${_t('yakinda')}</option>`);
   sel.innerHTML = opts.join('');
 }
-function fillSettings(){ fillLangs(); $('set-bk').textContent = backupLine(); $('set-rd').textContent = reduceActive() ? _t('aktif')+(rWeek()+1)+_t('hafta_2') : _t('sigarayi_haftalar_icinde_azaltarak'); $('s-quit').value=toLocal(S.quit); $('s-per').value=S.per; $('s-price').value=S.price; $('s-pack').value=S.pack; }
+function fillSettings(){ fillLangs(); renderPlusRow(); $('set-bk').textContent = backupLine(); $('set-rd').textContent = reduceActive() ? _t('aktif')+(rWeek()+1)+_t('hafta_2') : _t('sigarayi_haftalar_icinde_azaltarak'); $('s-quit').value=toLocal(S.quit); $('s-per').value=S.per; $('s-price').value=S.price; $('s-pack').value=S.pack; }
 function saveSettings(){
   const q=$('s-quit').value; if(q){ S.quit=new Date(q).getTime(); S.first=Math.min(S.first,S.quit); markMilestones(); }
   S.per=+$('s-per').value||S.per; S.price=+$('s-price').value||0; S.pack=+$('s-pack').value||20;

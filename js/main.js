@@ -11,10 +11,11 @@ function start(){
   scheduleNative();
   try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){}
   if(S.sync.on) syncNow(true);
+  gdInit();
 }
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){ window.addEventListener('load', ()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden && S && S.sync && S.sync.on) syncNow(true); });
 applyI18n();
 load();
 if(S){ defaults(); start(); }
-else { show('setup'); $('f-quit').value = toLocal(Date.now()); }
+else { show('setup'); if(gdAvailable()){ $('gd-setup-btn').style.display=''; loadGIS().catch(()=>{}); } $('f-quit').value = toLocal(Date.now()); }

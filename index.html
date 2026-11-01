@@ -43,6 +43,7 @@
   <div data-i18n="daha_once_kullandin_mi" class="sech" style="margin-top:34px">Daha önce kullandın mı?</div>
   <button data-i18n="yedek_dosyasindan_geri_yukle" class="btn sec" style="margin-top:0" onclick="$('imp-file2').click()">💾 Yedek dosyasından geri yükle</button>
   <input type="file" id="imp-file2" accept=".json,application/json,text/plain" style="display:none" onchange="importFile(this)">
+  <button class="btn sec" id="gd-setup-btn" style="display:none" onclick="gdRestoreFromSetup()" data-i18n="gd_setup_restore">Google hesabından geri yükle</button>
   <button data-i18n="bulut_koduyla_baglan" class="btn sec" onclick="openCloudSetup()">☁️ Bulut koduyla bağlan</button>
   <div data-i18n="mehmet_karadeniz_2026_2027" class="foot">Mehmet Karadeniz, 2026-2027</div>
 </div>
@@ -216,6 +217,8 @@
   <div data-i18n="yedekleme_ve_senkronizasyon" class="title">Yedekleme ve senkronizasyon</div>
   <div data-i18n="telefon_degistirdiginde_ya_da_tara" class="sub">Telefon değiştirdiğinde ya da tarayıcı verileri silindiğinde ilerlemen kaybolmasın.</div>
   <div class="card" id="bk-status"></div>
+  <div class="sech" data-i18n="gd_section">Google Drive yedeği</div>
+  <div class="card" id="gd-card"></div>
   <div data-i18n="dosya_yedegi" class="sech">Dosya yedeği</div>
   <div class="card">
     <p data-i18n="tum_verilerin_tek_bir_json" class="empty" style="margin:0">Tüm verilerin tek bir JSON dosyasına kaydedilir. Dosyayı Google Drive’a, e-postana ya da WhatsApp’ta kendine gönderebilirsin.</p>
@@ -229,7 +232,7 @@
     <textarea data-i18n-attr="placeholder:ya_da_yedek_metnini_buraya" id="imp-text" placeholder="…ya da yedek metnini buraya yapıştır" style="margin-top:12px"></textarea>
     <button data-i18n="metinden_geri_yukle" class="btn sec sm" onclick="importText($('imp-text').value)">Metinden geri yükle</button>
   </div>
-  <div data-i18n-text="bulut_senkronizasyonu" class="sech">Bulut senkronizasyonu <span data-i18n="istege_bagli">isteğe bağlı</span></div>
+  <div class="sech" data-i18n="gelismis_firebase">Gelişmiş: kendi Firebase veritabanın</div>
   <div class="card" id="sync-card"></div>
 </div>
 
@@ -270,6 +273,7 @@
   <label for="s-lang" data-i18n="dil_language">Dil / Language</label><select id="s-lang" onchange="setLang(this.value)"></select>
   <button class="rowlink" onclick="openReducePlan()"><span class="em">📉</span><span><b data-i18n="kademeli_birakma_plani">Kademeli bırakma planı</b><small id="set-rd"></small></span></button>
   <button class="rowlink" onclick="go('backup')"><span class="em">💾</span><span><b data-i18n="yedekleme_ve_senkronizasyon">Yedekleme ve senkronizasyon</b><small id="set-bk"></small></span></button>
+  <div id="plus-row"></div>
   <label data-i18n="biraktigin_an">Bıraktığın an</label><input type="datetime-local" id="s-quit">
   <label data-i18n="gunluk_sigara">Günlük sigara</label><input type="number" id="s-per" inputmode="numeric">
   <label data-i18n="paket_fiyati">Paket fiyatı (₺)</label><input type="number" id="s-price" inputmode="decimal">
@@ -386,6 +390,7 @@
   <button data-i18n="harika" class="btn pri" style="max-width:320px;margin-top:24px">Harika!</button></div></div>
 <canvas id="confetti"></canvas>
 
+<script src="js/config.js"></script>
 <script src="js/i18n/tr.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/data.js"></script>
@@ -399,6 +404,8 @@
 <script src="js/games.js"></script>
 <script src="js/notifications.js"></script>
 <script src="js/backup.js"></script>
+<script src="js/gdrive.js"></script>
+<script src="js/plus.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

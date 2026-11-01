@@ -22,7 +22,8 @@ Sigarayı bırakma sürecini takip eden, modern ve minimalist bir mobil web uygu
 - **Günlük hedefler ve akşam değerlendirmesi**
 - **Bildirimler:** Sabah, akşam, zor saatler, sağlık dönüm noktaları, haftalık rapor ve özel hatırlatmalar
 - **Bilgi merkezi:** Yoksunluk, ilk hafta, stres, kilo ve profesyonel destek (ALO 171)
-- **Yedekleme:** JSON dışa/içe aktarma ve isteğe bağlı Firebase bulut senkronizasyonu
+- **Yedekleme:** Google Drive yedeği (kullanıcının kendi Drive'ındaki gizli uygulama klasörü), JSON dışa/içe aktarma ve gelişmiş kullanıcılar için Firebase senkronizasyonu
+- **Dil altyapısı:** Tüm metinler `js/i18n/tr.js` içinde; yeni dil eklemek yalnızca çeviri işidir
 
 ## Dosyalar
 
@@ -30,6 +31,9 @@ Sigarayı bırakma sürecini takip eden, modern ve minimalist bir mobil web uygu
 |---|---|
 | `index.html` | Ekranların HTML iskeleti |
 | `css/style.css` | Tüm stiller |
+| `js/config.js` | Ayarlar: Google istemci kimliği, Nefes Plus anahtarı |
+| `js/i18n/tr.js` | Türkçe metinler (kaynak dil) |
+| `js/i18n.js` | Dil motoru: `_t()`, `applyI18n()`, `setLang()` |
 | `js/data.js` | Sabit veriler: dönüm noktaları, mesajlar, tetikleyiciler, hedefler |
 | `js/core.js` | Durum, kayıt ve hesaplamalar |
 | `js/content.js` | Rozet tanımları, seviyeler, bilgi merkezi metinleri |
@@ -41,6 +45,8 @@ Sigarayı bırakma sürecini takip eden, modern ve minimalist bir mobil web uygu
 | `js/games.js` | Hafıza kartları, blok bulmaca, Dört Bağla |
 | `js/notifications.js` | Bildirimler |
 | `js/backup.js` | Dosya yedeği ve bulut senkronizasyonu |
+| `js/gdrive.js` | Google Drive yedeği |
+| `js/plus.js` | Nefes Plus altyapısı |
 | `js/main.js` | Başlatma |
 | `manifest.webmanifest`, `sw.js`, `icon-*.png` | Telefona kurulum ve internetsiz çalışma |
 | `tests/test_app.py` | Uçtan uca testler |
@@ -57,6 +63,34 @@ python tests/test_app.py games      # adında "games" geçenler
 ```
 
 Kurulum, kayma ve yeniden başlama, yedek ve bulut senkronizasyonu, sağlık, kademeli bırakma, grafikler, başarı kartı, rozetler, ACİL ve oyunlar test edilir.
+
+## Google Drive yedeği kurulumu
+
+Uygulama sunucu kullanmaz. Veriler, kullanıcının kendi Google Drive'ındaki ve yalnızca bu uygulamanın erişebildiği gizli uygulama klasörüne (`appDataFolder`) yazılır. Kullanılan izin `drive.appdata`, Google'ın sınıflandırmasında "hassas olmayan" kapsamdır.
+
+1. [console.cloud.google.com](https://console.cloud.google.com) adresinde yeni bir proje oluştur (ör. *Nefes*).
+2. **API'ler ve Hizmetler → Kitaplık → Google Drive API → Etkinleştir.**
+3. **Google Auth Platform (OAuth izin ekranı):**
+   - Marka: uygulama adı *Nefes*, destek e-postası.
+   - Kitle: *Harici*. Test aşamasında **Test kullanıcıları**na kendi Gmail adresini ekle.
+   - Veri erişimi: kapsam olarak `.../auth/drive.appdata` ekle.
+4. **İstemciler → İstemci oluştur → Web uygulaması.** *Yetkili JavaScript kaynakları*:
+   - `https://karadenizmehmet-debug.github.io`
+   - (yerel deneme için) `http://localhost:8000`
+5. Oluşan **İstemci kimliği**ni `js/config.js` içindeki `googleClientId` alanına yaz. Bu kimlik gizli değildir.
+
+Not: Android uygulamasında (APK) Google girişi için ayrıca Android türünde bir istemci ve yerel giriş eklentisi gerekir; bu adım APK hazırlığında yapılacak.
+
+## Yeni dil eklemek
+
+1. `js/i18n/tr.js` dosyasını `js/i18n/en.js` olarak kopyala; `LANG_TR` → `LANG_EN`, `code: 'en'`, `name: 'English'`, `locale: 'en-US'`, para birimi ve `voice: 'en'` alanlarını değiştir.
+2. Yalnızca değerleri çevir; anahtarlara ve `{ad}` yer tutucularına dokunma.
+3. `index.html` içinde `tr.js` satırının altına `<script src="js/i18n/en.js"></script>` ekle ve `sw.js` önbellek listesine yaz.
+4. Dil, Ayarlar'daki seçimden değiştirilir. Kontrol için `localStorage.nefes_lang = 'xx'` sahte dili çevrilmemiş metinleri ⟦ ⟧ dışında bırakır.
+
+## Nefes Plus
+
+`js/config.js` içinde `plusEnabled: false` olduğu sürece her şey ücretsizdir ve Plus hiçbir yerde görünmez. Kural: **sigarayı bırakmaya yardım eden özellikler (sayaç, ACİL, nefes, sağlık, yedekleme, kayma takibi) hiçbir zaman ücretli olmaz.** Ekstra bir özelliği Plus'a bağlamak için `plusGate('özellik', () => { ... })` kullanılır. Satın alma, Google Play sürümünde Play Faturalandırma eklentisiyle (tek seferlik ürün `nefes_plus`) yapılacak.
 
 ## Telefona kurulum
 

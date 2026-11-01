@@ -19,6 +19,7 @@ function save(touch=true){
   if(touch) S.updatedAt = Date.now();
   try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
   if(touch && S.sync && S.sync.on){ clearTimeout(pushT); pushT = setTimeout(syncPush, 4000); }
+  if(touch && S.gdrive && S.gdrive.on && typeof gdSchedule === 'function') gdSchedule();
 }
 function defaults(){
   const norm = x => typeof x==='number' ? {t:x, n:1} : x;
@@ -28,7 +29,7 @@ function defaults(){
   S.stats=S.stats||{breaths:0}; S.stats.games=S.stats.games||0; S.stats.bestGame=S.stats.bestGame||0; S.stats.shares=S.stats.shares||0; S.stats.read=S.stats.read||[]; S.prefs=S.prefs||{voice:false,vibe:true}; S.first=Math.min(S.first||S.quit, S.quit); S.fired=S.fired||{};
   S.bank.smoked=S.bank.smoked||0; S.plan=S.plan||null; S.reduce=S.reduce||null; S.prog=S.prog||{done:{}};
   S.sync=S.sync||{on:false,url:'',code:'',last:0,err:''};
-  S.backupAt=S.backupAt||0; S.updatedAt=S.updatedAt||Date.now();
+  S.backupAt=S.backupAt||0; S.gdrive=S.gdrive||{on:false,last:0,err:'',fileId:null,email:''}; S.plus=S.plus||{active:false,since:0,token:''}; S.updatedAt=S.updatedAt||Date.now();
   S.notif=S.notif||{morning:{on:true,time:'09:00'},evening:{on:true,time:'21:00'},hard:{on:true},health:{on:true},weekly:{on:true},custom:[]};
 }
 function day(k=dkey()){ return S.days[k] ||= {water:0, done:{}}; }

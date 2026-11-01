@@ -205,6 +205,79 @@ def test_i18n_keys_complete(b):
     pg.evaluate("go('set')"); assert pg.locator("#s-lang option").count() >= 1
     no_errors(pg)
 
+GOOGLE_STUB = """
+window.NEFES_TEST_CONFIG = Object.assign(window.NEFES_TEST_CONFIG||{}, {googleClientId:'test-client', allowInsecureOAuth:true});
+window.google = {accounts:{oauth2:{
+  initTokenClient(cfg){ const c={callback:cfg.callback, requestAccessToken(o){ window._gisCalls=(window._gisCalls||0)+1; setTimeout(()=>c.callback({access_token:'tok-'+Date.now(),expires_in:3600}),20); }}; return c; },
+  revoke(t,cb){ cb&&cb(); } }}};
+"""
+
+def drive_page(browser, drive):
+    """drive: {'file': None | dict} – sahte Google Drive deposu"""
+    ctx = browser.new_context(viewport=VIEW); OPEN.append(ctx)
+    H = {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,POST,PATCH,OPTIONS", "Access-Control-Allow-Headers": "Authorization,Content-Type"}
+    def api(route, req):
+        u = req.url
+        if req.method == "OPTIONS": return route.fulfill(status=204, headers=H)
+        assert req.headers.get("authorization", "").startswith("Bearer "), "jeton yok"
+        J = lambda o: route.fulfill(status=200, headers=H, content_type="application/json", body=json.dumps(o))
+        if "/about" in u: return J({"user": {"emailAddress": "mehmet@example.com"}})
+        if "/upload/drive/v3/files/" in u and req.method == "PATCH":
+            drive["file"] = json.loads(req.post_data); drive["writes"] = drive.get("writes", 0) + 1; return J({"id": "f1"})
+        if req.method == "POST" and u.split("?")[0].endswith("/drive/v3/files"):
+            assert "appDataFolder" in req.post_data; return J({"id": "f1"})
+        if "alt=media" in u: return J(drive["file"])
+        if "spaces=appDataFolder" in u: return J({"files": [{"id": "f1"}] if drive.get("file") else []})
+        route.fulfill(status=404, headers=H, body="{}")
+    ctx.route("https://www.googleapis.com/**", api)
+    pg = ctx.new_page(); pg.add_init_script(GOOGLE_STUB)
+    pg.errors = []; pg.on("pageerror", lambda e: pg.errors.append(str(e))); pg.on("dialog", lambda d: d.accept())
+    pg.goto(URL); return pg
+
+def test_google_drive_backup(b):
+    drive = {"file": None}
+    pg = drive_page(b, drive); setup_now(pg)
+    pg.click('[aria-label="Ayarlar"]'); pg.click("#v-set .rowlink >> nth=1"); pg.wait_for_timeout(200)
+    pg.click("#gd-card .btn.pri"); pg.wait_for_function("S.gdrive.on && S.gdrive.last>0", timeout=5000)
+    assert drive["file"]["app"] == "nefes" and drive["file"]["data"]["quit"] == pg.evaluate("S.quit")
+    assert "mehmet@example.com" in pg.inner_text("#gd-card")
+    # otomatik yedek: değişiklikten ~5 sn sonra
+    pg.wait_for_timeout(11000)                                   # bağlantıyla gelen rozet kaydı da yazılsın
+    w0 = drive["writes"]; pg.evaluate("water(1)")
+    for _ in range(30):
+        if drive["writes"] > w0: break
+        pg.wait_for_timeout(500)
+    assert drive["writes"] > w0 and drive["file"]["updatedAt"] == pg.evaluate("S.updatedAt")
+    w1 = drive["writes"]; pg.wait_for_timeout(12000)
+    assert drive["writes"] == w1, "değişiklik yokken Drive'a yazıldı (döngü)"
+    # yeni telefon: kurulum ekranından Google hesabıyla geri yükle
+    p2 = drive_page(b, drive)
+    assert p2.is_visible("#gd-setup-btn")
+    p2.click("#gd-setup-btn"); p2.wait_for_function("S && S.quit", timeout=5000)
+    assert p2.evaluate("S.quit") == pg.evaluate("S.quit") and p2.evaluate("S.gdrive.on")
+    assert p2.evaluate("dkey() in S.days && S.days[dkey()].water") == 1
+    for p in (pg, p2): no_errors(p)
+
+def test_drive_hidden_without_client_id(b):
+    pg = new_page(b)
+    assert not pg.is_visible("#gd-setup-btn")
+    setup_now(pg); pg.evaluate("go('backup')"); assert "yakında" in pg.inner_text("#gd-card")
+    no_errors(pg)
+
+def test_plus_scaffold(b):
+    pg = new_page(b); setup_now(pg)
+    assert pg.evaluate("hasPlus()") is True                    # Plus kapalıyken her şey açık
+    pg.evaluate("go('set')"); assert pg.inner_text("#plus-row") == ""
+    ctx = b.new_context(viewport=VIEW); OPEN.append(ctx); p2 = ctx.new_page()
+    p2.add_init_script("window.NEFES_TEST_CONFIG={plusEnabled:true}"); p2.errors=[]; p2.on("pageerror", lambda e: p2.errors.append(str(e)))
+    p2.goto(URL); setup_now(p2); p2.evaluate("go('set')")
+    assert "Nefes Plus" in p2.inner_text("#plus-row") and p2.evaluate("hasPlus()") is False
+    p2.evaluate("window._ran=0; plusGate('themes', ()=>{window._ran=1})")
+    assert p2.evaluate("window._ran") == 0 and p2.is_visible("#sheet")
+    p2.click("#sheetBox .btn.pri"); assert "Google Play" in p2.inner_text("#toast")
+    p2.evaluate("S.plus.active=true; plusGate('themes', ()=>{window._ran=1})"); assert p2.evaluate("window._ran") == 1
+    for p in (pg, p2): no_errors(p)
+
 # ---------------------------------------------------------------- çalıştırıcı
 def main():
     tests = [(n, f) for n, f in globals().items() if n.startswith("test_")]
