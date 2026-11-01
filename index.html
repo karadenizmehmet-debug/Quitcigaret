@@ -293,6 +293,28 @@ details summary{cursor:pointer;color:var(--lime);font-size:14px;margin-top:14px}
 .pitem span{font-size:13px;color:var(--muted);line-height:1.45;display:block;margin-top:2px}
 .shareimg{width:100%;border-radius:18px;border:1px solid var(--line);margin:12px 0 2px;display:block}
 
+.coll .v{font-size:22px}
+.cats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.cat{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;text-align:left;color:var(--text)}
+.cat .ce{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:24px}
+.cat b{display:block;font-size:15px;margin-top:12px}
+.cat small{display:block;color:var(--muted);font-size:13px;margin-top:2px;font-variant-numeric:tabular-nums}
+.cat .cbar{height:5px;background:var(--line);border-radius:5px;margin-top:10px;overflow:hidden}
+.cat .cbar i{display:block;height:100%;border-radius:5px}
+.bdg small.pr{font-variant-numeric:tabular-nums}
+.celebrate{position:fixed;inset:0;z-index:80;background:rgba(10,12,11,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:24px;text-align:center}
+.celebrate.on{display:flex;animation:fade .3s}
+.cb-hex{width:150px;height:150px;margin:0 auto 22px;display:grid;place-items:center;font-size:72px;background:var(--grad2);
+  clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);animation:popin .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes popin{0%{transform:scale(.2) rotate(-20deg);opacity:0}100%{transform:none;opacity:1}}
+.cb-k{font-size:13px;font-weight:700;color:var(--lime);letter-spacing:.1em;text-transform:uppercase}
+.celebrate h2{font-size:30px;letter-spacing:-.03em;margin-top:8px;line-height:1.15}
+.celebrate p{color:var(--muted);line-height:1.5;margin:10px auto 0;max-width:320px}
+#confetti{position:fixed;inset:0;z-index:90;pointer-events:none;display:none}
+.bopts{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.bopts button{background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:99px;padding:9px 14px;font-size:13px}
+.bopts button.on{border-color:var(--violet);color:var(--text);background:rgba(139,92,246,.15)}
+
 /* Kurulum */
 .intro{padding:50px 0 16px}
 .intro .logo i{width:56px;height:56px;border-radius:18px;margin-bottom:22px}
@@ -536,10 +558,11 @@ nav .sos svg{width:24px;height:24px}
     </div>
   </div>
   <button class="btn pri" onclick="openShareCard()">📣 Başarımı paylaş</button>
+  <div class="sech">Rozetler</div>
+  <div class="card coll" id="bdg-total"></div>
+  <div class="cats" id="badges"></div>
   <div class="sech">Gelişim <span>son 14 gün</span></div>
   <div id="charts"></div>
-  <div class="sech">Rozetler <span id="bdg-cnt"></span></div>
-  <div class="badges" id="badges"></div>
   <div class="sech">Takvim</div>
   <div class="card">
     <div class="calhead"><button onclick="calMove(-1)">‹</button><b id="cal-title"></b><button onclick="calMove(1)">›</button></div>
@@ -676,6 +699,8 @@ nav .sos svg{width:24px;height:24px}
         <div class="orb" id="orb"><span id="bPhase">Hazır ol</span></div>
       </div>
       <div class="btime" id="bTime">2:00</div>
+      <div class="bopts"><button id="bo-voice" onclick="togglePref('voice')">🔊 Sesli rehber</button><button id="bo-vibe" onclick="togglePref('vibe')">📳 Titreşim</button></div>
+      <p class="note" id="bo-hint" style="text-align:center;max-width:300px"></p>
       <button class="btn ghost" style="max-width:320px" onclick="endBreath(false)">Bitir</button>
     </div>
   </div>
@@ -703,6 +728,10 @@ nav .sos svg{width:24px;height:24px}
 <div class="sheet" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="box" id="sheetBox"></div></div>
 <div class="banner" id="banner" onclick="this.classList.remove('on')"><i>🌿</i><div><b id="bn-t"></b><span id="bn-b"></span></div></div>
 <div class="toast" id="toast"></div>
+<div class="celebrate" id="celebrate" onclick="closeCelebrate()"><div>
+  <div class="cb-hex" id="cb-emo"></div><div class="cb-k" id="cb-k"></div><h2 id="cb-t"></h2><p id="cb-p"></p>
+  <button class="btn pri" style="max-width:320px;margin-top:24px">Harika!</button></div></div>
+<canvas id="confetti"></canvas>
 
 <script>
 /* ================= Sabitler ================= */
@@ -756,19 +785,61 @@ const GOALS = [['smokefree','Bugün sigarasız','auto'],['water','8 bardak su','
 const PRESETS = ['📱 Telefon','🏖️ Tatil','💻 Bilgisayar','🎁 Hediye','🚲 Bisiklet'];
 const MOODS = ['😫','😕','😐','🙂','😄'];
 
+const CATS = [
+  ['seri','🔥','Seri','#fb923c'], ['saglik','❤️','Sağlık','#fb7185'], ['para','💰','Para','#fbbf24'], ['sigara','🚭','Sigara','#60a5fa'],
+  ['kriz','🛡️','Krizler','#a78bfa'], ['nefes','🫁','Nefes ve oyun','#2dd4bf'], ['aliskanlik','🌱','Alışkanlıklar','#b5f23d'], ['ozel','⭐','Özel','#f472b6']
+];
+const B = (cat,id,e,n,d,t,v,fmt) => ({cat,id,e,n,d,t,v,fmt});
+const HB = [['💓','Nabız dengede'],['🩸','Oksijen yükseldi'],['🌬️','Karbonmonoksit temizlendi'],['👅','Tatlar geri döndü'],['🫁','Rahat nefes'],['🚶','Dolaşım güçlendi'],
+  ['📈','Güçlü akciğerler'],['🍃','Öksürük azaldı'],['❤️','Kalbe bir yıl'],['🧠','İnme riski azaldı'],['🎗️','On yıllık zafer'],['🏅','Kalp kadar sağlam']];
 const BADGES = [
-  ['first','🌱','İlk adım','İlk 24 saat','time',D],
-  ['k3','💪','Kararlılık','3 gün','time',3*D],
-  ['k7','🔥','Güçlü irade','7 gün','time',7*D],
-  ['k14','🌅','Yeni başlangıç','14 gün','time',14*D],
-  ['k30','🕊️','Bir ay özgürlük','30 gün','time',30*D],
-  ['k90','🏆','Büyük başarı','90 gün','time',90*D],
-  ['k365','👑','Özgür hayat','1 yıl','time',365*D],
-  ['c1','🛡️','İlk zafer','İlk krizi atlat','pass',1],
-  ['c10','⚔️','Kriz ustası','10 krizi atlat','pass',10],
-  ['b5','🫁','Nefes ustası','5 nefes egzersizi','breath',5],
-  ['s1k','💰','Kumbaracı','₺1.000 biriktir','save',1000],
-  ['goal','🎯','Hedefe ulaştın','Tasarruf hedefini tamamla','goal',1]
+  B('seri','first','🌱','İlk adım','24 saat sigarasız',D,c=>c.el,'time'),
+  B('seri','k3','💪','Kararlılık','3 gün sigarasız',3*D,c=>c.el,'time'),
+  B('seri','k7','🔥','Güçlü irade','7 gün sigarasız',7*D,c=>c.el,'time'),
+  B('seri','k14','🌅','Yeni başlangıç','14 gün sigarasız',14*D,c=>c.el,'time'),
+  B('seri','k30','🕊️','Bir ay özgürlük','30 gün sigarasız',30*D,c=>c.el,'time'),
+  B('seri','k90','🏆','Büyük başarı','90 gün sigarasız',90*D,c=>c.el,'time'),
+  B('seri','k180','🌳','Yarım yıl','180 gün sigarasız',180*D,c=>c.el,'time'),
+  B('seri','k365','👑','Özgür hayat','1 yıl sigarasız',365*D,c=>c.el,'time'),
+  ...MS.map(([t,txt],i)=>B('saglik','h'+i,HB[i][0],HB[i][1],label(t)+': '+txt,t,c=>c.el,'time')),
+  B('para','s500','🪙','İlk birikim','₺500 biriktir',500,c=>c.savedT,'tl'),
+  B('para','s1k','💰','Kumbaracı','₺1.000 biriktir',1000,c=>c.savedT,'tl'),
+  B('para','s2500','💵','Tasarrufçu','₺2.500 biriktir',2500,c=>c.savedT,'tl'),
+  B('para','s5k','💳','Bütçe ustası','₺5.000 biriktir',5000,c=>c.savedT,'tl'),
+  B('para','s10k','🏦','Servet yolunda','₺10.000 biriktir',10000,c=>c.savedT,'tl'),
+  B('para','s25k','💎','Büyük birikim','₺25.000 biriktir',25000,c=>c.savedT,'tl'),
+  B('para','s50k','🏝️','Hayallerine bir adım','₺50.000 biriktir',50000,c=>c.savedT,'tl'),
+  B('para','goal','🎯','Hedefe ulaştın','Tasarruf hedefini tamamla',1,c=>S.goal&&S.goal.amount?c.savedT/S.goal.amount:0,'pct'),
+  ...[[100,'🚭','İlk yüz'],[250,'🧯','Çeyrek bin'],[500,'🌬️','Beş yüz'],[1000,'🌿','Binlik'],[2500,'🌲','Dev adım'],[5000,'🏔️','Beş bin'],[10000,'🌍','On bin']]
+     .map(([n,e,nm])=>B('sigara','n'+n,e,nm,n.toLocaleString('tr-TR')+' sigara içme',n,c=>c.cigsT,'n')),
+  B('kriz','c1','🛡️','İlk zafer','İlk krizi atlat',1,c=>c.passed,'n'),
+  B('kriz','c5','🥋','Savaşçı','5 krizi atlat',5,c=>c.passed,'n'),
+  B('kriz','c10','⚔️','Kriz ustası','10 krizi atlat',10,c=>c.passed,'n'),
+  B('kriz','c25','🏹','Sağlam irade','25 krizi atlat',25,c=>c.passed,'n'),
+  B('kriz','c50','🧘','Sükûnet','50 krizi atlat',50,c=>c.passed,'n'),
+  B('kriz','c100','🗿','Sarsılmaz','100 krizi atlat',100,c=>c.passed,'n'),
+  B('nefes','b1','🌬️','İlk nefes','İlk nefes egzersizini yap',1,()=>S.stats.breaths,'n'),
+  B('nefes','b5','🫁','Nefes ustası','5 nefes egzersizi',5,()=>S.stats.breaths,'n'),
+  B('nefes','b20','🌊','Derin nefes','20 nefes egzersizi',20,()=>S.stats.breaths,'n'),
+  B('nefes','b50','🧘‍♂️','Nefes bilgesi','50 nefes egzersizi',50,()=>S.stats.breaths,'n'),
+  B('nefes','g1','🫧','İlk oyun','Baloncuk oyununu oyna',1,()=>S.stats.games||0,'n'),
+  B('nefes','g10','🎮','Oyuncu','10 kez oyna',10,()=>S.stats.games||0,'n'),
+  B('nefes','g50','🎯','Keskin nişancı','Tek oyunda 50 baloncuk',50,()=>S.stats.bestGame||0,'n'),
+  B('aliskanlik','r1','🌙','İlk değerlendirme','Günü ilk kez değerlendir',1,c=>c.reviews,'n'),
+  B('aliskanlik','r7','📔','Düzenli günlük','7 akşam değerlendirmesi',7,c=>c.reviews,'n'),
+  B('aliskanlik','r30','📚','Günlük ustası','30 akşam değerlendirmesi',30,c=>c.reviews,'n'),
+  B('aliskanlik','w7','💧','Su dostu','7 gün 8 bardak su',7,c=>c.waterDays,'n'),
+  B('aliskanlik','w30','🌊','Su ustası','30 gün 8 bardak su',30,c=>c.waterDays,'n'),
+  B('aliskanlik','p7','🗓️','İlk hafta görevleri','7 program görevi',7,c=>c.progDone,'n'),
+  B('aliskanlik','p30','🏁','Program tamam','30 program görevi',30,c=>c.progDone,'n'),
+  B('aliskanlik','f1','✅','Mükemmel gün','Bir günün tüm hedeflerini tamamla',1,c=>c.fullDays,'n'),
+  B('aliskanlik','f7','🌟','Mükemmel hafta','7 mükemmel gün',7,c=>c.fullDays,'n'),
+  B('ozel','share','📣','İlham kaynağı','Başarı kartını paylaş ya da indir',1,()=>S.stats.shares||0,'n'),
+  B('ozel','bk','💾','Güvende','İlk yedeğini al',1,()=>S.backupAt?1:0,'n'),
+  B('ozel','sync','☁️','Bulutta','Bulut senkronunu aç',1,()=>S.sync.on?1:0,'n'),
+  B('ozel','learn','📖','Meraklı','Bilgi merkezinde 5 konu oku',5,()=>(S.stats.read||[]).length,'n'),
+  B('ozel','back','🔁','Geri dönüş','Yeniden başladıktan sonra 3 gün sigarasız',3*D,c=>S.attempts.length?c.el:0,'time'),
+  B('ozel','reduce','📉','Adım adım','Kademeli bırakma planını tamamla',1,()=>S.reduce&&!S.reduce.aborted&&Date.now()>=S.quit?1:0,'n')
 ];
 
 const LEVELS = [[0,'Başlangıç'],[100,'Filiz'],[300,'Fidan'],[700,'Genç ağaç'],[1500,'Güçlü gövde'],[3000,'Ulu çınar'],[6000,'Orman']];
@@ -838,7 +909,7 @@ function defaults(){
   S.slips=(S.slips||[]).map(norm); S.slipLog=(S.slipLog||S.slips.map(e=>({...e}))).map(norm);
   S.crises=S.crises||[]; S.days=S.days||{};
   S.bank=S.bank||{cigs:0,saved:0,ms:0}; S.attempts=S.attempts||[]; S.badges=S.badges||{};
-  S.stats=S.stats||{breaths:0}; S.first=Math.min(S.first||S.quit, S.quit); S.fired=S.fired||{};
+  S.stats=S.stats||{breaths:0}; S.stats.games=S.stats.games||0; S.stats.bestGame=S.stats.bestGame||0; S.stats.shares=S.stats.shares||0; S.stats.read=S.stats.read||[]; S.prefs=S.prefs||{voice:false,vibe:true}; S.first=Math.min(S.first||S.quit, S.quit); S.fired=S.fired||{};
   S.bank.smoked=S.bank.smoked||0; S.plan=S.plan||null; S.reduce=S.reduce||null; S.prog=S.prog||{done:{}};
   S.sync=S.sync||{on:false,url:'',code:'',last:0,err:''};
   S.backupAt=S.backupAt||0; S.updatedAt=S.updatedAt||Date.now();
@@ -1008,7 +1079,7 @@ function tick(){
   const sec = Math.floor(Date.now()/1e3);
   if(sec%10===0){
     if($('v-health').classList.contains('on')) renderHealth();
-    checkBadges(c); checkHealthNotif(el); checkReminders();
+    checkBadges(); checkHealthNotif(el); checkReminders();
     const lv = xpInfo(c); $('lvchip').textContent = 'Seviye '+lv.n+' · '+lv.name;
   }
 }
@@ -1117,33 +1188,88 @@ function saveGoal(){
 }
 
 /* ================= Başarılar ================= */
-function badgeProgress(b,c){
-  const [,, ,,type,target] = b;
-  if(type==='time') return c.el/target;
-  if(type==='pass') return c.passed/target;
-  if(type==='breath') return S.stats.breaths/target;
-  if(type==='save') return c.savedT/target;
-  if(type==='goal') return S.goal && S.goal.amount ? c.savedT/S.goal.amount : 0;
-  return 0;
+function bctx(){
+  const c = calc(), slips = slipSet(), ds = Object.values(S.days);
+  c.reviews = ds.filter(d=>d.review).length;
+  c.waterDays = ds.filter(d=>d.water>=8).length;
+  c.progDone = Object.values(S.prog.done).filter(Boolean).length;
+  c.fullDays = Object.keys(S.days).filter(k=>goalsFor(k,slips).every(Boolean)).length;
+  return c;
 }
-function checkBadges(c){
-  let fresh = null;
-  BADGES.forEach(b=>{ if(!S.badges[b[0]] && badgeProgress(b,c)>=1){ S.badges[b[0]]=Date.now(); fresh=b; } });
-  if(fresh){ save(false); notify('Yeni rozet: '+fresh[2]+' '+fresh[1], fresh[3]+' tamamlandı. Tebrikler!'); if($('v-ach').classList.contains('on')) renderAch(); }
+function badgeProgress(b,c){ return Math.max(0, b.v(c)/b.t); }
+function badgeLeft(b,c){
+  const v = b.v(c);
+  if(b.fmt==='time') return fmtDur(Math.max(0,b.t-v))+' kaldı';
+  if(b.fmt==='tl') return tl(v)+' / '+tl(b.t);
+  if(b.fmt==='pct') return '%'+Math.floor(Math.min(1,v)*100);
+  return num(Math.min(v,b.t))+' / '+num(b.t);
 }
+function checkBadges(){
+  if($('crisis').classList.contains('on') || $('celebrate').classList.contains('on')) return;
+  const c = bctx(), fresh = [];
+  const now = Date.now(); let changed = false;
+  BADGES.forEach(b=>{ if(!S.badges[b.id] && badgeProgress(b,c)>=1){ S.badges[b.id] = b.fmt==='time' ? Math.min(now, S.quit + b.t) : now; changed = true; if(now - S.badges[b.id] < 2*D) fresh.push(b); } });
+  if(!changed) return;
+  if(!fresh.length){ save(); if($('v-ach').classList.contains('on')) renderAch(); return; }
+  save();
+  if(document.hidden){ notify(fresh.length===1 ? 'Yeni rozet: '+fresh[0].n+' '+fresh[0].e : fresh.length+' yeni rozet kazandın 🏅', fresh.map(b=>b.n).slice(0,3).join(', ')); }
+  else if(fresh.length===1){ const b=fresh[0]; celebrate(b.e, 'Yeni rozet · '+CATS.find(x=>x[0]===b.cat)[2], b.n, b.d); }
+  else celebrate('🏅','Yeni rozetler', fresh.length+' yeni rozet kazandın!', fresh.slice(0,5).map(b=>b.e+' '+b.n).join(' · ')+(fresh.length>5?' …':''));
+  if($('v-ach').classList.contains('on')) renderAch();
+}
+function openCat(id){
+  const cat = CATS.find(x=>x[0]===id), c = bctx(), list = BADGES.filter(b=>b.cat===id), got = list.filter(b=>S.badges[b.id]).length;
+  openSheet(`<div style="display:flex;align-items:center;gap:14px"><div class="ce" style="width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:${cat[3]}26">${cat[1]}</div>
+      <div><h3 style="margin:0">${cat[2]}</h3><p>${got} / ${list.length} rozet</p></div></div>
+    <div class="badges" style="margin-top:16px">${list.map(b=>{
+      const on = !!S.badges[b.id], p = Math.min(1, badgeProgress(b,c));
+      return `<div class="bdg ${on?'on':''}"><div class="hx"><span>${b.e}</span></div><b>${b.n}</b>
+        <small>${on ? new Date(S.badges[b.id]).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'}) : b.d}</small>
+        ${on?'':`<div class="pb"><i style="width:${(p*100).toFixed(0)}%"></i></div><small class="pr">${badgeLeft(b,c)}</small>`}</div>`;
+    }).join('')}</div>
+    <button class="btn ghost" style="border:none" onclick="closeSheet()">Kapat</button>`);
+}
+
+/* ================= Kutlama ================= */
+const reduceMotion = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+function buzz(p){ try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
+function celebrate(emoji, kicker, title, text){
+  $('cb-emo').textContent = emoji; $('cb-k').textContent = kicker; $('cb-t').textContent = title; $('cb-p').textContent = text||'';
+  $('celebrate').classList.add('on');
+  buzz([40,60,40,60,140]); confetti();
+}
+function closeCelebrate(){ $('celebrate').classList.remove('on'); }
+function confetti(){
+  if(reduceMotion()) return;
+  const cv = $('confetti'), x = cv.getContext('2d'), W = cv.width = innerWidth, H = cv.height = innerHeight;
+  const colors = ['#b5f23d','#2dd4bf','#8b5cf6','#3b82f6','#fbbf24','#fb7185'];
+  const ps = Array.from({length:150}, ()=>({x:W/2+(Math.random()-.5)*80, y:H*0.32, vx:(Math.random()-.5)*14, vy:-Math.random()*15-4,
+    s:5+Math.random()*7, r:Math.random()*6, vr:(Math.random()-.5)*.35, c:colors[Math.floor(Math.random()*colors.length)], rect:Math.random()<.6}));
+  cv.style.display = 'block'; const t0 = performance.now();
+  (function frame(t){
+    x.clearRect(0,0,W,H);
+    ps.forEach(p=>{ p.vy += .35; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      x.save(); x.translate(p.x,p.y); x.rotate(p.r); x.fillStyle = p.c;
+      if(p.rect) x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); else { x.beginPath(); x.arc(0,0,p.s/2.4,0,7); x.fill(); }
+      x.restore(); });
+    if(t - t0 < 3200) requestAnimationFrame(frame); else { x.clearRect(0,0,W,H); cv.style.display = 'none'; }
+  })(t0);
+}
+
 function renderAch(){
-  const c = calc(); checkBadges(c);
+  checkBadges(); const c = calc();
   const lv = xpInfo(c);
   $('lv-n').textContent = lv.n; $('lv-name').textContent = lv.name;
   $('lv-bar').style.width = (lv.p*100).toFixed(1)+'%';
   $('lv-xp').textContent = num(lv.xp)+' puan';
   $('lv-next').textContent = lv.next ? 'Sonraki seviye: '+num(lv.next) : 'En üst seviye';
-  const earned = Object.keys(S.badges).length;
-  $('bdg-cnt').textContent = earned+'/'+BADGES.length;
-  $('badges').innerHTML = BADGES.map(b=>{
-    const on = !!S.badges[b[0]], p = Math.min(1, badgeProgress(b,c));
-    const sub = on ? new Date(S.badges[b[0]]).toLocaleDateString('tr-TR',{day:'numeric',month:'short'}) : b[3];
-    return `<div class="bdg ${on?'on':''}"><div class="hx"><span>${b[1]}</span></div><b>${b[2]}</b><small>${sub}</small>${on?'':`<div class="pb"><i style="width:${(p*100).toFixed(0)}%"></i></div>`}</div>`;
+  const bc = bctx(), earned = BADGES.filter(b=>S.badges[b.id]).length;
+  $('bdg-total').innerHTML = `<div class="k" style="justify-content:space-between"><b style="color:var(--text);font-size:15px">Toplam koleksiyon</b><b style="color:var(--lime);font-size:18px">${earned} / ${BADGES.length}</b></div>
+    <div class="bar"><i style="width:${(earned/BADGES.length*100).toFixed(1)}%"></i></div>`;
+  $('badges').innerHTML = CATS.map(([id,e,n,col])=>{
+    const list = BADGES.filter(b=>b.cat===id), got = list.filter(b=>S.badges[b.id]).length;
+    return `<button class="cat" onclick="openCat('${id}')"><div class="ce" style="background:${col}26">${e}</div><b>${n}</b><small>${got} / ${list.length}</small>
+      <div class="cbar"><i style="width:${(got/list.length*100).toFixed(0)}%;background:${col}"></i></div></button>`;
   }).join('');
   renderCharts(); renderCal(); renderReport(); renderReduce(); renderAttempts();
 }
@@ -1211,8 +1337,9 @@ function renderAttempts(){
 }
 
 /* ================= Bilgi merkezi ================= */
+function markRead(i){ if(!S.stats.read.includes(i)){ S.stats.read.push(i); save(); } }
 function renderLearn(){
-  $('learn').innerHTML = LEARN.map(([e,q,a],i)=>`<div class="acc" id="acc${i}"><button class="q" onclick="$('acc${i}').classList.toggle('open')"><span class="em">${e}</span>${q}</button><div class="a">${a}</div></div>`).join('');
+  $('learn').innerHTML = LEARN.map(([e,q,a],i)=>`<div class="acc" id="acc${i}"><button class="q" onclick="$('acc${i}').classList.toggle('open');markRead(${i})"><span class="em">${e}</span>${q}</button><div class="a">${a}</div></div>`).join('');
 }
 
 /* ================= Alt sayfa ================= */
@@ -1301,7 +1428,7 @@ function bankAttempt(){
 function restart(){
   const now = Date.now();
   bankAttempt();
-  if(S.reduce && !S.reduce.done) S.reduce.done = true;
+  if(S.reduce && !S.reduce.done){ S.reduce.done = true; S.reduce.aborted = true; }
   S.quit = now; S.slips = []; S.plan = {t:now, done:{}};
   markMilestones(); save(); scheduleNative();
   const c2 = calc();
@@ -1336,7 +1463,7 @@ function pickTrig(id){
 function closeCrisis(){
   stopBreathTimer(); stopGameTimer();
   $('crisis').classList.remove('on');
-  checkBadges(calc());
+  checkBadges();
   if($('v-home').classList.contains('on')){ renderGoals(); renderTrigs(); renderWeek(); renderRecovery(); }
 }
 function resolve(ok){
@@ -1344,7 +1471,7 @@ function resolve(ok){
   if(ok){
     const passed = S.crises.filter(c=>c.passed===true).length;
     $('winText').textContent = `Toplam ${passed} krizi atlattın. Her seferinde istek biraz daha zayıflıyor.`;
-    cs('win');
+    cs('win'); confetti(); buzz([40,60,120]);
   } else {
     $('advice').textContent = 'Sorun değil, istek hâlâ geçiyor. Başka bir araç dene; birkaç dakika daha dayan.';
     cs('tools');
@@ -1375,9 +1502,45 @@ function infoDone(){
 
 /* Nefes: 4 al · 2 tut · 6 ver = 12 sn × 10 tur = 2 dakika */
 const PH = [['Nefes al',4,1],['Tut',2,1],['Ver',6,.62]];
-let bT=null, bEl=0, bPh=0, bLeft=0;
+let bT=null, bEl=0, bPh=0, bLeft=0, actx=null, wakeL=null;
+const PH_WORDS = ['Nefes al','Tut','Yavaşça ver'], PH_VIBE = [[220],[70,90,70],[70,90,70,90,70]];
+function hasTrVoice(){ try{ return 'speechSynthesis' in window && speechSynthesis.getVoices().some(v=>/^tr/i.test(v.lang)); }catch(e){ return false; } }
+function speak(t){
+  try{ speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang='tr-TR'; u.rate=.9; u.pitch=1;
+    const v = speechSynthesis.getVoices().find(v=>/^tr/i.test(v.lang)); if(v) u.voice = v; speechSynthesis.speak(u); }catch(e){}
+}
+function tone(i){
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const now = actx.currentTime, o = actx.createOscillator(), g = actx.createGain(); o.type='sine'; o.connect(g); g.connect(actx.destination);
+    const [f0,f1,dur] = [[262,392,1.4],[523,523,.35],[392,196,1.8]][i];
+    o.frequency.setValueAtTime(f0,now); o.frequency.exponentialRampToValueAtTime(f1,now+dur);
+    g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(.12,now+.15); g.gain.linearRampToValueAtTime(0,now+dur);
+    o.start(now); o.stop(now+dur+.05);
+  }catch(e){}
+}
+function guide(i){
+  if(S.prefs.vibe) buzz(PH_VIBE[i]);
+  if(S.prefs.voice){ if(hasTrVoice()) speak(PH_WORDS[i]); else tone(i); }
+}
+function renderBOpts(){
+  $('bo-voice').classList.toggle('on', !!S.prefs.voice); $('bo-vibe').classList.toggle('on', !!S.prefs.vibe);
+  const parts = [];
+  if(S.prefs.vibe) parts.push('Titreşim: al = uzun, tut = iki kısa, ver = üç kısa.');
+  if(S.prefs.voice) parts.push(hasTrVoice() ? 'Sesli komutlar açık.' : 'Ses tonu: al = yükselen, tut = kısa çan, ver = alçalan.');
+  $('bo-hint').textContent = parts.length ? parts.join(' ')+' Gözlerini kapatabilirsin.' : '';
+}
+function togglePref(k){
+  S.prefs[k] = !S.prefs[k]; save(false); renderBOpts();
+  if(k==='voice' && S.prefs.voice){ try{ actx = actx || new (window.AudioContext||window.webkitAudioContext)(); actx.resume(); }catch(e){} }
+  if(k==='vibe' && S.prefs.vibe) buzz([60]);
+}
+async function keepAwake(on){
+  try{ if(on && navigator.wakeLock) wakeL = await navigator.wakeLock.request('screen'); else if(!on && wakeL){ await wakeL.release(); wakeL=null; } }catch(e){}
+}
 function startBreath(){
-  cs('breath'); bEl=0; bPh=-1; bLeft=0;
+  cs('breath'); bEl=0; bPh=-1; bLeft=0; renderBOpts(); keepAwake(true);
+  if(S.prefs.voice){ try{ actx = actx || new (window.AudioContext||window.webkitAudioContext)(); actx.resume(); }catch(e){} if(hasTrVoice()) speak('Rahat bir pozisyon al. Başlıyoruz.'); }
   const orb=$('orb'); orb.style.transition='none'; orb.style.transform='scale(.62)';
   $('bPhase').textContent='Hazır ol'; $('bRing').style.strokeDashoffset=804.2; $('bTime').textContent='2:00';
   setTimeout(()=>{ nextPhase(); bT=setInterval(bStep,1000); },800);
@@ -1386,6 +1549,7 @@ function nextPhase(){
   bPh=(bPh+1)%3; const [t,s,sc]=PH[bPh]; bLeft=s;
   const orb=$('orb'); orb.style.transition=`transform ${s}s ease-in-out`; orb.style.transform=`scale(${sc})`;
   $('bPhase').textContent=t;
+  guide(bPh);
 }
 function bStep(){
   bEl++; bLeft--;
@@ -1394,10 +1558,11 @@ function bStep(){
   if(bEl>=120){ endBreath(true); return; }
   if(bLeft<=0) nextPhase();
 }
-function stopBreathTimer(){ clearInterval(bT); bT=null; }
+function stopBreathTimer(){ clearInterval(bT); bT=null; keepAwake(false); try{ speechSynthesis.cancel(); }catch(e){} }
 function endBreath(full){
   stopBreathTimer();
   if(full || bEl>=30){ day().done.breath=true; S.stats.breaths++; save(); }
+  if(full){ if(S.prefs.voice && hasTrVoice()) speak('Harika, egzersiz tamamlandı.'); buzz([40,60,40]); }
   cs('check');
 }
 
@@ -1420,7 +1585,7 @@ function spawn(){
   setTimeout(()=>{ if(!b.dataset.p){ b.classList.add('gone'); setTimeout(()=>b.remove(),160); } },2600);
 }
 function stopGameTimer(){ clearInterval(gT); clearInterval(gSpawn); gT=gSpawn=null; }
-function endGame(){ stopGameTimer(); toast(gScore+' baloncuk patlattın!'); cs('check'); }
+function endGame(){ stopGameTimer(); S.stats.games++; S.stats.bestGame=Math.max(S.stats.bestGame,gScore); save(); toast(gScore+' baloncuk patlattın!'); cs('check'); }
 
 /* ================= Bildirimler ================= */
 const NOTIF_ROWS = [
@@ -1484,7 +1649,7 @@ function markMilestones(){ const el=Date.now()-S.quit; MS.forEach(([t],i)=>{ if(
 function checkHealthNotif(el){
   let hit=null;
   MS.forEach(([t,txt],i)=>{ const f='ms'+i+'_'+S.quit; if(el>=t && !S.fired[f]){ S.fired[f]=1; hit=txt; } });
-  if(hit){ save(false); if(S.notif.health.on && !nativeLN()) notify('Yeni iyileşme aşaması ❤️', hit); }
+  if(hit){ save(false); if(S.notif.health.on && !nativeLN() && document.hidden) notify('Yeni iyileşme aşaması ❤️', hit); }
 }
 function pruneFired(){ const k=dkey(); for(const f in S.fired){ if(!f.startsWith('ms') && !f.endsWith('@'+k)) delete S.fired[f]; } }
 
@@ -1752,7 +1917,7 @@ async function shareCard(){
   if(!shareBlob){ toast('Hazırlanıyor, tekrar dene'); return; }
   const f = new File([shareBlob], 'nefes-basari.png', {type:'image/png'});
   try{
-    if(navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], text:'Sigarayı bırakma yolculuğumda ilerliyorum 🌱'}); return; }
+    if(navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], text:'Sigarayı bırakma yolculuğumda ilerliyorum 🌱'}); S.stats.shares++; save(); return; }
   }catch(e){ if(e && e.name==='AbortError') return; }
   downloadCard();
 }
@@ -1760,7 +1925,7 @@ function downloadCard(){
   if(!shareBlob) return;
   const a = document.createElement('a'); a.href = URL.createObjectURL(shareBlob); a.download = 'nefes-basari.png';
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),5000);
-  toast('Kart indirildi');
+  S.stats.shares++; save(); toast('Kart indirildi');
 }
 
 /* ================= Yedekleme ================= */
