@@ -1871,12 +1871,12 @@ function renderCharts(){
 /* ================= Paylaşılabilir başarı kartı ================= */
 function rr(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
 function drawShareCard(){
-  const c = calc(), W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width=W; cv.height=H;
+  const c = calc(), W = 1080, CH_H = 1350, cv = document.createElement('canvas'); cv.width=W; cv.height=CH_H;
   const x = cv.getContext('2d'), F = '-apple-system,"Segoe UI",Roboto,Inter,sans-serif';
-  x.fillStyle = '#0a0c0b'; x.fillRect(0,0,W,H);
+  x.fillStyle = '#0a0c0b'; x.fillRect(0,0,W,CH_H);
   let gr = x.createRadialGradient(W/2,-80,40,W/2,-80,900); gr.addColorStop(0,'rgba(181,242,61,.30)'); gr.addColorStop(1,'rgba(181,242,61,0)');
-  x.fillStyle = gr; x.fillRect(0,0,W,H);
-  const lg = x.createLinearGradient(0,0,W,H); lg.addColorStop(0,'#b5f23d'); lg.addColorStop(1,'#2dd4bf');
+  x.fillStyle = gr; x.fillRect(0,0,W,CH_H);
+  const lg = x.createLinearGradient(0,0,W,CH_H); lg.addColorStop(0,'#b5f23d'); lg.addColorStop(1,'#2dd4bf');
   // logo
   x.fillStyle = lg; rr(x,90,90,84,84,26); x.fill();
   x.strokeStyle = '#08130a'; x.lineWidth = 6; x.lineCap = 'round';
@@ -1885,7 +1885,8 @@ function drawShareCard(){
   x.moveTo(4,16); x.lineTo(20,16); x.moveTo(7,20); x.lineTo(17,20); x.lineWidth=2.2; x.stroke(); x.restore();
   x.fillStyle = '#eef2ef'; x.font = `800 52px ${F}`; x.textBaseline='middle'; x.fillText('Nefes', 196, 134);
   // ana sayı
-  const el = c.el, big = el >= D ? Math.floor(el/D) : Math.floor(el/H), unit = el >= D ? 'gündür sigarasızım' : 'saattir sigarasızım';
+  const el = c.el, big = el >= D ? Math.floor(el/D) : el >= H ? Math.floor(el/H) : Math.max(0, Math.floor(el/MIN));
+  const unit = el >= D ? 'gündür sigarasızım' : el >= H ? 'saattir sigarasızım' : 'dakikadır sigarasızım';
   x.textAlign='center'; x.textBaseline='alphabetic';
   x.font = `800 340px ${F}`; x.fillStyle = lg; x.fillText(String(big), W/2, 620);
   x.font = `600 56px ${F}`; x.fillStyle = '#eef2ef'; x.fillText(unit, W/2, 712);
