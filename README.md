@@ -118,3 +118,7 @@ Tüm veriler yalnızca cihazda (localStorage) saklanır. Bulut senkronizasyonu i
 ---
 
 © Mehmet Karadeniz, 2026-2027
+
+## Lisans
+
+© 2026 Mehmet Karadeniz. Tüm hakları saklıdır. Kod incelenebilir; izinsiz kopyalanamaz, değiştirilemez, dağıtılamaz veya yayınlanamaz. Ayrıntılar için [LICENSE](LICENSE).
