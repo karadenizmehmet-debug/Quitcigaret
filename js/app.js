@@ -161,9 +161,9 @@ function renderReview(){
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
 
 function renderTrigs(){
-  const all = S.crises, list = all.filter(c=>c.trig);
+  const all = S.crises, list = all.flatMap(trigsOf);
   if(!all.length){ $('trig-card').innerHTML = _t('henuz_kayit_yok_sigara_istegi'); return; }
-  const cnt = {}; list.forEach(c=>cnt[c.trig]=(cnt[c.trig]||0)+1);
+  const cnt = {}; list.forEach(id=>cnt[id]=(cnt[id]||0)+1);
   const max = Math.max(1,...Object.values(cnt));
   const passed = all.filter(c=>c.passed===true).length;
   const topT = topTrigger();
@@ -177,7 +177,7 @@ function renderTrigs(){
     ${TRIGS.filter(t=>cnt[t[0]]).map(t=>`<div class="tr"><span class="n">${t[2]} ${t[1]}</span><span class="b"><i style="width:${cnt[t[0]]/max*100}%"></i></span><span class="x">${cnt[t[0]]}</span></div>`).join('')}`;
 }
 function topTrigger(){
-  const cnt={}; S.crises.forEach(c=>{ if(c.trig) cnt[c.trig]=(cnt[c.trig]||0)+1; });
+  const cnt={}; S.crises.flatMap(trigsOf).forEach(id=>cnt[id]=(cnt[id]||0)+1);
   const top = Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0];
   return top ? TRIGS.find(t=>t[0]===top[0]) : null;
 }

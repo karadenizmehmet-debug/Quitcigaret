@@ -123,6 +123,24 @@ def test_reduce_mode(b):
     pg.click("nav >> text=Başarı"); pg.click("nav >> text=Sağlık")
     no_errors(pg)
 
+def test_slip_multiple_triggers(b):
+    pg = new_page(b); seeded(pg)
+    before = pg.evaluate("S.crises.length")
+    pg.click("text=Bir tane içtim")
+    for t in ("Çay içiyorum", "Arkadaş ortamı", "Stresliyim"): pg.click(f"#sheetBox >> text={t}")
+    pg.click("#sheetBox >> text=Stresliyim")  # tekrar basınca kalkar
+    assert pg.locator("#sheetBox .minichips button.on").count() == 2
+    pg.click("#sheetBox .btn.pri"); pg.wait_for_timeout(200)
+    last = pg.evaluate("S.crises.at(-1)")
+    assert pg.evaluate("S.crises.length") == before + 1
+    assert last["trig"] == "cay" and last["trigs"] == ["cay", "arkadas"]
+    assert pg.evaluate("S.slipLog.at(-1).trigs") == ["cay", "arkadas"]
+    # eski kayıtlar (yalnız trig) ve yeni kayıtlar birlikte sayılır
+    cnt = pg.evaluate("(()=>{const c={}; S.crises.flatMap(trigsOf).forEach(i=>c[i]=(c[i]||0)+1); return c})()")
+    assert cnt["cay"] == 1 and cnt["arkadas"] == 1 and cnt["stres"] >= 1
+    assert "Arkadaş ortamı" in pg.inner_text("#trig-card")
+    no_errors(pg)
+
 def test_program_charts_share(b):
     pg = new_page(b); seeded(pg)
     pg.click("#prog-card >> text=Tamamladım"); assert pg.evaluate("S.prog.done[13]")

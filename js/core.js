@@ -34,6 +34,7 @@ function defaults(){
 }
 function day(k=dkey()){ return S.days[k] ||= {water:0, done:{}}; }
 function toast(t){ const el=$('toast'); el.textContent=t; el.classList.add('on'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('on'),2400); }
+function trigsOf(c){ return Array.isArray(c.trigs) && c.trigs.length ? c.trigs : (c.trig ? [c.trig] : []); }
 function slipSet(){ return new Set(S.slipLog.map(e=>dkey(e.t))); }
 
 /* ================= Hesaplar ================= */

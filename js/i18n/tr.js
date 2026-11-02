@@ -477,7 +477,7 @@ const LANG_TR = {
     kaydedelim_yargi_yok: "Kaydedelim, yargı yok.",
     ne_oldugunu_bilmek_bir_sonraki: "Ne olduğunu bilmek bir sonraki sefere hazırlar.",
     kac_sigara_ictin: "Kaç sigara içtin?",
-    ne_tetikledi_istege_bagli: "Ne tetikledi? (isteğe bağlı)",
+    ne_tetikledi_istege_bagli: "Ne tetikledi? (isteğe bağlı, birden fazla seçebilirsin)",
     kaydet_ve_devam_et: "Kaydet ve devam et",
     sayacin_surer_ictigin_sigaralar_bi: "Sayacın sürer; içtiğin sigaralar birikimden düşülür.",
     kaydet_ve_yeniden_basla: "Kaydet ve yeniden başla",

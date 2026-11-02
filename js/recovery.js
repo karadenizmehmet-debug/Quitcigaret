@@ -2,9 +2,9 @@
    Mehmet Karadeniz, 2026-2027 */
 
 /* ================= Kayma ve yeniden başlama ================= */
-let slipN = 1, slipTrig = null;
+let slipN = 1, slipTrigs = [];
 function openSlip(){
-  slipN = 1; slipTrig = null;
+  slipN = 1; slipTrigs = [];
   openSheet(`<h3>${_t('kaydedelim_yargi_yok')}</h3><p>${_t('ne_oldugunu_bilmek_bir_sonraki')}</p>
     <label>${_t('kac_sigara_ictin')}</label>
     <div class="stepper"><button onclick="slipStep(-1)">−</button><b id="slipN">1</b><button onclick="slipStep(1)">+</button></div>
@@ -17,10 +17,15 @@ function openSlip(){
     <button class="btn ghost" style="border:none" onclick="closeSheet()">${_t('vazgec')}</button>`);
 }
 function slipStep(d){ slipN = Math.max(1, Math.min(60, slipN+d)); $('slipN').textContent = slipN; }
-function slipPick(id){ slipTrig = slipTrig===id ? null : id; document.querySelectorAll('.minichips button').forEach(b=>b.classList.toggle('on', b.dataset.t===slipTrig)); }
+function slipPick(id){
+  slipTrigs = slipTrigs.includes(id) ? slipTrigs.filter(x=>x!==id) : [...slipTrigs, id];
+  document.querySelectorAll('.minichips button').forEach(b=>b.classList.toggle('on', slipTrigs.includes(b.dataset.t)));
+}
 function saveSlip(reset){
-  const e = {t:Date.now(), n:slipN, trig:slipTrig};
-  if(slipTrig) S.crises.push({t:e.t, trig:slipTrig, passed:false});
+  // trig: ilk sebep (eski sürümlerle uyum), trigs: seçilen tüm sebepler
+  const trig = slipTrigs[0] || null, trigs = slipTrigs.length > 1 ? [...slipTrigs] : undefined;
+  const e = {t:Date.now(), n:slipN, trig, ...(trigs?{trigs}:{})};
+  if(trig) S.crises.push({t:e.t, trig, ...(trigs?{trigs}:{}), passed:false});
   // Kademeli bırakma sürerken içilen sigara kayma değil, günlük sayaca yazılır (çift sayım olmaz)
   if(!reset && reduceActive()){
     const k = dkey(e.t); S.reduce.log[k] = Math.min(99, rCount(k)+slipN);

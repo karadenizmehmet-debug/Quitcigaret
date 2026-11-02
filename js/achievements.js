@@ -13,7 +13,7 @@ function bctx(){
   c.calmDays = ds.filter(d=>d.review && d.review.crave<=2).length;
   c.happyDays = ds.filter(d=>d.review && d.review.mood>=3).length;
   c.nightPassed = S.crises.filter(x=>{ const h=new Date(x.t).getHours(); return x.passed===true && (h>=22 || h<6); }).length;
-  c.trigKinds = new Set(S.crises.map(x=>x.trig).filter(Boolean)).size;
+  c.trigKinds = new Set(S.crises.flatMap(trigsOf)).size;
   return c;
 }
 function badgeProgress(b,c){ return Math.max(0, b.v(c)/b.t); }
