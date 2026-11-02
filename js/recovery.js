@@ -20,8 +20,15 @@ function slipStep(d){ slipN = Math.max(1, Math.min(60, slipN+d)); $('slipN').tex
 function slipPick(id){ slipTrig = slipTrig===id ? null : id; document.querySelectorAll('.minichips button').forEach(b=>b.classList.toggle('on', b.dataset.t===slipTrig)); }
 function saveSlip(reset){
   const e = {t:Date.now(), n:slipN, trig:slipTrig};
-  S.slips.push(e); S.slipLog.push({...e});
   if(slipTrig) S.crises.push({t:e.t, trig:slipTrig, passed:false});
+  // Kademeli bırakma sürerken içilen sigara kayma değil, günlük sayaca yazılır (çift sayım olmaz)
+  if(!reset && reduceActive()){
+    const k = dkey(e.t); S.reduce.log[k] = Math.min(99, rCount(k)+slipN);
+    save(); closeSheet(); renderReduceCard(); renderGoals(); renderTrigs(); tick();
+    toast(slipN+_t('sigara_kaydedildi_devam_ediyoruz'));
+    return;
+  }
+  S.slips.push(e); S.slipLog.push({...e});
   if(reset){ restart(); return; }
   save(); closeSheet(); renderWeek(); renderGoals(); renderTrigs(); tick();
   toast(slipN+_t('sigara_kaydedildi_devam_ediyoruz'));

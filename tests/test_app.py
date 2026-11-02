@@ -114,6 +114,9 @@ def test_reduce_mode(b):
     assert pg.inner_text("#hero-l") == "gün sonra bırakıyorsun"
     assert pg.evaluate("[0,1,2,3].map(w=>rLimit(w))") == [16, 12, 8, 4]
     assert pg.inner_text("#succ-k") == "Plan uyumu"
+    pg.click("text=Bir tane içtim"); pg.click("#sheetBox >> text=+"); pg.click("#sheetBox .btn.pri"); pg.wait_for_timeout(200)
+    assert pg.evaluate("rCount()") == 2 and pg.evaluate("S.slips.length + S.slipLog.length") == 0
+    assert "2" in pg.inner_text("#reduce-card .rc b")
     pg.evaluate("S.reduce.log[dkey()]=17; save(); renderGoals(); tick()")
     assert not pg.evaluate("document.querySelector('#goals .goal').classList.contains('done')")
     pg.click("nav >> text=Başarı"); pg.click("nav >> text=Sağlık")
