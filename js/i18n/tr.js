@@ -212,6 +212,8 @@ const LANG_TR = {
     canim_sikiliyor: "Canım sıkılıyor",
     can_sikintisi_en_sik_tetikleyicile: "Can sıkıntısı en sık tetikleyicilerden biri. Ellerini ve zihnini meşgul et: baloncuk oyunu ya da kısa bir yürüyüş işe yarar.",
     kahve_iciyorum: "Kahve içiyorum",
+    cay_iciyorum: "Çay içiyorum",
+    cay_ve_sigara_birlikte_gelen: "Çay ve sigara alışkanlıkla birbirine bağlanmış. Çayını farklı bir yerde ya da farklı bir bardakta iç, yanına su ya da sakız koy; rutini bozmak bağı zayıflatır.",
     kahve_ve_sigara_beyninde_birbirine: "Kahve ve sigara beyninde birbirine bağlanmış. Kahveni farklı bir yerde ya da farklı bir bardakta iç; rutini bozmak bağı zayıflatır.",
     yemek_sonrasi_aliskanligi_kirmak_i: "Yemek sonrası alışkanlığı kırmak için masadan hemen kalk, dişlerini fırçala ya da sakız çiğne.",
     arkadas_ortami: "Arkadaş ortamı",

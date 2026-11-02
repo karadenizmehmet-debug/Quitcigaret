@@ -43,6 +43,7 @@ const TRIGS = [
   ['stres',_t('stresliyim'),'😣',_t('nikotin_stresi_azaltiyormus_gibi_h')],
   ['sikinti',_t('canim_sikiliyor'),'😐',_t('can_sikintisi_en_sik_tetikleyicile')],
   ['kahve',_t('kahve_iciyorum'),'☕',_t('kahve_ve_sigara_beyninde_birbirine')],
+  ['cay',_t('cay_iciyorum'),'🫖',_t('cay_ve_sigara_birlikte_gelen')],
   ['yemek',_t('yemekten_sonra'),'🍽️',_t('yemek_sonrasi_aliskanligi_kirmak_i')],
   ['arkadas',_t('arkadas_ortami'),'👥',_t('sigara_icen_arkadaslarina_biraktig')],
   ['nikotin',_t('nikotin_istegi'),'🧲',_t('fiziksel_istek_gercek_ama_gecici')]
