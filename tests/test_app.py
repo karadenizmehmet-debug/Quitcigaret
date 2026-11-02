@@ -141,6 +141,35 @@ def test_slip_multiple_triggers(b):
     assert "Arkadaş ortamı" in pg.inner_text("#trig-card")
     no_errors(pg)
 
+def test_habit_insights(b):
+    pg = new_page(b)
+    # az veri: kaç kayıt kaldığını söyler
+    pg.evaluate("localStorage.setItem('nefes_v2', JSON.stringify({quit:Date.now()-3*864e5, per:20, price:100, pack:20, crises:[{t:Date.now()-1e6,trig:'stres',passed:true}]}))")
+    pg.reload(); pg.wait_for_timeout(300)
+    assert "4 kriz kaydı daha" in pg.inner_text("#ins-card")
+    # zengin veri: 14 gün, akşam yoğun, çayda zorlanıyor, stresi atlatıyor, yürüyüşlü günler sakin
+    pg.evaluate("""(()=>{
+      const D=864e5, now=Date.now(), dk=t=>{const d=new Date(t);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+      const crises=[], days={};
+      for(let i=13;i>=1;i--){
+        const walk = i%2===0, mood = i%4===1 ? 0 : 3, base = new Date(now-i*D);
+        days[dk(base)] = {water:4, done:walk?{walk:true}:{}, review:{mood, crave:5, note:'', t:base.getTime()}};
+        const n = walk ? 1 : (i>7 ? 5 : 2);
+        for(let j=0;j<n;j++){ const d=new Date(base); d.setHours(20+j%3,15);
+          const trig = j%2 ? 'cay' : 'stres'; crises.push({t:d.getTime(), trig, passed: trig==='stres'}); }
+      }
+      localStorage.setItem('nefes_v2', JSON.stringify({quit:now-14*D, per:20, price:100, pack:20, crises, days}));
+    })()""")
+    pg.reload(); pg.wait_for_timeout(300)
+    ins = pg.evaluate("insights().map(i=>i[0])")
+    for em in ("🎯", "⏰", "📉", "🚶", "💡"): assert em in ins, (em, ins)
+    card = pg.inner_text("#ins-card")
+    assert "Çay içiyorum" in card and "%0" in card and "%100" in card
+    assert "18:00–21:00" in card
+    assert pg.locator("#ins-card .ins").count() == 3
+    pg.click("#ins-card >> text=Tüm bulgular"); assert pg.locator("#sheetBox .ins").count() == len(ins)
+    no_errors(pg)
+
 def test_program_charts_share(b):
     pg = new_page(b); seeded(pg)
     pg.click("#prog-card >> text=Tamamladım"); assert pg.evaluate("S.prog.done[13]")

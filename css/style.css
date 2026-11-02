@@ -94,6 +94,10 @@ a{color:var(--lime)}
 .tr .b{flex:1;height:10px;background:var(--line);border-radius:10px;overflow:hidden}
 .tr .b i{display:block;height:100%;background:var(--grad2);border-radius:10px}
 .tr .x{width:24px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.ins{display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.5;padding:10px 0;border-top:1px solid var(--line)}
+.ins:first-child{border-top:none;padding-top:0}
+.ins .em{font-size:20px;line-height:1.2;flex:none}
+.ins b{color:var(--text)}
 .empty{color:var(--muted);font-size:14px;line-height:1.5;margin-top:8px}
 
 /* Butonlar */

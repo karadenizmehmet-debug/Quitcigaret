@@ -175,6 +175,7 @@ function renderTrigs(){
     </div>
     ${topT?`<p class="empty" style="margin-top:12px">${_t('en_sik_tetikleyicin')} <b style="color:var(--text)">${topT[2]} ${topT[1]}</b>${hh!=null?`<br>${_t('en_cok_zorlandigin_saat')} <b style="color:var(--text)">${pad(hh)}${_t('n00_civari')}</b>`:''}</p>`:''}
     ${TRIGS.filter(t=>cnt[t[0]]).map(t=>`<div class="tr"><span class="n">${t[2]} ${t[1]}</span><span class="b"><i style="width:${cnt[t[0]]/max*100}%"></i></span><span class="x">${cnt[t[0]]}</span></div>`).join('')}`;
+  if(typeof renderInsights==="function") renderInsights();
 }
 function topTrigger(){
   const cnt={}; S.crises.flatMap(trigsOf).forEach(id=>cnt[id]=(cnt[id]||0)+1);
