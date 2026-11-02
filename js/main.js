@@ -16,6 +16,7 @@ function start(){
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){ window.addEventListener('load', ()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden && S && S.sync && S.sync.on) syncNow(true); });
 applyI18n();
+$('app-ver').textContent = CONFIG.appVersion;
 load();
 if(S){ defaults(); start(); }
 else { show('setup'); if(gdAvailable()){ $('gd-setup-btn').style.display=''; loadGIS().catch(()=>{}); } $('f-quit').value = toLocal(Date.now()); }

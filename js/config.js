@@ -2,6 +2,10 @@
    Mehmet Karadeniz, 2026-2027 */
 
 const CONFIG = {
+  // Uygulama sürümü; ana ekranda logonun yanında görünür.
+  // sw.js'teki CACHE ile aynı olmalı ('nefes-' + appVersion); test bunu denetler.
+  appVersion: 'v15',
+
   // Google Drive yedeği için OAuth istemci kimliği (Web uygulaması türü).
   // README'deki "Google Drive yedeği kurulumu" adımlarıyla oluşturulur. Gizli değildir; koda yazılabilir.
   // Boş bırakılırsa Google Drive seçenekleri gizlenir.

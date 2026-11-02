@@ -25,6 +25,7 @@ a{color:var(--lime)}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.02em}
 .logo i{width:30px;height:30px;border-radius:10px;background:var(--grad);display:grid;place-items:center}
 .logo i svg{width:18px;height:18px}
+.logo .ver{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0;margin-left:-4px;align-self:flex-end;padding-bottom:3px}
 .tb{display:flex;gap:8px}
 .iconbtn{width:40px;height:40px;border-radius:13px;background:var(--card);border:1px solid var(--line);color:var(--text);display:grid;place-items:center;position:relative}
 .iconbtn svg{width:19px;height:19px}

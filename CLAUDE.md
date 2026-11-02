@@ -69,7 +69,7 @@ Kullanıcı açıkça istemedikçe kaldırma veya davranışını değiştirme: 
 ## 7. PWA ve çevrimdışı
 
 - Yeni JS/CSS/görsel dosyası eklenirse sw.js `FILES` listesine ekle.
-- Önbelleğe giren herhangi bir dosya değiştiğinde `CACHE` sürümünü bir artır (ör. `nefes-v11` → `nefes-v12`); aksi halde kullanıcılar eski sürümde kalır.
+- Önbelleğe giren herhangi bir dosya değiştiğinde `CACHE` sürümünü bir artır (ör. `nefes-v11` → `nefes-v12`); aksi halde kullanıcılar eski sürümde kalır. Aynı anda js/config.js'teki `appVersion` değerini de eşitle (ana ekranda görünen sürüm; `test_app_version_matches_cache` denetler).
 - Temel özellikler internetsiz çalışmalı; harici bağımlılık ekleme.
 
 ## 8. Testler
