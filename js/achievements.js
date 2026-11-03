@@ -103,9 +103,10 @@ function renderCal(){
   for(let d=1; d<=daysIn; d++){
     const t = new Date(base.getFullYear(), base.getMonth(), d, 12).getTime();
     const st = dayStatus(t, slips), isT = dkey(t)===dkey();
-    h += `<div class="c ${st==='ok'||st==='slip'?st:''} ${isT?'today':''}">${d}</div>`;
+    h += `<div class="c ${st==='ok'||st==='slip'||st==='limit'?st:''} ${isT?'today':''}">${d}</div>`;
   }
   $('cal').innerHTML = h;
+  $('lg-limit').hidden = !S.reduce;
 }
 function weekStats(){
   const slips = slipSet(), now = Date.now();

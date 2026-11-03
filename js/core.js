@@ -35,13 +35,19 @@ function defaults(){
 function day(k=dkey()){ return S.days[k] ||= {water:0, done:{}}; }
 function toast(t){ const el=$('toast'); el.textContent=t; el.classList.add('on'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('on'),2400); }
 function trigsOf(c){ return Array.isArray(c.trigs) && c.trigs.length ? c.trigs : (c.trig ? [c.trig] : []); }
-function slipSet(){ return new Set(S.slipLog.map(e=>dkey(e.t))); }
+// Sigara içilen günler: kaymalar + kademeli bırakma sayacı (azaltma sırasında içilenler de sigarasız sayılmaz)
+function slipSet(){
+  const s = new Set(S.slipLog.map(e=>dkey(e.t)));
+  for(const k in (S.reduce?.log||{})) if(S.reduce.log[k] > 0) s.add(k);
+  return s;
+}
+function reduceTotal(){ return Object.values(S.reduce?.log||{}).reduce((a,n)=>a+(n||0),0); }
 
 /* ================= Hesaplar ================= */
 function calc(){
   const now = Date.now(), el = Math.max(0, now-S.quit);
   const sum = a => a.reduce((x,e)=>x+(e.n||1),0);
-  const smokedNow = sum(S.slips), smokedT = sum(S.slipLog);
+  const smokedNow = sum(S.slips), smokedT = sum(S.slipLog) + reduceTotal();
   const avoided = Math.max(0, Math.floor(el/D*S.per) - smokedNow);
   const expectedT = Math.max(0,(now - S.first)/D*S.per);
   const each = S.price / S.pack;
@@ -77,7 +83,11 @@ function dayStatus(t, slips){
   const k=dkey(t), sod=startOfDay(t);
   if(sod > startOfDay(Date.now())) return 'future';
   if(sod + D <= S.first) return 'none';
-  return slips.has(k) ? 'slip' : 'ok';
+  if(!slips.has(k)) return 'ok';
+  // Kademeli bırakmada günlük sınırın içinde kalınan gün kayma değil, 'limit'
+  const r = S.reduce, n = r?.log?.[k] || 0;
+  if(n && !S.slipLog.some(e=>dkey(e.t)===k) && n <= rLimit(Math.max(0, Math.floor((sod-r.start)/(7*D))), r)) return 'limit';
+  return 'slip';
 }
 function xpInfo(c){
   const slips = slipSet();

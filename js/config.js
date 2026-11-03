@@ -4,7 +4,7 @@
 const CONFIG = {
   // Uygulama sürümü; ana ekranda logonun yanında görünür.
   // sw.js'teki CACHE ile aynı olmalı ('nefes-' + appVersion); test bunu denetler.
-  appVersion: 'v15',
+  appVersion: 'v16',
 
   // Google Drive yedeği için OAuth istemci kimliği (Web uygulaması türü).
   // README'deki "Google Drive yedeği kurulumu" adımlarıyla oluşturulur. Gizli değildir; koda yazılabilir.

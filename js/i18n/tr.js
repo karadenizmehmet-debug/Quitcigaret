@@ -71,6 +71,7 @@ const LANG_TR = {
     takvim: "Takvim",
     sigarasiz: "Sigarasız",
     kayma: "Kayma",
+    sinirda: "Sınırda",
     haftalik_rapor: "Haftalık rapor",
     son_7_gun: "son 7 gün",
     azaltma: "Azaltma",

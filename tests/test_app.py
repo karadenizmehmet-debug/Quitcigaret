@@ -123,6 +123,24 @@ def test_reduce_mode(b):
     pg.click("nav >> text=Başarı"); pg.click("nav >> text=Sağlık")
     no_errors(pg)
 
+def test_reduce_counts_in_stats(b):
+    # Azaltma sırasında içilenler takvim, haftalık rapor ve 'İçtiğin' kartına yansımalı
+    pg = new_page(b)
+    pg.click("text=Kademeli azalt"); pg.fill("#f-weeks", "4"); pg.fill("#f-per", "20"); pg.fill("#f-price", "100"); pg.fill("#f-pack", "20")
+    pg.click("text=Yolculuğa başla"); pg.wait_for_timeout(300)
+    pg.evaluate("S.first=S.reduce.start-864e5; S.reduce.log[dkey(Date.now()-864e5)]=3; S.reduce.log[dkey()]=17; save()")
+    assert pg.evaluate("calc().smokedT") == 20
+    assert pg.evaluate("dayStatus(Date.now(), slipSet())") == "slip"            # sınır (16) aşıldı
+    assert pg.evaluate("dayStatus(Date.now()-864e5, slipSet())") in ("limit", "slip")
+    assert pg.evaluate("weekStats().ok") == 0
+    pg.evaluate("S.reduce.log[dkey()]=2; save()")
+    assert pg.evaluate("dayStatus(Date.now(), slipSet())") == "limit"
+    pg.click("nav >> text=Başarı"); pg.wait_for_timeout(200)
+    assert pg.locator("#cal .c.limit.today").count() == 1
+    assert pg.is_visible("#lg-limit")
+    assert pg.evaluate("calc().smokedT") == 5 and pg.evaluate("calc().reduction") < 100
+    no_errors(pg)
+
 def test_slip_multiple_triggers(b):
     pg = new_page(b); seeded(pg)
     before = pg.evaluate("S.crises.length")
