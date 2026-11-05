@@ -13,12 +13,10 @@ const toLocal = t => { const d=new Date(t); return new Date(d - d.getTimezoneOff
 const startOfDay = t => { const d=new Date(t); d.setHours(0,0,0,0); return d.getTime(); };
 
 function load(){ try{ S = JSON.parse(localStorage.getItem(KEY)); }catch(e){ S=null; } }
-let pushT = null;
 function save(touch=true){
   if(!S) return;
   if(touch) S.updatedAt = Date.now();
   try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
-  if(touch && S.sync && S.sync.on){ clearTimeout(pushT); pushT = setTimeout(syncPush, 4000); }
   if(touch && S.gdrive && S.gdrive.on && typeof gdSchedule === 'function') gdSchedule();
 }
 function defaults(){
@@ -28,7 +26,7 @@ function defaults(){
   S.bank=S.bank||{cigs:0,saved:0,ms:0}; S.attempts=S.attempts||[]; S.badges=S.badges||{};
   S.stats=S.stats||{breaths:0}; S.stats.games=S.stats.games||0; S.stats.bestGame=S.stats.bestGame||0; S.stats.shares=S.stats.shares||0; S.stats.read=S.stats.read||[]; S.prefs=S.prefs||{voice:false,vibe:true}; S.first=Math.min(S.first||S.quit, S.quit); S.fired=S.fired||{};
   S.bank.smoked=S.bank.smoked||0; S.plan=S.plan||null; S.reduce=S.reduce||null; S.prog=S.prog||{done:{}};
-  S.sync=S.sync||{on:false,url:'',code:'',last:0,err:''};
+  // Eski sürümlerdeki Firebase ayarları (S.sync) silinmez ama artık kullanılmaz.
   S.backupAt=S.backupAt||0; S.gdrive=S.gdrive||{on:false,last:0,err:'',fileId:null,email:''}; S.plus=S.plus||{active:false,since:0,token:''}; S.updatedAt=S.updatedAt||Date.now();
   S.notif=S.notif||{morning:{on:true,time:'09:00'},evening:{on:true,time:'21:00'},hard:{on:true},health:{on:true},weekly:{on:true},custom:[]};
 }

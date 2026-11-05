@@ -44,7 +44,6 @@
   <button data-i18n="yedek_dosyasindan_geri_yukle" class="btn sec" style="margin-top:0" onclick="$('imp-file2').click()">💾 Yedek dosyasından geri yükle</button>
   <input type="file" id="imp-file2" accept=".json,application/json,text/plain" style="display:none" onchange="importFile(this)">
   <button class="btn sec" id="gd-setup-btn" style="display:none" onclick="gdRestoreFromSetup()" data-i18n="gd_setup_restore">Google hesabından geri yükle</button>
-  <button data-i18n="bulut_koduyla_baglan" class="btn sec" onclick="openCloudSetup()">☁️ Bulut koduyla bağlan</button>
   <div data-i18n="mehmet_karadeniz_2026_2027" class="foot">Mehmet Karadeniz, 2026-2027</div>
 </div>
 
@@ -235,8 +234,6 @@
     <textarea data-i18n-attr="placeholder:ya_da_yedek_metnini_buraya" id="imp-text" placeholder="…ya da yedek metnini buraya yapıştır" style="margin-top:12px"></textarea>
     <button data-i18n="metinden_geri_yukle" class="btn sec sm" onclick="importText($('imp-text').value)">Metinden geri yükle</button>
   </div>
-  <div class="sech" data-i18n="gelismis_firebase">Gelişmiş: kendi Firebase veritabanın</div>
-  <div class="card" id="sync-card"></div>
 </div>
 
 <!-- ============ BİLGİ MERKEZİ ============ -->

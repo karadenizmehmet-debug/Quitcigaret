@@ -15,7 +15,6 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parent.parent
 URL = (ROOT / "index.html").as_uri()
 VIEW = {"width": 390, "height": 844}
-FB = "https://test-rtdb.firebaseio.com"
 
 # 12,5 gün önce bırakmış, geçmişi olan kullanıcı
 SEED = """
@@ -28,18 +27,8 @@ localStorage.setItem('nefes_v2', JSON.stringify({quit:now-12.5*D, per:20, price:
 """
 
 OPEN = []
-def new_page(browser, db=None):
+def new_page(browser):
     ctx = browser.new_context(viewport=VIEW, accept_downloads=True); OPEN.append(ctx)
-    if db is not None:
-        H = {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,PUT,OPTIONS", "Access-Control-Allow-Headers": "Content-Type"}
-        def fb(route, req):
-            key = req.url.split("/nefes/")[1]
-            if req.method == "OPTIONS": return route.fulfill(status=204, headers=H)
-            if req.method == "PUT":
-                db[key] = json.loads(req.post_data)
-                return route.fulfill(status=200, headers=H, content_type="application/json", body=req.post_data)
-            route.fulfill(status=200, headers=H, content_type="application/json", body=json.dumps(db.get(key)))
-        ctx.route(FB + "/**", fb)
     pg = ctx.new_page()
     pg.add_init_script("navigator.vibrate=(p)=>{(window._vib=window._vib||[]).push(JSON.stringify(p));return true}")
     pg.errors = []
@@ -80,25 +69,25 @@ def test_slip_and_restart_keep_gains(b):
     assert pg.is_visible("#recovery .card")
     no_errors(pg)
 
-def test_backup_file_and_cloud_sync(b):
-    db = {}
-    pg = new_page(b, db); setup_now(pg)
+def test_backup_file_restore(b):
+    pg = new_page(b); setup_now(pg)
     pg.click('[aria-label="Ayarlar"]'); pg.click("#v-set .rowlink >> nth=1")
     with pg.expect_download() as dl: pg.click("#v-backup >> text=İndir")
     path = Path(tempfile.mkdtemp()) / dl.value.suggested_filename; dl.value.save_as(path)
     assert json.load(open(path))["app"] == "nefes"
-    pg.fill("#sy-url", FB); pg.click("text=Yeni kod"); code = pg.input_value("#sy-code")
-    pg.click('#sync-card button:text-is("Bağlan")'); pg.wait_for_timeout(800)
-    assert code + ".json" in db and pg.evaluate("S.sync.err") == ""
-    money = pg.inner_text("#money") if pg.is_visible("#money") else None
-    # yeni telefon: buluttan
-    p2 = new_page(b, db); p2.click("text=Bulut koduyla bağlan")
-    p2.fill("#sy-url", FB); p2.fill("#sy-code", code); p2.click("text=Verilerimi indir"); p2.wait_for_timeout(500)
-    assert p2.evaluate("S.quit") == pg.evaluate("S.quit")
+    assert not pg.locator("#sync-card").count(), "Firebase bölümü kaldırılmış olmalı"
     # yeni telefon: dosyadan
-    p3 = new_page(b); p3.set_input_files("#imp-file2", str(path)); p3.wait_for_timeout(500)
+    p3 = new_page(b)
+    assert not p3.locator("text=Bulut koduyla bağlan").count()
+    p3.set_input_files("#imp-file2", str(path)); p3.wait_for_timeout(500)
     assert p3.evaluate("S.quit") == pg.evaluate("S.quit")
-    for p in (pg, p2, p3): no_errors(p)
+    # eski sürümden Firebase ayarı içeren yedek de sorunsuz yüklenmeli
+    p4 = new_page(b)
+    p4.evaluate("""localStorage.setItem('nefes_v2', JSON.stringify({quit:Date.now()-3*864e5, per:20, price:100, pack:20,
+        sync:{on:true,url:'https://x.firebaseio.com',code:'abcdefghijklmnopqrstuvwx',last:1,err:''}}))""")
+    p4.reload(); p4.wait_for_timeout(400); p4.evaluate("water(1)"); p4.wait_for_timeout(300)
+    assert p4.evaluate("S.sync.code") == "abcdefghijklmnopqrstuvwx"     # eski veri silinmez
+    for p in (pg, p3, p4): no_errors(p)
 
 def test_health_milestones(b):
     pg = new_page(b); seeded(pg)
