@@ -22,7 +22,7 @@ Sigarayı bırakma sürecini takip eden, modern ve minimalist bir mobil web uygu
 - **Günlük hedefler ve akşam değerlendirmesi**
 - **Bildirimler:** Sabah, akşam, zor saatler, sağlık dönüm noktaları, haftalık rapor ve özel hatırlatmalar
 - **Bilgi merkezi:** Yoksunluk, ilk hafta, stres, kilo ve profesyonel destek (ALO 171)
-- **Yedekleme:** Google Drive yedeği (kullanıcının kendi Drive'ındaki gizli uygulama klasörü), JSON dışa/içe aktarma ve gelişmiş kullanıcılar için Firebase senkronizasyonu
+- **Yedekleme:** Google Drive yedeği (kullanıcının kendi Drive'ındaki gizli uygulama klasörü) ve JSON dışa/içe aktarma
 - **Dil altyapısı:** Tüm metinler `js/i18n/tr.js` içinde; yeni dil eklemek yalnızca çeviri işidir
 
 ## Dosyalar
@@ -111,7 +111,7 @@ npx cap open android
 
 ## Verilerin gizliliği
 
-Tüm veriler yalnızca cihazda (localStorage) saklanır. Bulut senkronizasyonu isteğe bağlıdır ve kullanıcının kendi Firebase veritabanına bağlanır.
+Tüm veriler yalnızca cihazda (localStorage) saklanır. Google Drive yedeği isteğe bağlıdır ve veriler yalnızca kullanıcının kendi Google Drive'ına yazılır; sunucumuz yoktur.
 
 > Sağlık bilgileri genel bilgilendirme amaçlıdır ve tıbbi tavsiye yerine geçmez.
 

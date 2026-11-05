@@ -7,7 +7,7 @@ Mehmet Karadeniz, 2026-2027
 Nefes – Sigara Bırakma Takip Uygulaması. Mobil öncelikli PWA; düz HTML/CSS/JS, derleme sistemi yok. GitHub Pages'te yayınlanır, ileride Capacitor ile APK'ya çevrilip Google Play'e çıkacak (README → "APK'ya dönüştürme").
 
 - Veriler cihazda (localStorage) tutulur, çevrimdışı çalışır.
-- Yedekleme: JSON dışa/içe aktarma, kullanıcının kendi Google Drive'ı (appDataFolder) ve isteğe bağlı kullanıcının kendi Firebase Realtime Database'i.
+- Yedekleme: JSON dışa/içe aktarma ve kullanıcının kendi Google Drive'ı (appDataFolder). Firebase senkronizasyonu kullanıcı isteğiyle kaldırıldı (v17); eski kayıtlardaki `S.sync` alanı silinmez, kullanılmaz.
 - Reklam yok. Lisans: tüm hakları saklıdır (açık kaynak değil).
 
 ## 2. Bağlam tasarrufu
@@ -34,7 +34,7 @@ Nefes – Sigara Bırakma Takip Uygulaması. Mobil öncelikli PWA; düz HTML/CSS
 | js/crisis.js | ACİL destek, nefes egzersizleri |
 | js/games.js | Oyunlar |
 | js/notifications.js | Bildirimler (APK'da Capacitor LocalNotifications) |
-| js/backup.js | JSON yedek + Firebase senkronizasyonu (REST) |
+| js/backup.js | JSON dosya yedeği ve geri yükleme |
 | js/gdrive.js | Google Drive yedeği (drive.appdata kapsamı) |
 | js/plus.js | Nefes Plus altyapısı (Play Faturalandırma, ürün `nefes_plus`) |
 | js/i18n.js, js/i18n/tr.js | Dil altyapısı ve Türkçe metinler |
@@ -54,7 +54,7 @@ Nefes – Sigara Bırakma Takip Uygulaması. Mobil öncelikli PWA; düz HTML/CSS
 
 ## 5. Korunacak özellikler
 
-Kullanıcı açıkça istemedikçe kaldırma veya davranışını değiştirme: sigarasız süre, para tasarrufu, içilmeyen sigara sayısı, sağlık dönüm noktaları, rozet/başarı sistemi, oyunlar, ACİL ekranı, nefes egzersizleri, kayma takibi, 72 saatlik yeniden başlama planı, kademeli bırakma modu, 30 günlük program, grafikler ve paylaşım kartları, bildirimler, JSON dışa/içe aktarma, Google Drive yedeği, Firebase senkronizasyonu.
+Kullanıcı açıkça istemedikçe kaldırma veya davranışını değiştirme: sigarasız süre, para tasarrufu, içilmeyen sigara sayısı, sağlık dönüm noktaları, rozet/başarı sistemi, oyunlar, ACİL ekranı, nefes egzersizleri, kayma takibi, 72 saatlik yeniden başlama planı, kademeli bırakma modu, 30 günlük program, grafikler ve paylaşım kartları, bildirimler, JSON dışa/içe aktarma, Google Drive yedeği.
 
 **Plus kuralı:** Bırakmaya yardım eden özellikler (sayaç, ACİL, nefes, sağlık, yedekleme, kayma takibi) hiçbir zaman Plus'a bağlanmaz. `plusEnabled: false` iken Plus hiçbir yerde görünmez.
 
@@ -62,8 +62,8 @@ Kullanıcı açıkça istemedikçe kaldırma veya davranışını değiştirme: 
 
 - `nefes_v2` veri yapısını izinsiz değiştirme. Değişirse geriye dönük uyumlu ol: eksik alanlara varsayılan ver, gerekiyorsa `load()` sonrasında bir migration adımı ekle ve testini yaz. Eski kayıtlar asla silinmemeli.
 - JSON içe aktarmayı ve buluttan gelen veriyi doğrulamadan uygulama.
-- Kullanıcı verisini yalnızca kullanıcının kendi Drive'ına / kendi Firebase'ine gönder; başka hiçbir servise gönderme. Sunucumuz yok.
-- Gizli bilgi (API secret, Firebase admin anahtarı vb.) koda yazma. OAuth istemci kimliği gizli değildir, config.js'e yazılabilir.
+- Kullanıcı verisini yalnızca kullanıcının kendi Google Drive'ına gönder; başka hiçbir servise gönderme. Sunucumuz yok.
+- Gizli bilgi (API secret vb.) koda yazma. OAuth istemci kimliği gizli değildir, config.js'e yazılabilir.
 - Hata durumunda mevcut veriyi bozmadan çık.
 
 ## 7. PWA ve çevrimdışı
