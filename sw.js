@@ -1,6 +1,6 @@
 // Nefes – çevrimdışı çalışma için service worker
 // Mehmet Karadeniz, 2026-2027
-const CACHE = 'nefes-v18';
+const CACHE = 'nefes-v19';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './css/style.css', './js/config.js', './js/i18n/tr.js', './js/i18n.js',
   ...['data','core','content','app','screens','achievements','insights','recovery','crisis','games','notifications','backup','gdrive','plus','main'].map(f => './js/' + f + '.js')];
 
@@ -16,7 +16,9 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
   e.respondWith(
-    fetch(req).then(res => {
+    // cache:'no-cache': tarayıcının HTTP önbelleğini (GitHub Pages ~10 dk) atlayıp sunucuya sorar;
+    // böylece yeni sürüm yayınlanınca bir sonraki açılışta gelir.
+    fetch(req, { cache: 'no-cache' }).then(res => {
       const copy = res.clone();
       caches.open(CACHE).then(c => c.put(req, copy));
       return res;
