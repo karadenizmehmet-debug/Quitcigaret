@@ -152,7 +152,7 @@ def test_habit_insights(b):
     pg = new_page(b)
     # az veri: kaç kayıt kaldığını söyler
     pg.evaluate("localStorage.setItem('nefes_v2', JSON.stringify({quit:Date.now()-3*864e5, per:20, price:100, pack:20, crises:[{t:Date.now()-1e6,trig:'stres',passed:true}]}))")
-    pg.reload(); pg.wait_for_timeout(300)
+    pg.reload(); pg.wait_for_function("typeof S==='object' && S && document.querySelector('#ins-card') && document.querySelector('#ins-card').innerText.trim().length>0")
     assert "4 kriz kaydı daha" in pg.inner_text("#ins-card")
     # zengin veri: 14 gün, akşam yoğun, çayda zorlanıyor, stresi atlatıyor, yürüyüşlü günler sakin
     pg.evaluate("""(()=>{
@@ -167,7 +167,7 @@ def test_habit_insights(b):
       }
       localStorage.setItem('nefes_v2', JSON.stringify({quit:now-14*D, per:20, price:100, pack:20, crises, days}));
     })()""")
-    pg.reload(); pg.wait_for_timeout(300)
+    pg.reload(); pg.wait_for_function("typeof S==='object' && S && document.querySelector('#ins-card') && document.querySelector('#ins-card').innerText.trim().length>0")
     ins = pg.evaluate("insights().map(i=>i[0])")
     for em in ("🎯", "⏰", "📉", "🚶", "💡"): assert em in ins, (em, ins)
     card = pg.inner_text("#ins-card")
