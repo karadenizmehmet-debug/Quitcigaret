@@ -326,9 +326,19 @@ def test_google_drive_backup(b):
     for p in (pg, p2): no_errors(p)
 
 def test_drive_hidden_without_client_id(b):
-    pg = new_page(b)
+    ctx = b.new_context(viewport=VIEW); OPEN.append(ctx); pg = ctx.new_page()
+    pg.add_init_script("window.NEFES_TEST_CONFIG={googleClientId:'', allowInsecureOAuth:true}")
+    pg.errors=[]; pg.on("pageerror", lambda e: pg.errors.append(str(e))); pg.goto(URL)
     assert not pg.is_visible("#gd-setup-btn")
     setup_now(pg); pg.evaluate("go('backup')"); assert "yakında" in pg.inner_text("#gd-card")
+    no_errors(pg)
+
+def test_drive_client_id_configured(b):
+    import re
+    cid = re.search(r"googleClientId: '([^']*)'", (ROOT/"js"/"config.js").read_text()).group(1)
+    assert re.fullmatch(r"\d+-[a-z0-9]{32}\.apps\.googleusercontent\.com", cid), cid
+    pg = new_page(b)
+    assert pg.evaluate("CONFIG.googleClientId") == cid
     no_errors(pg)
 
 def test_plus_scaffold(b):
