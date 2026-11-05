@@ -4,12 +4,12 @@
 const CONFIG = {
   // Uygulama sürümü; ana ekranda logonun yanında görünür.
   // sw.js'teki CACHE ile aynı olmalı ('nefes-' + appVersion); test bunu denetler.
-  appVersion: 'v17',
+  appVersion: 'v18',
 
   // Google Drive yedeği için OAuth istemci kimliği (Web uygulaması türü).
   // README'deki "Google Drive yedeği kurulumu" adımlarıyla oluşturulur. Gizli değildir; koda yazılabilir.
   // Boş bırakılırsa Google Drive seçenekleri gizlenir.
-  googleClientId: '',
+  googleClientId: '970194629052-9prs9so6hnv9hedaa2t0h8lgv65fs73j.apps.googleusercontent.com',
 
   // Nefes Plus. false iken her şey ücretsizdir ve Plus ile ilgili hiçbir şey görünmez.
   // Kural: sigarayı bırakmaya yardım eden özellikler (sayaç, ACİL, nefes, sağlık,
