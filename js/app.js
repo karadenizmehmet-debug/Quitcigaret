@@ -18,6 +18,14 @@ function go(v){
   tick();
 }
 
+/* ================= Koyu / normal mod (varsayılan koyu; anahtar nefes_tema) ================= */
+function toggleTheme(){
+  const light = document.documentElement.getAttribute('data-theme') !== 'light';
+  if(light) document.documentElement.setAttribute('data-theme','light'); else document.documentElement.removeAttribute('data-theme');
+  const m = document.querySelector('meta[name=theme-color]'); if(m) m.setAttribute('content', light ? '#f3f6f4' : '#0a0c0b');
+  try{ localStorage.setItem('nefes_tema', light ? 'light' : 'dark'); }catch(e){}
+}
+
 /* ================= Kurulum & ayarlar ================= */
 let setupMode = 'now';
 function setMode(m){

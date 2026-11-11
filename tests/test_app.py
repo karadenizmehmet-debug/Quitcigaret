@@ -215,6 +215,21 @@ def test_badges(b):
     pg.click("nav >> text=Başarı"); pg.click(".cat >> nth=1"); assert pg.locator("#sheetBox .bdg").count() == 12
     no_errors(pg)
 
+def test_theme_toggle(b):
+    pg = new_page(b); seeded(pg)
+    assert pg.evaluate("document.documentElement.getAttribute('data-theme')") is None      # varsayılan koyu
+    bg0 = pg.evaluate("getComputedStyle(document.body).backgroundColor")
+    pg.click("button[onclick='toggleTheme()']")
+    assert pg.evaluate("document.documentElement.getAttribute('data-theme')") == "light"
+    assert pg.evaluate("localStorage.getItem('nefes_tema')") == "light"
+    assert pg.evaluate("getComputedStyle(document.body).backgroundColor") != bg0
+    pg.reload(); pg.wait_for_timeout(300)
+    assert pg.evaluate("document.documentElement.getAttribute('data-theme')") == "light"   # kalıcı
+    pg.click("button[onclick='toggleTheme()']")
+    assert pg.evaluate("document.documentElement.getAttribute('data-theme')") is None
+    assert pg.evaluate("JSON.parse(localStorage.getItem('nefes_v2')).per") == 20            # veri bozulmadı
+    no_errors(pg)
+
 def test_crisis_breath_and_celebration(b):
     pg = new_page(b); seeded(pg)
     pg.click(".sos"); pg.click("#chips button >> nth=0"); pg.click(".tool.wide"); pg.click("#bo-voice")

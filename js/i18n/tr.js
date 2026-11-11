@@ -27,6 +27,7 @@ const LANG_TR = {
     bilgi_merkezi: "Bilgi merkezi",
     bildirimler: "Bildirimler",
     ayarlar: "Ayarlar",
+    tema_degistir: "Koyu / normal mod",
     gun_sigarasiz: "gün sigarasız",
     saat: "saat",
     dakika: "dakika",

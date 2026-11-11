@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#0a0c0b">
+<script>try{if(localStorage.getItem("nefes_tema")==="light"){document.documentElement.setAttribute("data-theme","light");document.querySelector('meta[name=theme-color]').setAttribute("content","#f3f6f4")}}catch(e){}</script>
 <meta name="author" content="Mehmet Karadeniz, 2026-2027">
 <meta name="copyright" content="Mehmet Karadeniz, 2026-2027">
 <title>Nefes</title>
@@ -52,6 +53,7 @@
   <div class="top">
     <div data-i18n-text="nefes" class="logo"><i><svg viewBox="0 0 24 24" fill="none" stroke="#08130a" stroke-width="2.4" stroke-linecap="round"><path d="M4 12c4 0 6-3 8-6 2 3 4 6 8 6M4 16h16M7 20h10"/></svg></i>Nefes<small id="app-ver" class="ver"></small></div>
     <div class="tb">
+      <button data-i18n-attr="aria-label:tema_degistir" class="iconbtn" onclick="toggleTheme()" aria-label="Koyu / normal mod"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
       <button data-i18n-attr="aria-label:bilgi_merkezi" class="iconbtn" onclick="go('learn')" aria-label="Bilgi merkezi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5zM4 19.5V21h16"/></svg></button>
       <button data-i18n-attr="aria-label:bildirimler" class="iconbtn" onclick="go('notif')" aria-label="Bildirimler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg></button>
       <button data-i18n-attr="aria-label:ayarlar" class="iconbtn" onclick="go('set')" aria-label="Ayarlar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
