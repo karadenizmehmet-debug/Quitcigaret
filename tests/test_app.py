@@ -179,8 +179,8 @@ def test_habit_insights(b):
 
 def test_app_version_matches_cache(b):
     import re
-    cache = re.search(r"CACHE = 'nefes-(v\d+)'", (ROOT/"sw.js").read_text()).group(1)
-    cfg = re.search(r"appVersion: '(v\d+)'", (ROOT/"js"/"config.js").read_text()).group(1)
+    cache = re.search(r"CACHE = 'nefes-(v[\d.]+)'", (ROOT/"sw.js").read_text()).group(1)
+    cfg = re.search(r"appVersion: '(v[\d.]+)'", (ROOT/"js"/"config.js").read_text()).group(1)
     assert cache == cfg, f"sw.js {cache} ≠ config.js {cfg}"
     pg = new_page(b); seeded(pg)
     assert pg.inner_text("#app-ver") == cfg

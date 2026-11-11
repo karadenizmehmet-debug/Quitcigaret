@@ -69,7 +69,7 @@ Kullanıcı açıkça istemedikçe kaldırma veya davranışını değiştirme: 
 ## 7. PWA ve çevrimdışı
 
 - Yeni JS/CSS/görsel dosyası eklenirse sw.js `FILES` listesine ekle.
-- Önbelleğe giren herhangi bir dosya değiştiğinde `CACHE` sürümünü bir artır (ör. `nefes-v11` → `nefes-v12`); aksi halde kullanıcılar eski sürümde kalır. Aynı anda js/config.js'teki `appVersion` değerini de eşitle (ana ekranda görünen sürüm; `test_app_version_matches_cache` denetler).
+- Önbelleğe giren herhangi bir dosya değiştiğinde `CACHE` sürümünü bir artır (`nefes-` + `appVersion`, ör. `nefes-v1.18` → `nefes-v1.18.1`); aksi halde kullanıcılar eski sürümde kalır. Aynı anda js/config.js'teki `appVersion` değerini de eşitle (ana ekranda görünen sürüm; `test_app_version_matches_cache` denetler).
 - Temel özellikler internetsiz çalışmalı; harici bağımlılık ekleme.
 
 ## 8. Testler
@@ -105,3 +105,9 @@ Modern, sade, minimalist; mobil öncelikli; kolay gezinme; gereksiz animasyon yo
 ## 12. Son kural
 
 En küçük güvenli değişikliği tercih et. Çalışan özellikleri yeniden yazma, istenmedikçe büyük refaktör yapma.
+
+## Sürüm numarası
+Biçim `vX.Y` / `vX.Y.Z`, uygulamada görünür. Her değişiklikte artır ve aynı commit'e koy:
+- **Küçük düzeltme** (hata, yazım, stil): `+0.0.1` → v1.2 → v1.2.1 → v1.2.2
+- **Yeni içerik / özellik**: `+0.1`, düzeltme hanesi sıfırlanır → v1.2.2 → v1.3
+- Sürüm tek yerde tutulur: `js/config.js` → `appVersion`; `sw.js` → `CACHE` ile aynı olmalı.
